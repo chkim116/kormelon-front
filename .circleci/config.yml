@@ -35,7 +35,7 @@ jobs:
     deploy-stage:
         docker:
             - image: circleci/node:lts
-            - image: 'cimg/base:stable'
+            - image: "cimg/base:stable"
         steps:
             - attach_workspace:
                   at: .
@@ -67,7 +67,7 @@ workflows:
                       branches:
                           only:
                               - master
-                 context: kormelon
+                  context: kormelon
 
             - deploy-stage:
                   requires:
@@ -76,4 +76,4 @@ workflows:
                       branches:
                           only:
                               - master
-                 context: kormelon
+                  context: kormelon

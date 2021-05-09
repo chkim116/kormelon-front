@@ -11,6 +11,10 @@ jobs:
             - image: circleci/node:lts
         steps:
             - checkout
+            - run:
+                  name: install
+                  command: |
+                      yarn install
             - restore_cache:
                   name: Restore Next.js build cache
                   key: next-cache-{{ checksum "yarn.lock" }}

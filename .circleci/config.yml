@@ -66,7 +66,7 @@ jobs:
                   command: |
                       yarn generate-eb-zip
                       eb init kormelon --keyname "Kormelon-env" --platform "Node.js 14" --region "ap-northeast-2"
-                      eb deploy kormelon-front
+                      eb deploy Kormelon-env
 
 workflows:
     version: 2

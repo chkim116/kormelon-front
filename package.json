@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
+        "build:prod": "next build",
         "build": "NODE_ENV=production ANALYZE=true next build",
         "start": "next start -p $PORT",
-        "prestart": "npm install && next build",
+        "prestart": "npm install && next build:prod",
         "generate-eb-zip": "sh ./scripts/generate-eb-zip.sh"
     },
     "dependencies": {

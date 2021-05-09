@@ -54,9 +54,6 @@ jobs:
                       yarn generate-eb-zip
                       eb init kormelon --keyname "Kormelon-env" --platform "Node.js 14" --region "ap-northeast-2"
                       eb deploy kormelon-front
-            - notify-workflow-build-status-to-slack:
-                  env: stage
-                  event: deploy
 
 workflows:
     version: 2

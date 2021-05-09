@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
     aws-s3: circleci/aws-s3@2.0.0
+    node: circleci/node@4.3.0
     aws-cli: circleci/aws-cli@1.4.0
     aws-ebcli: circleci/aws-elastic-beanstalk@1.0.2
 
@@ -34,13 +35,20 @@ jobs:
 
     deploy-stage:
         docker:
-            - image: circleci/node:lts
-            - image: "cimg/base:stable"
+            - image: cimg/base:stable
+        executor: aws-cli/default
         steps:
+            - checkout
+            - node/install:
+                  node-version: "14.16.0"
+                  install-yarn: true
             - attach_workspace:
                   at: .
             - aws-ebcli/setup
             - aws-s3/copy:
+                  aws-access-key-id: AWS_ACCESS_KEY_ID
+                  aws-region: AWS_REGION
+                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
                   from: ".next/static"
                   to: "s3://kormelon/_next/static"
                   arguments: |
@@ -51,12 +59,13 @@ jobs:
                   name: "Invalidate CloudFront Cache"
                   command: |
                       aws cloudfront create-invalidation --distribution-id ${AWS_CLOUD_FRONT} --paths "/*"
+
             - run:
                   name: "Deploy to Elastic Beanstalk"
                   command: |
                       yarn generate-eb-zip
                       eb init kormelon --keyname "Kormelon-env" --platform "Node.js 14" --region "ap-northeast-2"
-                      eb deploy kormelon-front
+                      eb deploy Kormelon-env
 
 workflows:
     version: 2

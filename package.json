@@ -6,7 +6,7 @@
         "dev": "next dev",
         "build": "NODE_ENV=production ANALYZE=true next build",
         "postbuild": "next-on-netlify",
-        "start": "next start -p 8081",
+        "start": "next start -p $PORT",
         "generate-eb-zip": "sh ./scripts/generate-eb-zip.sh"
     },
     "dependencies": {

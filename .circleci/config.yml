@@ -36,6 +36,7 @@ jobs:
         docker:
             - image: cimg/base:stable
             - image: circleci/node:lts
+        executor: aws-cli/default
         steps:
             - attach_workspace:
                   at: .

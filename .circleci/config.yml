@@ -68,7 +68,7 @@ workflows:
                   filters:
                       branches:
                           only:
-                              - remake
+                              - master
 
             - deploy-stage:
                   requires:
@@ -76,4 +76,4 @@ workflows:
                   filters:
                       branches:
                           only:
-                              - remake
+                              - master

@@ -42,6 +42,9 @@ jobs:
                   at: .
             - aws-ebcli/setup
             - aws-s3/copy:
+                  aws-access-key-id: AWS_ACCESS_KEY_ID
+                  aws-region: AWS_REGION
+                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
                   from: ".next/static"
                   to: "s3://kormelon/_next/static"
                   arguments: |

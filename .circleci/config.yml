@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
     aws-s3: circleci/aws-s3@2.0.0
+    node: circleci/node@4.3.0
     aws-cli: circleci/aws-cli@1.4.0
     aws-ebcli: circleci/aws-elastic-beanstalk@1.0.2
 
@@ -38,6 +39,10 @@ jobs:
             - image: circleci/node:lts
         executor: aws-cli/default
         steps:
+            - checkout
+            - node/install:
+                  node-version: "14.16.0"
+                  install-yarn: true
             - attach_workspace:
                   at: .
             - aws-ebcli/setup
@@ -55,6 +60,7 @@ jobs:
                   name: "Invalidate CloudFront Cache"
                   command: |
                       aws cloudfront create-invalidation --distribution-id ${AWS_CLOUD_FRONT} --paths "/*"
+
             - run:
                   name: "Deploy to Elastic Beanstalk"
                   command: |

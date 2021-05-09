@@ -1,0 +1,55 @@
+@import "~antd/dist/antd.css";
+
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, "Noto Sans KR", Sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #212729;
+    line-height: 1.65em;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+    font-size: 30px !important;
+}
+
+p {
+    font-size: 1.125rem;
+    line-height: 1.65em;
+}
+
+.hljs-string {
+    color: #b97b00;
+}
+
+.hljs-variable {
+    color: #b93d3d;
+}
+
+.hljs-built_in {
+    color: #6b6860;
+}
+
+.hljs-comment {
+    color: rgba(117, 117, 117, 0.7);
+}
+
+.hljs-attribute {
+    color: #00bce2;
+}
+
+@media all and (max-width: 540px) {
+    h1 {
+        font-size: 24px !important;
+    }
+
+    p {
+        font-size: 1.125rem;
+    }
+}

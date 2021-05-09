@@ -29,15 +29,13 @@ jobs:
                       - .
 
     deploy-stage:
-        executor: aws-cli/default
         docker:
             - image: circleci/node:lts
+        executor: aws-cli/default
         steps:
             - checkout
             - attach_workspace:
                   at: .
-            - node/install:
-                  install-yarn: true
             - aws-ebcli/setup
             - aws-s3/copy:
                   from: ".next/static"

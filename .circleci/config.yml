@@ -41,23 +41,13 @@ jobs:
             - attach_workspace:
                   at: .
             - aws-ebcli/setup
-            - aws-s3/sync:
-                  arguments: |
-                      --acl public-read \
-                      --cache-control "max-age=86400"
-                  aws-access-key-id: AWS_ACCESS_KEY_ID
-                  aws-region: AWS_REGION
-                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-                  from: ".next/static"
-                  to: "s3://kormelon/_next/static"
-            - aws-s3/copy:
-                  aws-access-key-id: AWS_ACCESS_KEY_ID
-                  aws-region: AWS_REGION
-                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-                  from: ".next/static"
-                  to: "s3://kormelon/_next/static"
-                  arguments: --recursive
-
+             - aws-s3/copy:
+                   from: ".next/static"
+                   to: "s3://kormelon/_next/static"
+                   arguments: |
+                        --acl public-read \
+                        --cache-control "max-age=86400" \
+                        --recursive
             - run:
                   name: "Invalidate CloudFront Cache"
                   command: |

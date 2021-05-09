@@ -36,7 +36,6 @@ jobs:
     deploy-stage:
         docker:
             - image: cimg/base:stable
-            - image: circleci/node:lts
         executor: aws-cli/default
         steps:
             - checkout
@@ -76,7 +75,7 @@ workflows:
                   filters:
                       branches:
                           only:
-                              - circleci
+                              - master
                   context: kormelon
 
             - deploy-stage:
@@ -85,5 +84,5 @@ workflows:
                   filters:
                       branches:
                           only:
-                              - circleci
+                              - master
                   context: kormelon

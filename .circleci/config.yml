@@ -1,13 +1,10 @@
 version: 2.1
 
 orbs:
-    aws-s3: circleci/aws-s3@2.0.0
     node: circleci/node@4.3.0
-    aws-cli: circleci/aws-cli@1.4.0
-    aws-ebcli: circleci/aws-elastic-beanstalk@1.0.2
 
 jobs:
-    build-stage:
+    deploy-stage:
         docker:
             - image: circleci/node:lts
         steps:
@@ -20,67 +17,15 @@ jobs:
                   name: Restore Next.js build cache
                   key: next-cache-{{ checksum "yarn.lock" }}
             - run:
-                  name: Build Next.js
+                  name: deploy Next.js
                   command: |
-                      yarn build
-            - save_cache:
-                  name: Cache Next.js build
-                  key: next-cache-{{ checksum "yarn.lock" }}
-                  paths:
-                      - .next/cache
-            - persist_to_workspace:
-                  root: .
-                  paths:
-                      - .
-
-    deploy-stage:
-        docker:
-            - image: cimg/base:stable
-        executor: aws-cli/default
-        steps:
-            - checkout
-            - node/install:
-                  node-version: "14.16.0"
-                  install-yarn: true
-            - attach_workspace:
-                  at: .
-            - aws-ebcli/setup
-            - aws-s3/copy:
-                  aws-access-key-id: AWS_ACCESS_KEY_ID
-                  aws-region: AWS_REGION
-                  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-                  from: ".next/static"
-                  to: "s3://kormelon/_next/static"
-                  arguments: |
-                      --acl public-read \
-                      --cache-control "max-age=86400" \
-                      --recursive
-            - run:
-                  name: "Invalidate CloudFront Cache"
-                  command: |
-                      aws cloudfront create-invalidation --distribution-id ${AWS_CLOUD_FRONT} --paths "/*"
-
-            - run:
-                  name: "Deploy to Elastic Beanstalk"
-                  command: |
-                      yarn generate-eb-zip
-                      eb init kormelon --keyname "Kormelon-env" --platform "Node.js 14" --region "ap-northeast-2"
-                      eb deploy Kormelon-env
+                      yarn deploy
 
 workflows:
     version: 2
-    build-deploy:
+    next-deploy:
         jobs:
-            - build-stage:
-                  filters:
-                      branches:
-                          only:
-                              - master
-                  context: kormelon
-
             - deploy-stage:
-                  requires:
-                      - build-stage
                   filters:
                       branches:
                           only:

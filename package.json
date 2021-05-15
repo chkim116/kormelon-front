@@ -6,8 +6,7 @@
         "dev": "next dev",
         "build": "NODE_ENV=production ANALYZE=true next build",
         "start": "next start -p $PORT",
-        "prestart": "npm install && next build",
-        "generate-eb-zip": "sh ./scripts/generate-eb-zip.sh"
+        "deploy": "serverless"
     },
     "dependencies": {
         "@cooksmelon/utils": "^1.0.4",

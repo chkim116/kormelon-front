@@ -1,0 +1,11 @@
+# serverless.yml
+
+falsyExempleServerlessNext:
+    component: "@sls-next/serverless-component"
+    inputs:
+        bucketName: "kormelon"
+        cloudfront:
+            distributionId: AWS_CLOUD_FRONT
+        name:
+            defaultLambda: "kormelon"
+            apiLambda: "kormelon-api"

@@ -6,7 +6,7 @@ falsyExempleServerlessNext:
         roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
         bucketName: "kormelon-front"
         cloudfront:
-            distributionId: AWS_CLOUD_FRONT
+            distributionId: "E2LNB20XCFS409"
         name:
             defaultLambda: "kormelon"
             apiLambda: "kormelon-api"

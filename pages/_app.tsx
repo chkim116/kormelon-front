@@ -25,7 +25,7 @@ const AppLayouts = styled(Layout)`
 
 axios.defaults.baseURL =
     process.env.NODE_ENV === "production"
-        ? "https://api.kormelon.cf"
+        ? "https://api.kormelon.com"
         : "http://localhost:4000"
 axios.defaults.withCredentials = true
 

@@ -25,7 +25,7 @@ const AppLayouts = styled(Layout)`
 
 axios.defaults.baseURL =
     process.env.NODE_ENV === "production"
-        ? "https://api.kormelon.cf"
+        ? "https://api.kormelon.com"
         : "http://localhost:4000"
 axios.defaults.withCredentials = true
 
@@ -92,7 +92,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
                     description: "개발은 즐겁게",
                     type: "blog",
                     locale: "ko_KR",
-                    url: "https://www.kormelon.cf/",
+                    url: "https://www.kormelon.com/",
                     site_name: "생각창고",
                 }}
                 twitter={{

@@ -88,13 +88,13 @@ const Contents = ({ post }: Props) => {
             <NextSeo
                 title={`${post.title}`}
                 description={`${post.preview}`}
-                canonical="https://www.kormelon.cf/"
+                canonical="https://www.kormelon.com/"
                 openGraph={{
                     title: `${post.title}`,
                     description: `${post.preview}`,
                     type: "article",
                     locale: "ko_KR",
-                    url: `https://www.kormelon.cf/contents/${post.title}`,
+                    url: `https://www.kormelon.com/contents/${post.title}`,
                     site_name: "생각창고",
                 }}
                 twitter={{

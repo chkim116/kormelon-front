@@ -1,7 +1,7 @@
 # serverless.yml
 
 falsyExempleServerlessNext:
-    component: "@sls-next/serverless-component"
+    component: "@sls-next/serverless-component@1.19.0"
     inputs:
         bucketName: "kormelon"
         cloudfront:

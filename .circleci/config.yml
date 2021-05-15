@@ -9,13 +9,19 @@ jobs:
             - image: circleci/node:lts
         steps:
             - checkout
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-
+                      # fallback to using the latest cache if no exact match is found
+                      - v1-dependencies-
             - run:
                   name: install
                   command: |
                       yarn install
-            - restore_cache:
-                  name: Restore Next.js build cache
-                  key: next-cache-{{ checksum "yarn.lock" }}
+            - save_cache:
+                  paths:
+                      - node_modules
+                  key: v1-dependencies-
             - run:
                   name: deploy Next.js
                   command: |

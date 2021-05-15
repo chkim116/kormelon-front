@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
+        "build:prod": "next build",
         "build": "NODE_ENV=production ANALYZE=true next build",
         "start": "next start -p $PORT",
-        "deploy": "serverless"
+        "deploy": "npx serverless"
     },
     "dependencies": {
         "@cooksmelon/utils": "^1.0.4",
@@ -16,7 +17,6 @@
         "axios": "^0.21.1",
         "globby": "^11.0.2",
         "next": "10.0.7",
-        "next-on-netlify": "^2.9.0",
         "next-seo": "^4.20.0",
         "quill": "^1.3.7",
         "react": "17.0.1",

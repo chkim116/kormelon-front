@@ -67,7 +67,7 @@ export default function Home({ post, postCount, categories }: Props) {
             <NextSeo
                 title="개발자의 생각창고"
                 description="개발자 김창회의 블로그"
-                canonical="https://www.kormelon.cf"
+                canonical="https://www.kormelon.com"
             />
             <AppTitle>all</AppTitle>
             <AppContents categories={categories}>

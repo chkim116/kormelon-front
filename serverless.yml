@@ -3,7 +3,7 @@
 falsyExempleServerlessNext:
     component: "@sls-next/serverless-component@1.19.0-alpha.37"
     inputs:
-        roleArn: AWS_SERVERLESS_ROLE
+        roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
         bucketName: "kormelon-front"
         cloudfront:
             distributionId: AWS_CLOUD_FRONT

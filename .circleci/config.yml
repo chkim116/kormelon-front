@@ -30,4 +30,5 @@ workflows:
                       branches:
                           only:
                               - master
+                              - circleci
                   context: kormelon

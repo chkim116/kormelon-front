@@ -3,6 +3,9 @@
 falsyExempleServerlessNext:
     component: "@sls-next/serverless-component@1.19.0-alpha.37"
     inputs:
+        domain: "kormelon.com"
+        memory:
+            defaultLambda: 1024
         roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
         bucketName: "kormelon-front"
         cloudfront:

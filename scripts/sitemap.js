@@ -2,8 +2,8 @@ const fs = require("fs")
 const axios = require("axios")
 const globby = require("globby")
 
-const fetchUrl = "https://api.kormelon.cf/post/all"
-const YOUR_URL = "https://kormelon.cf"
+const fetchUrl = "https://api.kormelon.com/post/all"
+const YOUR_URL = "https://kormelon.com"
 const getDate = new Date().toISOString()
 
 async function generateSiteMap() {

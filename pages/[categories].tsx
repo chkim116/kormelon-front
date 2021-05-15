@@ -64,7 +64,7 @@ const Category = ({ post, postCount }: Props) => {
             <NextSeo
                 title="개발자의 생각창고"
                 description={`${router.query.categories}에 대한 생각`}
-                canonical="https://www.kormelon.cf"
+                canonical="https://www.kormelon.com"
             />
             <AppTitle>{router.query?.categories}</AppTitle>
             <AppContents categories={categories}>

@@ -92,7 +92,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
                     description: "개발은 즐겁게",
                     type: "blog",
                     locale: "ko_KR",
-                    url: "https://www.kormelon.cf/",
+                    url: "https://www.kormelon.com/",
                     site_name: "생각창고",
                 }}
                 twitter={{

@@ -1,0 +1,27 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:react-hooks/recommended"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-undef": "off",
+    "react/prefer-stateless-function": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "no-unused-vars": 1, // 잠시 꺼두기
+    "react-hooks/exhaustive-deps": 0 // hook 경고 제거
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"]
+    }
+  ]
+}

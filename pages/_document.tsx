@@ -5,7 +5,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta name="google-site-verification" content="7RYJ0wuUw2CvBgx03RveUFDeeCfoqRZNBSfTYnSabx8" />
+          <meta name="google-site-verification" content="3yQnN4a3laP_8uJlbw0p-c0XNOQlISHhCfBdGfGTq4w" />
         </Head>
         <body>
           <Main />

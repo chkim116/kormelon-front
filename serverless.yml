@@ -1,14 +1,14 @@
 # serverless.yml
 
 falsyExempleServerlessNext:
-    component: "@sls-next/serverless-component@1.19.0-alpha.37"
-    inputs:
-        memory:
-            defaultLambda: 1024
-        roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
-        bucketName: "kormelon-front"
-        cloudfront:
-            distributionId: "E2LNB20XCFS409"
-        name:
-            defaultLambda: "kormelon"
-            apiLambda: "kormelon-api"
+  component: '@sls-next/serverless-component@1.19.0-alpha.37'
+  inputs:
+    memory:
+      defaultLambda: 1024
+    roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
+    bucketName: 'kormelon-front'
+    cloudfront:
+      distributionId: 'E2LNB20XCFS409'
+    name:
+      defaultLambda: 'kormelon'
+      apiLambda: 'kormelon-api'

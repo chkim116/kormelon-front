@@ -1,14 +1,18 @@
+# https://falsy.me/%EC%86%8C%EC%86%8C%ED%95%9C-%EA%B0%9C%EB%B0%9C-%EC%9D%BC%EC%A7%80-serverless-next-js%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%9C-%EB%B0%B0%ED%8F%AC%EC%97%90%EC%84%9C-%EC%83%88%EB%A1%9C%EC%9A%B4-role/
 # serverless.yml
 
-ServerlessNext:
-  component: '@sls-next/serverless-component@1.19.0'
+falsyExempleServerlessNext:
+  component: '@sls-next/serverless-component@1.20.0-alpha.7'
   inputs:
+    timeout:
+      defaultLambda: 30
     memory:
       defaultLambda: 1024
     roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
     bucketName: 'kormelon'
+    bucketRegion: 'us-east-1'
     cloudfront:
       distributionId: 'E294ZOOBDNKQSP'
     name:
       defaultLambda: 'kormelonLambda'
-      imageLambda: 'kormelonImgLambda'
+      apiLambda: 'kormelonApiLambda'

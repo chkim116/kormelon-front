@@ -4,13 +4,14 @@
 falsyExempleServerlessNext:
   component: '@sls-next/serverless-component@1.20.0-alpha.7'
   inputs:
-    timeout:
-      defaultLambda: 30
     memory:
       defaultLambda: 1024
-    roleArn: arn:aws:iam::195592554540:role/Serverless-kormelon
+    roleArn: arn:aws:iam::195592554540:role/serverless_kormelon
     bucketName: 'kormelon'
-    bucketRegion: 'us-east-1'
+    runtime:
+      defaultLambda: 'nodejs14.x'
+      apiLambda: 'nodejs14.x'
+      imageLambda: 'nodejs14.x'
     cloudfront:
       distributionId: 'E294ZOOBDNKQSP'
     name:

@@ -12,10 +12,9 @@ const ContentLayout = styled.div`
     margin-top: 0.9em !important;
     padding-bottom: 1em;
     border-bottom: 1px dashed #dbdbdc;
-
-    img {
-      width: 100%;
-    }
+  }
+  img {
+    width: 100%;
   }
 `;
 

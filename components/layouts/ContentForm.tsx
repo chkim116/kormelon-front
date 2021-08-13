@@ -13,6 +13,9 @@ const ContentLayout = styled.div`
     padding-bottom: 1em;
     border-bottom: 1px dashed #dbdbdc;
   }
+  img {
+    width: 100%;
+  }
 `;
 
 interface Props {

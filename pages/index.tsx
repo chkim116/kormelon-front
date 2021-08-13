@@ -45,6 +45,7 @@ export default function Home({ post, postCount }: Props) {
   const [postList, setPostList] = useState<Post[]>(post);
   const [categories, setCategories] = useState<Categories[]>();
   const [isLoading, setIsLoading] = useState(false);
+
   const viewPort = useRef<any>(null);
   const isLimit = useMemo(() => {
     return Math.ceil(postCount / 6);

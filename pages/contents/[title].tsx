@@ -128,6 +128,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const { params } = ctx;
 
   const post = await axios.get(`/post/${encodeURIComponent(params?.title as string)}`).then((res) => res.data);
-
   return { props: { post } };
 };

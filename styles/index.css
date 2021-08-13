@@ -22,6 +22,7 @@ h1 {
 p {
   font-size: 1.125rem;
   line-height: 1.65em;
+  margin: 0 !important;
 }
 
 .hljs-string {
@@ -54,6 +55,7 @@ p {
   }
 
   p {
+    margin: 0 !important;
     font-size: 1.125rem;
   }
 }

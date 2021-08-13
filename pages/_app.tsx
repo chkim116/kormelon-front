@@ -95,6 +95,11 @@ function MyApp({ Component, pageProps, user }: AppProps) {
           href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3241811705564924"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <AppContext.Provider value={state}>
         <div

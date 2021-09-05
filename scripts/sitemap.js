@@ -8,7 +8,6 @@ const getDate = new Date().toISOString();
 
 async function generateSiteMap() {
   const fetchPosts = async () => await axios.get(fetchUrl).then((res) => res.data.postTitleList);
-
   const pages = await globby([
     '../pages/**/*.tsx',
     '../pages/*.tsx',
@@ -26,10 +25,9 @@ async function generateSiteMap() {
   const postList = `
         ${posts
           .map((post) => {
-            let title = post.title;
             return `
               <url>
-                <loc>${`${YOUR_URL}/contents/${title}`}</loc>
+                <loc>${`${YOUR_URL}/contents/${post}`}</loc>
                 <lastmod>${getDate}</lastmod>
               </url>`;
           })

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build:prod": "next build",
+    "postbuild": "node ./scripts/sitemap.js",
     "build": "NODE_ENV=production ANALYZE=false next build",
     "start": "next start -p $PORT",
     "deploy": "npx serverless",

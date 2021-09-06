@@ -31,13 +31,14 @@ const App = styled(Header)<{ scaleheight: string }>`
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
-    span {
+    div {
       cursor: pointer;
     }
   }
 
   .header__login {
     margin-right: 15px;
+    font-family: 'Noto Sans KR', serif;
   }
   @media all and (max-width: 540px) {
     font-size: 14px;
@@ -96,29 +97,30 @@ const AppHeader = ({ handleLogout, handleShowSider, showSider }: Props) => {
     <App scaleheight={scaleHeight.toString()}>
       <div className="header__container">
         <Link href="/">
-          <div>
-            <span>개발자의 생각창고</span>
-          </div>
+          <div>개발자의 생각창고</div>
         </Link>
         <div className="header__login">
-          {isUser?.id ? (
-            <>
-              <Link href="/upload">
-                <Button type="link" size="middle">
-                  Upload
+          {
+            isUser?.id ? (
+              <>
+                <Link href="/upload">
+                  <Button type="link" size="middle">
+                    Upload
+                  </Button>
+                </Link>
+                <Button type="link" size="middle" onClick={handleLogOut}>
+                  Logout
                 </Button>
-              </Link>
-              <Button type="link" size="middle" onClick={handleLogOut}>
-                Logout
-              </Button>
-            </>
-          ) : (
-            <Link href="/login">
-              <Button type="link" size="middle">
-                Login
-              </Button>
-            </Link>
-          )}
+              </>
+            ) : null
+            // (
+            //   <Link href="/login">
+            //     <Button type="link" size="middle">
+            //       Login
+            //     </Button>
+            //   </Link>
+            // )
+          }
         </div>
         <NavBtn type="ghost" size="large" onClick={handleShowSider}>
           {showSider ? <CloseOutlined /> : <MenuOutlined />}

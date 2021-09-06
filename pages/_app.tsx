@@ -11,6 +11,8 @@ import { DefaultSeo } from 'next-seo';
 import { useGlobalState, useScrollTop } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from '../styles/theme';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -101,26 +103,28 @@ function MyApp({ Component, pageProps, user }: AppProps) {
           crossOrigin="anonymous"
         ></script>
       </Head>
-      <AppContext.Provider value={state}>
-        <div
-          style={{
-            position: 'fixed',
-            left: 0,
-            zIndex: 999,
-            fontSize: 8,
-          }}
-        >
-          Today{view.views} <span>Total{view.totalView}</span>
-        </div>
-        <AppLayouts>
-          <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
-          <Component {...pageProps} />
-          <AppFooter>
-            <div>KimChanghoe &copy; 2021</div>
-          </AppFooter>
-        </AppLayouts>
-        <AppTop></AppTop>
-      </AppContext.Provider>
+      <ThemeProvider theme={theme}>
+        <AppContext.Provider value={state}>
+          <div
+            style={{
+              position: 'fixed',
+              left: 0,
+              zIndex: 999,
+              fontSize: 8,
+            }}
+          >
+            Today{view.views} <span>Total{view.totalView}</span>
+          </div>
+          <AppLayouts>
+            <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
+            <Component {...pageProps} />
+            <AppFooter>
+              <div>KimChanghoe &copy; 2021</div>
+            </AppFooter>
+          </AppLayouts>
+          <AppTop></AppTop>
+        </AppContext.Provider>
+      </ThemeProvider>
     </>
   );
 }

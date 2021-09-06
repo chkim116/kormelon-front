@@ -15,7 +15,9 @@ const Container = styled.div`
   margin: 120px auto 0 auto;
   max-width: 1200px;
   width: 100%;
-
+  @media all and (max-width: ${({ theme }) => theme.desktop}) {
+    width: 95%;
+  }
   .upload__header {
     display: flex;
   }
@@ -115,7 +117,7 @@ const Upload = () => {
 
       const { id } = e.currentTarget.dataset;
 
-      if (!form?.title && !form?.category && desc === '') {
+      if (!form?.title || !form?.category || desc === '') {
         setLoading(() => false);
         return notification.error({
           message: '다 입력해 주세요',

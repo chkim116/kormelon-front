@@ -77,10 +77,10 @@ type Props = {
   setDesc: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
+const MarkEditor = ({ prevDesc = '', title, setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
-  const [txt, setTxt] = useState('');
+  const [txt, setTxt] = useState<string | null>(null);
   const [range, setRange] = useState({ selStart: 0, selEnd: 0 });
   const editor = useRef<HTMLTextAreaElement>(null);
 
@@ -96,7 +96,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
   const onHeader = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const { toolbar, lnline } = e.currentTarget.dataset;
-      const newText = addMark(txt, startText, endText, toolbar as string, lnline as string);
+      const newText = addMark(txt ?? '', startText, endText, toolbar as string, lnline as string);
       const edit = editor.current;
 
       if (edit) {
@@ -138,7 +138,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
             'Content-Type': 'multipart/form-data',
           },
         }).then((res) => res.data);
-        setTxt(() => addMark(txt, startText, endText, 'img', '', img));
+        setTxt(() => addMark(txt ?? '', startText, endText, 'img', '', img));
       };
       postImg();
     },
@@ -230,11 +230,14 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
   }, [range]);
 
   useEffect(() => {
-    setDesc(txt);
+    if (txt) {
+      setDesc(txt);
+    }
     const nodes = document.querySelectorAll('pre');
     highlights(nodes);
   }, [txt]);
 
+  console.log(prevDesc);
   return (
     <WriteContainer>
       <EditorContainer>
@@ -244,7 +247,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
           onKeyDown={onKeyDown}
           onSelect={onSelect}
           ref={editor}
-          value={txt || prevDesc}
+          value={txt ?? prevDesc}
           onChange={onChange}
           spellCheck={false}
         ></Editor>
@@ -255,7 +258,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
         <div
           id="content"
           dangerouslySetInnerHTML={{
-            __html: marked(txt || prevDesc || ''),
+            __html: marked(txt ?? prevDesc),
           }}
         ></div>
       </Preview>

@@ -1,10 +1,10 @@
-import { Tag } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { Post } from '../pages';
 import styled from '@emotion/styled';
 
 import { Picsum } from 'picsum-photos';
+import AppTags from './layouts/AppTags';
 
 const ContentContainer = styled.div`
   display: grid;
@@ -43,12 +43,6 @@ const ContentLayout = styled.div`
   p {
     color: #959595;
   }
-
-  .ant-tag {
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 `;
 
 const ContentImage = styled.div`
@@ -83,7 +77,7 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
 
               {post.tags.map((tag) => (
                 <Link href={`/search/${tag}`} key={tag}>
-                  <Tag color="cyan">{tag}</Tag>
+                  <AppTags>{tag}</AppTags>
                 </Link>
               ))}
             </ContentLayout>

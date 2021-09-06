@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Text from 'antd/lib/typography/Text';
-import { Tag } from 'antd';
+import AppTags from './AppTags';
+import Link from 'next/link';
 
 const ContentLayout = styled.div`
   margin-bottom: 3em;
@@ -29,9 +30,9 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
       <div className="content-title">{title}</div>
       <div>
         {tags.map((tag) => (
-          <Tag color="blue" key={tag}>
-            {tag}
-          </Tag>
+          <Link href={`/search/${tag}`} key={tag}>
+            <AppTags>{tag}</AppTags>
+          </Link>
         ))}
       </div>
       <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />

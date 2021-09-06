@@ -26,7 +26,6 @@ type Props = {
 };
 
 const AppTitle = ({ title }: Props) => {
-  console.log(title);
   return <TitleContaier>{title.toUpperCase()}</TitleContaier>;
 };
 

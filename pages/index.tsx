@@ -47,7 +47,6 @@ export default function Home({ post, postCount }: Props) {
   const [lastElement, page] = useInfiniteScroll(data);
 
   useEffect(() => {
-    if (page <= 1) return;
     if (page > isLimit) return;
     setIsLoading(true);
     pagePost(page as number).then((res) => {

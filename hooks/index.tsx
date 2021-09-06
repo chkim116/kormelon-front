@@ -14,7 +14,6 @@ export const useInfiniteScroll = ({ viewPort, isLoading, limit }: Props) => {
       if (isLoading || viewPort === undefined || node === null || page >= limit) {
         return;
       }
-
       viewPort = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           viewPort.disconnect();
@@ -28,7 +27,7 @@ export const useInfiniteScroll = ({ viewPort, isLoading, limit }: Props) => {
     [isLoading, viewPort, page, limit],
   );
 
-  return [lastElement, page];
+  return [lastElement, page + 1];
 };
 
 export const useScrollTop = () => {

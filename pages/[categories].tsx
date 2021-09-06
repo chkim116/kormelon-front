@@ -39,7 +39,7 @@ const Category = ({ post, postCount }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (page <= 1) return;
+    if (page > data.limit) return;
     setIsLoading(true);
     pagePost(router.query.categories as string, page as number).then((res) => {
       setPostList([...postList, ...res.data.post]);
@@ -61,7 +61,7 @@ const Category = ({ post, postCount }: Props) => {
       <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents categories={categories}>
         <>
-          <ContentList lastElement={lastElement} viewPort={viewPort} postList={post}></ContentList>
+          <ContentList lastElement={lastElement} viewPort={viewPort} postList={postList}></ContentList>
           {isLoading && <AppLoading scroll={true} />}
         </>
       </AppContents>

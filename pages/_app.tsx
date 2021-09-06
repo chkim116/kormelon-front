@@ -15,6 +15,8 @@ import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../styles/theme';
+import router from 'next/router';
+import AppLoading from '../components/layouts/AppLoading';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -27,6 +29,7 @@ axios.defaults.withCredentials = true;
 export const AppContext = createContext(initial);
 
 function MyApp({ Component, pageProps, user }: AppProps) {
+  const [isglobalLoading, setIsGlobalLoading] = useState(false);
   const [state, dispatch] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
@@ -83,6 +86,20 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     }
   }, [user]);
 
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => {
+      setIsGlobalLoading(true);
+    });
+    router.events.on('routeChangeComplete', () => setIsGlobalLoading(false));
+    router.events.on('routeChangeError', () => setIsGlobalLoading(false));
+
+    return () => {
+      router.events.off('routeChangeStart', () => {});
+      router.events.off('routeChangeComplete', () => {});
+      router.events.off('routeChangeError', () => {});
+    };
+  }, []);
+
   useScrollTop();
 
   return (
@@ -126,6 +143,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={state}>
           <AppLayouts>
+            <>{isglobalLoading && <AppLoading scroll />}</>;
             <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
             <Component {...pageProps} />
             <AppFooter>

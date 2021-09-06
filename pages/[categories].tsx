@@ -43,6 +43,10 @@ const Category = ({ post, postCount }: Props) => {
     });
   }, [page]);
 
+  useEffect(() => {
+    setPostList(post);
+  }, [post]);
+
   if (router.isFallback) {
     return <AppLoading />;
   }
@@ -78,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post: Props = await axios
     .get(`/post?filter=${encodeURI(params?.categories as string)}`)
     .then((res) => res.data);
+  console.log(post);
 
   return {
     props: { post: post.post, postCount: post.postCount },

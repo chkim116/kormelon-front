@@ -6,7 +6,6 @@ import { Categories } from './[categories]';
 import AppContents from '../components/layouts/AppContents';
 import { useInfiniteScroll } from '../hooks';
 import AppLoading from '../components/layouts/AppLoading';
-import { NextSeo } from 'next-seo';
 import AppTitle from '../components/layouts/AppTitle';
 
 export interface Post {
@@ -63,7 +62,6 @@ export default function Home({ post, postCount }: Props) {
 
   return (
     <>
-      <NextSeo title="개발자의 생각창고" description="개발자 김창회의 블로그" canonical="https://www.kormelon.com" />
       <AppTitle title="all"></AppTitle>
       <AppContents categories={categories}>
         <>

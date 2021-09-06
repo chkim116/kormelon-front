@@ -13,11 +13,11 @@ import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
-import { NextSeo } from 'next-seo';
 import { useGlobalState } from '../../hooks';
 import marked from 'marked';
 import { highlights } from '../../lib/highlight';
 import Anchors from '../../components/Anchors';
+import SEO from '../../seo';
 
 const Content = styled.section`
   width: 100%;
@@ -89,26 +89,15 @@ const Contents = ({ post, anchor }: Props) => {
     return <AppEmpty />;
   }
 
+  const replace = (string: string) => string.replace(/<[^>]*>?/gm, '');
   // TODO: 에딧, 삭제 등은 고유 아이디로 이동~
   return (
     <>
-      <NextSeo
-        title={`${post.title}`}
-        description={`${post.preview}`}
-        canonical="https://www.kormelon.com/"
-        openGraph={{
-          title: `${post.title}`,
-          description: `${post.preview}`,
-          type: 'article',
-          locale: 'ko_KR',
-          url: `https://www.kormelon.com/contents/${post.title}`,
-          site_name: '생각창고',
-        }}
-        twitter={{
-          handle: '@handle',
-          site: '@site',
-          cardType: 'summary_large_image',
-        }}
+      <SEO
+        title={post.title}
+        desc={`${post.preview} | ${replace(post.description).replace(/\n/gi, ' ').slice(0, 180)}`}
+        image={post.thumb}
+        url={`https://www.kormelon.com/contents/${post.title}`}
       />
       <AppContents categories={categories}>
         <>

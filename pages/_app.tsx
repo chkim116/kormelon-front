@@ -78,14 +78,22 @@ function MyApp({ Component, pageProps, user }: AppProps) {
   return (
     <>
       <DefaultSeo
-        // TODO: 이미지 태그 추가하기!!
+        title={'개발자의 생각창고'}
+        description={`개발은 즐겁게`}
+        canonical="https://www.kormelon.com/"
         openGraph={{
           title: '개발자의 생각창고',
-          description: '개발은 즐겁게',
+          description: '개발은 재밌게 해야죠?',
           type: 'blog',
           locale: 'ko_KR',
           url: 'https://www.kormelon.com/',
           site_name: '생각창고',
+          images: [
+            {
+              url: `https://images.unsplash.com/photo-1616812757130-aca5451b0243?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80`,
+              alt: `생각창고`,
+            },
+          ],
         }}
         twitter={{
           handle: '@handle',

@@ -13,8 +13,7 @@ const { Item } = Form;
 
 const Container = styled.div`
   margin: 120px auto 0 auto;
-  max-width: 1200px;
-  width: 100%;
+  width: 98%;
   @media all and (max-width: ${({ theme }) => theme.desktop}) {
     width: 95%;
   }

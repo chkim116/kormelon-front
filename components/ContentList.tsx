@@ -58,7 +58,7 @@ const ContentImage = styled.div`
   img {
     width: 100%;
     min-height: 300px;
-    object-fit: contain;
+    object-fit: cover;
   }
 `;
 

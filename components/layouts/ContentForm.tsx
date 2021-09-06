@@ -26,15 +26,13 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
   return (
     <ContentLayout>
       <Text>{date}</Text>
-      <div className="content-title">
-        {title}
-        <div>
-          {tags.map((tag) => (
-            <Tag color="blue" key={tag}>
-              {tag}
-            </Tag>
-          ))}
-        </div>
+      <div className="content-title">{title}</div>
+      <div>
+        {tags.map((tag) => (
+          <Tag color="blue" key={tag}>
+            {tag}
+          </Tag>
+        ))}
       </div>
       <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />
     </ContentLayout>

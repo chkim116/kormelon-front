@@ -145,6 +145,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post = { ...fetch, description: html };
   // eslint-disable-next-line no-useless-escape
   const reg = /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~']+<\/\1>/g;
-  const anchor = html.match(reg) as string[];
+  const anchor = html.match(reg) || [];
   return { props: { post, anchor } };
 };

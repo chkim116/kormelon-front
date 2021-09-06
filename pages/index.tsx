@@ -2,7 +2,6 @@ import { GetServerSideProps } from 'next';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import ContentList from '../components/ContentList';
-import { Categories } from './[categories]';
 import AppContents from '../components/layouts/AppContents';
 import { useInfiniteScroll } from '../hooks';
 import AppLoading from '../components/layouts/AppLoading';
@@ -32,7 +31,6 @@ const pagePost = async (page: number) => {
 
 export default function Home({ post, postCount }: Props) {
   const [postList, setPostList] = useState<Post[]>(post);
-  const [categories, setCategories] = useState<Categories[]>();
   const [isLoading, setIsLoading] = useState(false);
 
   const viewPort = useRef<any>(null);
@@ -56,14 +54,10 @@ export default function Home({ post, postCount }: Props) {
     });
   }, [page]);
 
-  useEffect(() => {
-    (async () => await axios.get('/category').then((res) => setCategories(res.data)))();
-  }, []);
-
   return (
     <>
       <AppTitle title="all"></AppTitle>
-      <AppContents categories={categories}>
+      <AppContents>
         <>
           <ContentList viewPort={viewPort} postList={postList} lastElement={lastElement}></ContentList>
           {isLoading && <AppLoading scroll={true} />}

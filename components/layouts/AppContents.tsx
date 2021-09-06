@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Layout, { Content } from 'antd/lib/layout/layout';
 import AppSider from './AppSider';
-import { Categories } from '../../pages/[categories]';
 
 export const AppContentLayout = styled(Layout)`
   width: 100%;
@@ -20,11 +19,11 @@ export const AppContent = styled(Content)`
   margin: 0 auto;
 `;
 
-const AppContents = ({ children, categories }: { children: React.ReactChild; categories?: Categories[] }) => {
+const AppContents = ({ children }: { children: React.ReactChild }) => {
   return (
     <AppContentLayout>
       <AppContent>{children}</AppContent>
-      <AppSider categories={categories || []} />
+      <AppSider />
     </AppContentLayout>
   );
 };

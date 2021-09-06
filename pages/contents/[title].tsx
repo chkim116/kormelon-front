@@ -107,7 +107,6 @@ const Contents = ({ post, anchor }: Props) => {
   }
 
   const replace = (string: string) => string.replace(/<[^>]*>?/gm, '');
-  // TODO: 에딧, 삭제 등은 고유 아이디로 이동~
   return (
     <>
       <SEO
@@ -131,7 +130,7 @@ const Contents = ({ post, anchor }: Props) => {
               </Button>
             </ContentEditBtn>
           )}
-          <AppContents categories={categories}>
+          <AppContents>
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
           </AppContents>
         </Content>

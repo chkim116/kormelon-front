@@ -32,11 +32,6 @@ const Category = ({ post, postCount }: Props) => {
     limit: Math.ceil(postCount / 6),
   };
   const [lastElement, page] = useInfiniteScroll(data);
-  const [categories, setCategories] = useState();
-
-  useEffect(() => {
-    (async () => await axios.get('/category').then((res) => setCategories(res.data)))();
-  }, []);
 
   useEffect(() => {
     if (page <= 1) return;
@@ -60,7 +55,7 @@ const Category = ({ post, postCount }: Props) => {
     <>
       <SEO desc={`${router.query.categories}에 대한 생각`} />
       <AppTitle title={router.query?.categories as string}></AppTitle>
-      <AppContents categories={categories}>
+      <AppContents>
         <>
           <ContentList lastElement={lastElement} viewPort={viewPort} postList={postList}></ContentList>
           {isLoading && <AppLoading scroll={true} />}

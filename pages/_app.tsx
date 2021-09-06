@@ -47,9 +47,19 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     });
   };
 
-  const handleShowSider = useCallback(() => {
+  const handleShowSider = useCallback((e) => {
+    e.stopPropagation();
     dispatch({ type: 'SHOWING' });
   }, []);
+
+  useEffect(() => {
+    if (state.showSider) {
+      document.body.addEventListener('click', handleShowSider);
+    }
+    return () => {
+      document.body.removeEventListener('click', handleShowSider);
+    };
+  }, [state.showSider]);
 
   useEffect(() => {
     const getViews = async () => {

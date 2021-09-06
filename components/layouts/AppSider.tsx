@@ -9,6 +9,7 @@ import { Button, Input, Modal, notification } from 'antd';
 import { delCategory, postCategory } from '../../fetch';
 import { AppContext } from '../../pages/_app';
 import { useGlobalState } from '../../hooks';
+import axios from 'axios';
 
 const App = styled(Sider)<{ show?: string }>`
   ${({ show, theme }) =>
@@ -71,12 +72,12 @@ const getAllLength = (category: Categories[]): number => {
   return res;
 };
 
-const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
-  const [allPost, setAllPost] = useState(getAllLength(categories) || 0);
+const AppSider = () => {
+  const [allPost, setAllPost] = useState(0);
   const { showSider } = useContext(AppContext);
   const [categoryName, setCategoryName] = useState('');
   const [add, setAdd] = useState(false);
-  const [categoryList, setCategoryList] = useState<Categories[]>(categories);
+  const [categoryList, setCategoryList] = useState<Categories[]>([]);
   const [delCategories, setDelCategories] = useState(false);
   const handleShowingAdd = useCallback(() => {
     setAdd((prev) => !prev);
@@ -125,9 +126,12 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
   }, []);
 
   useEffect(() => {
-    setCategoryList(categories);
-    setAllPost(getAllLength(categories));
-  }, [categories]);
+    (async () =>
+      await axios.get('/category').then((res) => {
+        setCategoryList(res.data);
+        setAllPost(getAllLength(res.data));
+      }))();
+  }, []);
 
   const CategoryLists = ({ categoryList }: { categoryList: Categories[] }) => {
     return (

@@ -56,7 +56,8 @@ const NavBtn = styled.div`
 
 interface Props {
   handleLogout: () => void;
-  handleShowSider: () => void;
+  // eslint-disable-next-line no-unused-vars
+  handleShowSider: (e: any) => void;
   showSider?: boolean;
 }
 

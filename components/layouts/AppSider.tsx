@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import Sider from 'antd/lib/layout/Sider';
@@ -11,38 +11,36 @@ import { AppContext } from '../../pages/_app';
 import { useGlobalState } from '../../hooks';
 
 const App = styled(Sider)<{ show?: string }>`
-  background-color: #ffffff;
-  padding: 1em;
-  margin-top: 1em;
-
-  ${({ show }) =>
+  ${({ show, theme }) =>
     show === 'true'
       ? css`
           position: fixed;
           left: 0;
-          top: 0;
-          margin-top: 90px;
+          top: 64px;
+          width: 100px;
+          height: 100vh;
+          background-color: #ffffff;
+          padding: 1em;
+          ul {
+            li {
+              color: ${theme.black};
+              cursor: pointer;
+              font-size: 16px;
+              line-height: 32px;
+              list-style: none;
+              @media all and (max-width: 540px) {
+                font-size: 14px !important;
+                line-height: 30px;
+              }
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
         `
       : css`
           display: none;
         `}
-
-  ul {
-    li {
-      cursor: pointer;
-      font-size: 18px;
-      list-style: none;
-      line-height: 38px;
-      color: #959595;
-      @media all and (max-width: 540px) {
-        font-size: 16px !important;
-        line-height: 34px;
-      }
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
 
   @media all and (max-width: 540px) {
     ${({ show }) =>
@@ -50,9 +48,8 @@ const App = styled(Sider)<{ show?: string }>`
         ? css`
             display: block;
             position: fixed;
-            right: 0;
-            top: 0;
-            margin-top: 90px;
+            left: 0;
+            top: 64px;
           `
         : css`
             display: none;
@@ -118,43 +115,45 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
         notification.success({
           message: `${cate} 제거 성공`,
         });
+        setCategoryList((prev) => prev.filter((lst) => lst._id !== id));
       },
     });
-    setCategoryList((prev) => prev.filter((lst) => lst._id !== id));
   }, []);
 
   const handleDelete = useCallback(() => {
     setDelCategories((prev) => !prev);
   }, []);
 
-  const CategoryLists = () => {
+  useEffect(() => {
+    setCategoryList(categories);
+  }, [categories]);
+
+  const CategoryLists = ({ categoryList }: { categoryList: Categories[] }) => {
     return (
       <>
         {categoryList.map((list) => (
-          <>
-            <div key={list._id}>
-              {delCategories ? (
+          <div key={list._id}>
+            {delCategories ? (
+              <li>
+                <DeleteOutlined
+                  data-id={list._id}
+                  data-cate={list.category}
+                  onClick={handleSelectForDel}
+                  style={{
+                    marginRight: '3px',
+                    color: 'red',
+                  }}
+                ></DeleteOutlined>
+                {list.category} ({list.post.length})
+              </li>
+            ) : (
+              <Link href={`/${list.category}`} key={list._id}>
                 <li>
-                  <DeleteOutlined
-                    data-id={list._id}
-                    data-cate={list.category}
-                    onClick={handleSelectForDel}
-                    style={{
-                      marginRight: '3px',
-                      color: 'red',
-                    }}
-                  ></DeleteOutlined>
                   {list.category} ({list.post.length})
                 </li>
-              ) : (
-                <Link href={`/${list.category}`} key={list._id}>
-                  <li>
-                    {list.category} ({list.post.length})
-                  </li>
-                </Link>
-              )}
-            </div>
-          </>
+              </Link>
+            )}
+          </div>
         ))}
       </>
     );
@@ -167,7 +166,7 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
           <Link href="/">
             <li>All ({allPost})</li>
           </Link>
-          <CategoryLists />
+          <CategoryLists categoryList={categoryList} />
         </ul>
         {add && (
           <div style={{ display: 'flex' }}>

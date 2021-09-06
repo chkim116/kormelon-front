@@ -3,13 +3,14 @@ import { Anchor } from 'antd';
 import { useMemo } from 'react';
 
 const BookAnchor = styled(Anchor)`
-  max-width: 400px;
+  max-width: 200px;
   width: 100%;
   letter-spacing: -0.5px;
   padding: 0;
   margin-bottom: 36px;
   position: fixed;
   top: 100px;
+  padding: 0 1em;
   right: 0;
   background-color: ${({ theme }) => theme.white};
   .ant-anchor-ink::before {
@@ -38,7 +39,7 @@ const Anchors = ({ anchor }: Props) => {
   return (
     <>
       {a && (
-        <BookAnchor affix={false}>
+        <BookAnchor className="anchor" affix={false}>
           {a.map((word) => (
             <AnchorBox key={word}>
               <Anchor.Link

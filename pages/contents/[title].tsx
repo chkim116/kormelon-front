@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import ContentForm from '../../components/layouts/ContentForm';
 import { Button, Modal, notification } from 'antd';
@@ -56,7 +56,7 @@ const Contents = ({ post, anchor }: Props) => {
   const { showSider } = useContext(AppContext);
   const [user] = useGlobalState('auth');
   const router = useRouter();
-
+  const thumbRef = useRef<HTMLDivElement>(null);
   const handleEdit = useCallback(() => {
     router.push(`/upload?title=${post?.title}&edit=true`);
   }, [post, router]);
@@ -77,6 +77,18 @@ const Contents = ({ post, anchor }: Props) => {
     });
   }, [post, router]);
 
+  const handleOpacityAnchor = useCallback(() => {
+    const thumbEl = thumbRef.current;
+    if (thumbEl) {
+      const height = thumbEl.clientHeight;
+      const opa = 1 - (height - scrollY) / height;
+      const anchor = document.querySelector('.anchor') as HTMLDivElement;
+      if (anchor) {
+        anchor.style.opacity = `${opa}`;
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (categories) {
       return;
@@ -92,6 +104,13 @@ const Contents = ({ post, anchor }: Props) => {
     if (nodes) {
       highlights(nodes);
     }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('scroll', handleOpacityAnchor);
+    return () => {
+      document.removeEventListener('scroll', handleOpacityAnchor);
+    };
   }, []);
 
   if (loading) {
@@ -117,7 +136,7 @@ const Contents = ({ post, anchor }: Props) => {
       />
       <>
         <Content>
-          <ContentThumb url={post.thumb}>
+          <ContentThumb url={post.thumb} ref={thumbRef}>
             <img src={post.thumb} alt="썸네일 이미지" />
           </ContentThumb>
           {user?.admin && (
@@ -133,8 +152,8 @@ const Contents = ({ post, anchor }: Props) => {
           <AppContents>
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
           </AppContents>
+          <Anchors anchor={anchor} />
         </Content>
-        <Anchors anchor={anchor} />
       </>
     </>
   );

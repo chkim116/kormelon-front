@@ -212,7 +212,7 @@ const Upload = () => {
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />
         </Item>
 
-        <MarkEditor value={prevDesc} title={form?.title || ''} setDesc={setDesc} desc={desc} />
+        <MarkEditor prevDesc={prevDesc} title={form?.title || ''} setDesc={setDesc} />
         {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
 
         {tags.map((tag) => (

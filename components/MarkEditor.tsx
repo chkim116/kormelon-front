@@ -125,15 +125,16 @@ export const ContentDetail = styled.div`
 `;
 
 type Props = {
-  value?: string;
+  prevDesc?: string;
   title?: string;
   setDesc: React.Dispatch<React.SetStateAction<string>>;
-  desc: string;
 };
 
-const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
+const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
+  const [txt, setTxt] = useState(prevDesc || '');
+  const [range, setRange] = useState({ selStart: 0, selEnd: 0 });
   const editor = useRef<HTMLTextAreaElement>(null);
 
   // 에디터 입력시
@@ -141,24 +142,39 @@ const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
     const edit = editor.current as HTMLTextAreaElement;
     setStartText(edit.selectionStart);
     setEndText(edit.selectionEnd);
-    setDesc(e.target.value);
+    setTxt(e.target.value);
   }, []);
 
   // 툴바버튼 클릭시 이벤트
   const onHeader = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const { toolbar, lnline } = e.currentTarget.dataset;
-      const newText = addMark(desc, startText, endText, toolbar as string, lnline as string);
+      const newText = addMark(txt, startText, endText, toolbar as string, lnline as string);
       const edit = editor.current;
 
       if (edit) {
-        const end = endText;
-        edit.setSelectionRange(0, end);
-        edit.focus();
-        setDesc(newText);
+        const len = toolbar?.length || 0;
+        setTxt(newText);
+        if (toolbar === '```') {
+          setRange({ selStart: startText + len + 'js'.length + 1, selEnd: startText + len + 'js'.length + 1 });
+          return;
+        }
+        if (toolbar === '**') {
+          setRange({ selStart: startText + len, selEnd: startText + len });
+          return;
+        }
+        if (toolbar === '_') {
+          setRange({ selStart: startText + len, selEnd: startText + len });
+          return;
+        }
+        if (toolbar === '[]()') {
+          setRange({ selStart: startText + len - 1, selEnd: startText + len - 1 });
+          return;
+        }
+        setRange({ selStart: endText + len + 1, selEnd: endText + len + 1 });
       }
     },
-    [desc, startText, endText, editor.current],
+    [txt, startText, endText, editor.current],
   );
 
   // 툴바가 이미지일시
@@ -175,11 +191,11 @@ const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
             'Content-Type': 'multipart/form-data',
           },
         }).then((res) => res.data);
-        setDesc(() => addMark(desc, startText, endText, 'img', '', img));
+        setTxt(() => addMark(txt, startText, endText, 'img', '', img));
       };
       postImg();
     },
-    [desc, startText, endText],
+    [txt, startText, endText],
   );
 
   // 글자를 드래그했을 시 시작, 끝을 저장
@@ -199,18 +215,78 @@ const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
   }, []);
 
   // 상하좌우 키보드 이벤트
-  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       const edit = editor.current as HTMLTextAreaElement;
-      setStartText(edit.selectionStart ? edit.selectionStart - 1 : 0);
-      setEndText(edit.selectionEnd);
-    }
-  }, []);
+      if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
+        setStartText(edit.selectionStart ? edit.selectionStart - 1 : 0);
+        setEndText(edit.selectionEnd);
+      }
+
+      //   https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
+
+      // Tab key?
+      if (e.keyCode === 9) {
+        e.preventDefault();
+        // selection?
+        if (edit.selectionStart == edit.selectionEnd) {
+          // These single character operations are undoable
+          if (!e.shiftKey) {
+            document.execCommand('insertText', false, '\t');
+          } else {
+            const text = edit.value;
+            if (edit.selectionStart > 0 && text[edit.selectionStart - 1] == '\t') {
+              document.execCommand('delete');
+            }
+          }
+        } else {
+          // Block indent/unindent trashes undo stack.
+          // Select whole lines
+          let selStart = edit.selectionStart;
+          let selEnd = edit.selectionEnd;
+          const text = edit.value;
+          while (selStart > 0 && text[selStart - 1] !== '\n') selStart--;
+          while (selEnd > 0 && text[selEnd - 1] !== '\n' && selEnd < text.length) selEnd++;
+
+          // Get selected text
+          let lines = text.substr(selStart, selEnd - selStart).split('\n');
+
+          // Insert tabs
+          for (let i = 0; i < lines.length; i++) {
+            // Don't indent last line if cursor at start of line
+            if (i == lines.length - 1 && lines[i].length === 0) continue;
+
+            // Tab or Shift+Tab?
+            if (e.shiftKey) {
+              if (lines[i].startsWith('\t')) lines[i] = lines[i].substr(1);
+              else if (lines[i].startsWith('    ')) lines[i] = lines[i].substr(4);
+            } else lines[i] = '\t' + lines[i];
+          }
+
+          const line = lines.join('\n');
+          // Update the text area
+          setTxt(text.substr(0, selStart) + line + text.substr(selEnd));
+          setRange({ selStart, selEnd: selStart + line.length });
+        }
+        return false;
+      }
+    },
+    [txt],
+  );
 
   useEffect(() => {
+    const edit = editor.current;
+    if (!edit) return;
+    const { selStart, selEnd } = range;
+    edit.setSelectionRange(selStart, selEnd);
+    edit.focus();
+  }, [range]);
+
+  useEffect(() => {
+    setDesc(txt);
     const nodes = document.querySelectorAll('pre');
     highlights(nodes);
-  }, [desc || value]);
+  }, [txt]);
 
   return (
     <WriteContainer>
@@ -221,8 +297,9 @@ const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
           onKeyDown={onKeyDown}
           onSelect={onSelect}
           ref={editor}
-          value={value || desc}
+          value={txt}
           onChange={onChange}
+          spellCheck={false}
         ></Editor>
       </EditorContainer>
 
@@ -230,7 +307,7 @@ const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
         <h1>{title ? title : '문서 제목을 입력바랍니다.'}</h1>
         <ContentDetail
           dangerouslySetInnerHTML={{
-            __html: marked(desc),
+            __html: marked(txt),
           }}
         ></ContentDetail>
       </Preview>

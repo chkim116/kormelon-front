@@ -4,11 +4,12 @@ import axios from 'axios';
 import ContentList from '../components/ContentList';
 import { useRouter } from 'next/router';
 import AppContents from '../components/layouts/AppContents';
-import { Post, AppTitle } from '.';
+import { Post } from '.';
 import AppLoading from '../components/layouts/AppLoading';
 import AppEmpty from '../components/layouts/AppEmpty';
 import { useInfiniteScroll } from '../hooks';
 import { NextSeo } from 'next-seo';
+import AppTitle from '../components/layouts/AppTitle';
 
 interface Props {
   post: Post[];
@@ -61,7 +62,7 @@ const Category = ({ post, postCount }: Props) => {
         description={`${router.query.categories}에 대한 생각`}
         canonical="https://www.kormelon.com"
       />
-      <AppTitle>{router.query?.categories}</AppTitle>
+      <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents categories={categories}>
         <>
           <ContentList lastElement={lastElement} viewPort={viewPort} postList={post}></ContentList>

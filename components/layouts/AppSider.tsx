@@ -16,7 +16,7 @@ const App = styled(Sider)<{ show?: string }>`
       ? css`
           position: fixed;
           left: 0;
-          top: 64px;
+          top: 53px;
           width: 100px;
           height: 100vh;
           background-color: #ffffff;
@@ -49,7 +49,7 @@ const App = styled(Sider)<{ show?: string }>`
             display: block;
             position: fixed;
             left: 0;
-            top: 64px;
+            top: 53px;
           `
         : css`
             display: none;
@@ -72,7 +72,7 @@ const getAllLength = (category: Categories[]): number => {
 };
 
 const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
-  const allPost = useState(getAllLength(categories) || 0);
+  const [allPost, setAllPost] = useState(getAllLength(categories) || 0);
   const { showSider } = useContext(AppContext);
   const [categoryName, setCategoryName] = useState('');
   const [add, setAdd] = useState(false);
@@ -126,6 +126,7 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
 
   useEffect(() => {
     setCategoryList(categories);
+    setAllPost(getAllLength(categories));
   }, [categories]);
 
   const CategoryLists = ({ categoryList }: { categoryList: Categories[] }) => {

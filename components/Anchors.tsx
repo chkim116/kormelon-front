@@ -21,7 +21,7 @@ const BookAnchor = styled(Anchor)`
 `;
 
 const AnchorBox = styled.div`
-  font-size: 0.8em;
+  font-size: 1em;
   color: ${(props) => props.theme.black};
 `;
 

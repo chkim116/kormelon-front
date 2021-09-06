@@ -11,6 +11,19 @@ const ContentContainer = styled.div`
   justify-content: center;
   grid-template-columns: repeat(3, 300px);
   gap: 2em;
+
+  @media all and (max-width: 1000px) {
+    grid-template-columns: repeat(2, 300px);
+  }
+
+  @media all and (max-width: 700px) {
+    grid-template-columns: repeat(1, 400px);
+  }
+
+  @media all and (max-width: 500px) {
+    grid-template-columns: repeat(1, 300px);
+    gap: 1em;
+  }
 `;
 
 const ContentLayout = styled.div`
@@ -44,7 +57,7 @@ const ContentImage = styled.div`
   text-align: center;
   img {
     width: 100%;
-    min-height: 250px;
+    min-height: 300px;
     object-fit: contain;
   }
 `;

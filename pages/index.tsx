@@ -3,22 +3,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import ContentList from '../components/ContentList';
 import { Categories } from './[categories]';
-import Title from 'antd/lib/typography/Title';
 import AppContents from '../components/layouts/AppContents';
-import styled from '@emotion/styled';
 import { useInfiniteScroll } from '../hooks';
 import AppLoading from '../components/layouts/AppLoading';
 import { NextSeo } from 'next-seo';
-
-export const AppTitle = styled(Title)`
-  margin: 95px 0;
-  padding: 0.75em 0 1.5em 0;
-  display: flex;
-  align-items: center;
-  color: #5f9ea0 !important;
-  justify-content: center;
-  border-bottom: 1px solid #dbdbdb;
-`;
+import AppTitle from '../components/layouts/AppTitle';
 
 export interface Post {
   _id: string;
@@ -75,7 +64,7 @@ export default function Home({ post, postCount }: Props) {
   return (
     <>
       <NextSeo title="개발자의 생각창고" description="개발자 김창회의 블로그" canonical="https://www.kormelon.com" />
-      <AppTitle>all</AppTitle>
+      <AppTitle title="all"></AppTitle>
       <AppContents categories={categories}>
         <>
           <ContentList viewPort={viewPort} postList={postList} lastElement={lastElement}></ContentList>

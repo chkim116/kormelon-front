@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400&display=swap'); /* h 태그 */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap'); /* pre 태그 */
 @import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
 
 #content {
   width: 100%;
@@ -57,8 +57,8 @@
 }
 
 #content pre {
-  font-family: 'Fira Sans', sans-serif;
-  letter-spacing: 0.01em;
+  font-family: 'Fira Code', monospace;
+  letter-spacing: -0.06em;
 }
 
 #content img {

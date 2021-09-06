@@ -2,8 +2,6 @@ import Link from 'next/link';
 import React from 'react';
 import { Post } from '../pages';
 import styled from '@emotion/styled';
-
-import { Picsum } from 'picsum-photos';
 import AppTags from './layouts/AppTags';
 
 const ContentContainer = styled.div`
@@ -64,7 +62,13 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
           <Link key={index} href={`/contents/${post.title}`}>
             <ContentLayout ref={postList.length === index + 1 ? lastElement : null}>
               <ContentImage>
-                <img src={post.thumb || Picsum.url()} alt={`${post.title} 썸네일`} />
+                <img
+                  src={
+                    post.thumb ||
+                    'https://assets-kormelon.s3.ap-northeast-2.amazonaws.com/img/roonz-2xEQDxB0ss4-unsplash.jpg'
+                  }
+                  alt={`${post.title} 썸네일`}
+                />
               </ContentImage>
               <div>
                 <Link href={`/${post.category}`}>{post.category}</Link>

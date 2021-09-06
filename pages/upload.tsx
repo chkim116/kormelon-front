@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import QuillEditor from '../components/QuillEditor';
 import styled from '@emotion/styled';
 import { Button, Form, Input, notification, Select, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -8,12 +7,14 @@ import { getCate, postFetcher } from '../fetch';
 import { Categories } from './[categories]';
 import { Post } from '.';
 import axios from 'axios';
+import MarkEditor from '../components/MarkEditor';
 
 const { Item } = Form;
 
 const Container = styled.div`
   margin: 120px auto 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
+  width: 100%;
 
   .upload__header {
     display: flex;
@@ -75,9 +76,9 @@ const Upload = () => {
     setForm(() => all);
   }, []);
 
-  const handleQuillChange = useCallback((values: any) => {
-    setDesc(() => values);
-  }, []);
+  // const handleQuillChange = useCallback((values: any) => {
+  //   setDesc(() => values);
+  // }, []);
 
   const handleTags = useCallback(() => {
     if (form?.tags) {
@@ -200,7 +201,8 @@ const Upload = () => {
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />
         </Item>
 
-        <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} />
+        <MarkEditor value={prevDesc} title={form?.title || ''} />
+        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
 
         {tags.map((tag) => (
           <Tag key={tag} onClick={handleDeleteTags}>

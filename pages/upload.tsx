@@ -25,7 +25,7 @@ const Container = styled.div`
   }
 
   .title__container {
-    width: 500px;
+    width: 90%;
     input {
       border: none;
       border-bottom: 1px solid #dbdbdb;

@@ -5,7 +5,7 @@ body {
   margin: 0;
   box-sizing: border-box;
   font-family: -apple-system, 'Noto Sans KR', Sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
   color: #212729;
   line-height: 1.65em;
@@ -13,16 +13,6 @@ body {
   word-break: keep-all;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-h1 {
-  font-size: 30px !important;
-}
-
-p {
-  font-size: 1.125rem;
-  line-height: 1.65em;
-  margin: 0 !important;
 }
 
 /* .hljs-string {
@@ -48,14 +38,3 @@ p {
 .hljs-tag {
   color: #333;
 } */
-
-@media all and (max-width: 540px) {
-  h1 {
-    font-size: 24px !important;
-  }
-
-  p {
-    margin: 0 !important;
-    font-size: 1.125rem;
-  }
-}

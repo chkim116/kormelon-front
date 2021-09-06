@@ -60,12 +60,6 @@ const Preview = styled.div`
     background: ${(props) => props.theme.gray};
     border-radius: 10px;
   }
-  & > h1 {
-    padding-bottom: 6px;
-    margin-bottom: 6px;
-    border-bottom: 1px solid ${(props) => props.theme.border};
-    font-size: 38px;
-  }
 
   img {
     display: block;
@@ -74,53 +68,6 @@ const Preview = styled.div`
   }
   @media all and (max-width: ${(props) => props.theme.desktop}) {
     display: none;
-  }
-`;
-
-export const ContentDetail = styled.div`
-  width: 100%;
-  min-height: 300px;
-  font-size: 1.125rem;
-  line-height: 1.7;
-  word-break: keep-all;
-  letter-spacing: -0.5px;
-  overflow-wrap: break-word;
-  h1 {
-    position: relative;
-    margin-top: 40px;
-    padding-bottom: 12px;
-    &:after {
-      width: 30px;
-      height: 1px;
-      content: '';
-      position: absolute;
-      bottom: 0px;
-      left: 0;
-      border-bottom: 2px solid ${(props) => props.theme.border};
-    }
-  }
-
-  blockquote {
-    border-left: 2px solid ${(props) => props.theme.black};
-    padding-left: 10px;
-    font-size: 20px;
-    font-weight: 500;
-    margin: 5px 0;
-  }
-
-  a {
-    &:hover {
-      color: #1890ff;
-    }
-  }
-  img {
-    max-width: 100%;
-    display: block;
-    margin: 30px auto;
-  }
-
-  @media all and (max-width: ${({ theme }) => theme.desktop}) {
-    font-size: 1rem;
   }
 `;
 
@@ -304,12 +251,13 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
       </EditorContainer>
 
       <Preview>
-        <h1>{title ? title : '문서 제목을 입력바랍니다.'}</h1>
-        <ContentDetail
+        <div className="content-title">{title ? title : '문서 제목을 입력바랍니다.'}</div>
+        <div
+          id="content"
           dangerouslySetInnerHTML={{
             __html: marked(txt || prevDesc || ''),
           }}
-        ></ContentDetail>
+        ></div>
       </Preview>
     </WriteContainer>
   );

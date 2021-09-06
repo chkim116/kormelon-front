@@ -10,7 +10,7 @@
   font-family: 'Noto Sans KR', serif;
   font-weight: 300;
   color: #212729;
-  line-height: 1.65em;
+  line-height: 1.55em;
   letter-spacing: -0.02em;
   word-break: keep-all;
   -webkit-font-smoothing: antialiased;
@@ -24,6 +24,7 @@
   border-bottom: 1px dashed #dbdbdc;
   font-family: 'Nanum Myeongjo', serif;
   font-size: 3rem;
+  line-height: 3rem;
 }
 
 #content h1 {

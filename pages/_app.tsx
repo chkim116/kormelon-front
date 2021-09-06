@@ -15,6 +15,8 @@ import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from '../styles/theme';
+import router from 'next/router';
+import AppLoading from '../components/layouts/AppLoading';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -27,6 +29,7 @@ axios.defaults.withCredentials = true;
 export const AppContext = createContext(initial);
 
 function MyApp({ Component, pageProps, user }: AppProps) {
+  const [isglobalLoading, setIsGlobalLoading] = useState(false);
   const [state, dispatch] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
@@ -47,9 +50,19 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     });
   };
 
-  const handleShowSider = useCallback(() => {
+  const handleShowSider = useCallback((e) => {
+    e.stopPropagation();
     dispatch({ type: 'SHOWING' });
   }, []);
+
+  useEffect(() => {
+    if (state.showSider) {
+      document.body.addEventListener('click', handleShowSider);
+    }
+    return () => {
+      document.body.removeEventListener('click', handleShowSider);
+    };
+  }, [state.showSider]);
 
   useEffect(() => {
     const getViews = async () => {
@@ -73,19 +86,41 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     }
   }, [user]);
 
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => {
+      setIsGlobalLoading(true);
+    });
+    router.events.on('routeChangeComplete', () => setIsGlobalLoading(false));
+    router.events.on('routeChangeError', () => setIsGlobalLoading(false));
+
+    return () => {
+      router.events.off('routeChangeStart', () => {});
+      router.events.off('routeChangeComplete', () => {});
+      router.events.off('routeChangeError', () => {});
+    };
+  }, []);
+
   useScrollTop();
 
   return (
     <>
       <DefaultSeo
-        // TODO: 이미지 태그 추가하기!!
+        title={'개발자의 생각창고'}
+        description={`개발은 즐겁게`}
+        canonical="https://www.kormelon.com/"
         openGraph={{
           title: '개발자의 생각창고',
-          description: '개발은 즐겁게',
+          description: '개발은 재밌게 해야죠?',
           type: 'blog',
           locale: 'ko_KR',
           url: 'https://www.kormelon.com/',
           site_name: '생각창고',
+          images: [
+            {
+              url: `https://images.unsplash.com/photo-1616812757130-aca5451b0243?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80`,
+              alt: `생각창고`,
+            },
+          ],
         }}
         twitter={{
           handle: '@handle',
@@ -107,21 +142,22 @@ function MyApp({ Component, pageProps, user }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={state}>
-          <div
-            style={{
-              position: 'fixed',
-              left: 0,
-              zIndex: 999,
-              fontSize: 8,
-            }}
-          >
-            Today{view.views} <span>Total{view.totalView}</span>
-          </div>
           <AppLayouts>
+            <>{isglobalLoading && <AppLoading scroll />}</>;
             <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
             <Component {...pageProps} />
             <AppFooter>
-              <div>KimChanghoe &copy; 2021</div>
+              <>
+                <div>KimChanghoe &copy; 2021</div>
+                <div>
+                  <small>
+                    Today <span>{view.views}</span>{' '}
+                    <span>
+                      Total <span>{view.totalView}</span>
+                    </span>
+                  </small>
+                </div>
+              </>
             </AppFooter>
           </AppLayouts>
           <AppTop></AppTop>

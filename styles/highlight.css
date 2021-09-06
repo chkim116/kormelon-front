@@ -9,7 +9,7 @@
 
 /* const, let, etc */
 .hljs-keyword {
-  color: #ae81ff;
+  color: #a87afd;
 }
 
 /*  null, undefined, boolean .. etc */
@@ -35,7 +35,7 @@
 }
 
 .hljs-built_in {
-  color: #6184c6;
+  color: #fcc14c;
 }
 
 .hljs-regexp {

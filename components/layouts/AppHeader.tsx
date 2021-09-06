@@ -10,9 +10,8 @@ import { useGlobalState } from '../../hooks';
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
   width: 100%;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
   height: ${({ scaleheight }) => (scaleheight === 'true' ? '65px' : '55px')};
-  border-bottom: 1px solid #dbdbdb;
   display: flex;
   align-items: center;
   font-size: 1.125rem;
@@ -26,13 +25,14 @@ const App = styled(Header)<{ scaleheight: string }>`
   }
 
   .header__container {
-    max-width: 1000px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
     div {
-      cursor: pointer;
+      div {
+        cursor: pointer;
+      }
     }
   }
 
@@ -45,18 +45,19 @@ const App = styled(Header)<{ scaleheight: string }>`
   }
 `;
 
-const NavBtn = styled(Button)`
-  position: absolute;
-  right: 20px;
-  top: 10px;
-  @media all and (max-width: 540px) {
-    top: 70px;
+const NavBtn = styled.div`
+  display: flex;
+  align-items: center;
+  button {
+    font-size: 1em;
+    margin-right: 1em;
   }
 `;
 
 interface Props {
   handleLogout: () => void;
-  handleShowSider: () => void;
+  // eslint-disable-next-line no-unused-vars
+  handleShowSider: (e: any) => void;
   showSider?: boolean;
 }
 
@@ -96,9 +97,14 @@ const AppHeader = ({ handleLogout, handleShowSider, showSider }: Props) => {
   return (
     <App scaleheight={scaleHeight.toString()}>
       <div className="header__container">
-        <Link href="/">
-          <div>개발자의 생각창고</div>
-        </Link>
+        <NavBtn>
+          <Button type="text" size="large" onClick={handleShowSider}>
+            {showSider ? <CloseOutlined /> : <MenuOutlined />}
+          </Button>
+          <Link href="/">
+            <div>개발자의 생각창고</div>
+          </Link>
+        </NavBtn>
         <div className="header__login">
           {
             isUser?.id ? (
@@ -122,9 +128,6 @@ const AppHeader = ({ handleLogout, handleShowSider, showSider }: Props) => {
             // )
           }
         </div>
-        <NavBtn type="ghost" size="large" onClick={handleShowSider}>
-          {showSider ? <CloseOutlined /> : <MenuOutlined />}
-        </NavBtn>
       </div>
     </App>
   );

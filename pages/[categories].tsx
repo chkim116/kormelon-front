@@ -4,11 +4,12 @@ import axios from 'axios';
 import ContentList from '../components/ContentList';
 import { useRouter } from 'next/router';
 import AppContents from '../components/layouts/AppContents';
-import { Post, AppTitle } from '.';
+import { Post } from '.';
 import AppLoading from '../components/layouts/AppLoading';
 import AppEmpty from '../components/layouts/AppEmpty';
 import { useInfiniteScroll } from '../hooks';
-import { NextSeo } from 'next-seo';
+import AppTitle from '../components/layouts/AppTitle';
+import SEO from '../seo';
 
 interface Props {
   post: Post[];
@@ -24,27 +25,27 @@ const Category = ({ post, postCount }: Props) => {
   const [postList, setPostList] = useState(post);
   const [isLoading, setIsLoading] = useState(false);
   const viewPort = useRef<any>(null);
-  console.log('d');
+
   const data = {
     viewPort: viewPort.current,
     isLoading,
     limit: Math.ceil(postCount / 6),
   };
   const [lastElement, page] = useInfiniteScroll(data);
-  const [categories, setCategories] = useState();
-
-  useEffect(() => {
-    (async () => await axios.get('/category').then((res) => setCategories(res.data)))();
-  }, []);
 
   useEffect(() => {
     if (page <= 1) return;
+    if (page > data.limit) return;
     setIsLoading(true);
     pagePost(router.query.categories as string, page as number).then((res) => {
       setPostList([...postList, ...res.data.post]);
       setIsLoading(false);
     });
   }, [page]);
+
+  useEffect(() => {
+    setPostList(post);
+  }, [post]);
 
   if (router.isFallback) {
     return <AppLoading />;
@@ -56,15 +57,11 @@ const Category = ({ post, postCount }: Props) => {
 
   return (
     <>
-      <NextSeo
-        title="개발자의 생각창고"
-        description={`${router.query.categories}에 대한 생각`}
-        canonical="https://www.kormelon.com"
-      />
-      <AppTitle>{router.query?.categories}</AppTitle>
-      <AppContents categories={categories}>
+      <SEO desc={`${router.query.categories}에 대한 생각`} />
+      <AppTitle title={router.query?.categories as string}></AppTitle>
+      <AppContents>
         <>
-          <ContentList lastElement={lastElement} viewPort={viewPort} postList={post}></ContentList>
+          <ContentList lastElement={lastElement} viewPort={viewPort} postList={postList}></ContentList>
           {isLoading && <AppLoading scroll={true} />}
         </>
       </AppContents>
@@ -85,6 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post: Props = await axios
     .get(`/post?filter=${encodeURI(params?.categories as string)}`)
     .then((res) => res.data);
+  console.log(post);
 
   return {
     props: { post: post.post, postCount: post.postCount },

@@ -25,18 +25,20 @@ interface Props {
 
 const ContentForm = ({ date, title, p, tags = [] }: Props) => {
   return (
-    <ContentLayout>
-      <Text>{date}</Text>
-      <div className="content-title">{title}</div>
-      <div>
-        {tags.map((tag) => (
-          <Link href={`/search/${tag}`} key={tag}>
-            <AppTags>{tag}</AppTags>
-          </Link>
-        ))}
-      </div>
-      <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />
-    </ContentLayout>
+    <>
+      <ContentLayout>
+        <Text>{date}</Text>
+        <div className="content-title">{title}</div>
+        <div>
+          {tags.map((tag) => (
+            <AppTags key={tag}>
+              <Link href={`/search/${tag}`}>{tag}</Link>
+            </AppTags>
+          ))}
+        </div>
+        <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />
+      </ContentLayout>
+    </>
   );
 };
 

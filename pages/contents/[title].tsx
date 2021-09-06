@@ -28,6 +28,23 @@ const ContentEditBtn = styled.div`
   width: 120px;
 `;
 
+const ContentThumb = styled.div<{ url: string }>`
+  background-attachment: fixed;
+  position: relative;
+  top: 75px;
+  max-height: 500px;
+  height: 100%;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  img {
+    height: 100%;
+    max-height: 500px;
+  }
+`;
+
 interface Props {
   post: Post;
   anchor: string[];
@@ -99,24 +116,27 @@ const Contents = ({ post, anchor }: Props) => {
         image={post.thumb}
         url={`https://www.kormelon.com/contents/${post.title}`}
       />
-      <AppContents categories={categories}>
-        <>
-          <Content>
-            {user?.admin && (
-              <ContentEditBtn>
-                <Button type="link" size="large" onClick={handleEdit}>
-                  <EditOutlined />
-                </Button>
-                <Button type="link" size="large" onClick={handleDelete}>
-                  <DeleteOutlined />
-                </Button>
-              </ContentEditBtn>
-            )}
+      <>
+        <Content>
+          <ContentThumb url={post.thumb}>
+            <img src={post.thumb} alt="썸네일 이미지" />
+          </ContentThumb>
+          {user?.admin && (
+            <ContentEditBtn>
+              <Button type="link" size="large" onClick={handleEdit}>
+                <EditOutlined />
+              </Button>
+              <Button type="link" size="large" onClick={handleDelete}>
+                <DeleteOutlined />
+              </Button>
+            </ContentEditBtn>
+          )}
+          <AppContents categories={categories}>
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
-          </Content>
-          <Anchors anchor={anchor} />
-        </>
-      </AppContents>
+          </AppContents>
+        </Content>
+        <Anchors anchor={anchor} />
+      </>
     </>
   );
 };

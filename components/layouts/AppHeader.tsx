@@ -10,9 +10,8 @@ import { useGlobalState } from '../../hooks';
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
   width: 100%;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
   height: ${({ scaleheight }) => (scaleheight === 'true' ? '65px' : '55px')};
-  border-bottom: 1px solid #dbdbdb;
   display: flex;
   align-items: center;
   font-size: 1.125rem;

@@ -10,6 +10,10 @@ const Tag = styled.span`
   padding: 0.2em 0.6em;
   white-space: pre;
   cursor: pointer;
+
+  a {
+    color: ${({ theme }) => theme.black};
+  }
   & + & {
     margin-left: 3px;
   }
@@ -23,11 +27,7 @@ type Props = {
 };
 
 const AppTags = ({ children }: Props) => {
-  return (
-    <Tag>
-      #<>{children}</>
-    </Tag>
-  );
+  return <Tag>{children}</Tag>;
 };
 
 export default AppTags;

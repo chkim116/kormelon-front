@@ -27,7 +27,7 @@ export const useInfiniteScroll = ({ viewPort, isLoading, limit }: Props) => {
     [isLoading, viewPort, page, limit],
   );
 
-  return [lastElement, page + 1];
+  return [lastElement, page];
 };
 
 export const useScrollTop = () => {

@@ -39,6 +39,7 @@ const Category = ({ post, postCount }: Props) => {
   }, []);
 
   useEffect(() => {
+    if (page <= 1) return;
     if (page > data.limit) return;
     setIsLoading(true);
     pagePost(router.query.categories as string, page as number).then((res) => {

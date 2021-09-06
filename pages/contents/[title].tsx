@@ -4,7 +4,6 @@ import ContentForm from '../../components/layouts/ContentForm';
 import { Button, Modal, notification } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AppContents from '../../components/layouts/AppContents';
-import AppSider from '../../components/layouts/AppSider';
 import axios from 'axios';
 import { Categories } from '../[categories]';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';

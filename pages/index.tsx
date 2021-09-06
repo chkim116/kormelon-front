@@ -23,6 +23,7 @@ export const AppTitle = styled(Title)`
 export interface Post {
   _id: string;
   title: string;
+  thumb: string;
   preview: string;
   description: string;
   createDate: string;

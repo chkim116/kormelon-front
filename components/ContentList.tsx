@@ -44,6 +44,7 @@ const ContentImage = styled.div`
   text-align: center;
   img {
     width: 100%;
+    min-height: 250px;
     object-fit: contain;
   }
 `;
@@ -56,8 +57,11 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
           <Link key={index} href={`/contents/${post.title}`}>
             <ContentLayout ref={postList.length === index + 1 ? lastElement : null}>
               <ContentImage>
-                <img src={Picsum.url()} alt={`${post.title} 썸네일`} />
+                <img src={post.thumb || Picsum.url()} alt={`${post.title} 썸네일`} />
               </ContentImage>
+              <div>
+                <Link href={`/${post.category}`}>{post.category}</Link>
+              </div>
               <h3>{post.title}</h3>
               <p>{post.preview}</p>
               <p>

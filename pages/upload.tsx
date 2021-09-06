@@ -21,7 +21,8 @@ const Container = styled.div`
   }
 
   .select__container {
-    width: 120px;
+    width: 300px;
+    display: flex;
   }
 
   .title__container {
@@ -68,6 +69,7 @@ const Upload = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Categories[]>([]);
+  const [thumbPreview, setThumbPreview] = useState<string>('');
   const [prevDesc, setPrevDesc] = useState<string>();
   // 여긴 에디터일때
   const [editPost, setEditPost] = useState<Post>();
@@ -123,6 +125,7 @@ const Upload = () => {
 
       const data = {
         ...form,
+        thumb: thumbPreview,
         tags: tags,
         description: desc,
         createDate: new Date().toDateString(),
@@ -168,6 +171,26 @@ const Upload = () => {
     [desc, form, tags, router],
   );
 
+  const handleUploadThumb = useCallback((e) => {
+    const file = e.target.files[0];
+
+    const fd = new FormData();
+
+    fd.append('image', file);
+    // 이미지 api
+    const postImg = async () => {
+      return await axios
+        .post('/post/img', fd, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => setThumbPreview(res.data));
+    };
+
+    postImg();
+  }, []);
+
   useEffect(() => {
     getCate().then((res) => setCategories(res.data || []));
   }, []);
@@ -175,11 +198,12 @@ const Upload = () => {
   //  여기부턴 수정 시~
   useEffect(() => {
     if (editPost) {
-      const { title, description, tags, category, preview } = editPost;
+      const { title, description, tags, category, preview, thumb } = editPost;
       uploadForm.setFieldsValue({ title, category, preview });
       setForm(() => ({ title, category, preview, tags: '' }));
       setPrevDesc(() => description);
       setTags(() => tags);
+      setThumbPreview(() => thumb || '');
     }
   }, [uploadForm, editPost]);
 
@@ -195,18 +219,22 @@ const Upload = () => {
   return (
     <Container>
       <Form size="large" form={uploadForm} name="uploadForm" layout="horizontal" onValuesChange={handleFormChange}>
-        <div className="upload__header">
-          <Item name="category" className="select__container" required>
-            <Select bordered={false} style={{ borderBottom: '1px solid #dbdbdb' }}>
-              {categories.map((list) => (
-                <Select.Option key={list.category} value={list.category} children={list.category}></Select.Option>
-              ))}
-            </Select>
-          </Item>
-          <Item className="title__container" name="title" required>
-            <Input placeholder="제목입력" />
-          </Item>
-        </div>
+        <Item label="썸네일">
+          <div>
+            <img src={thumbPreview} alt="이 글의 썸네일이 될 사진" width={150} height={150} />
+            <input type="file" accept="image/*" onChange={handleUploadThumb} />
+          </div>
+        </Item>
+        <Item name="category" className="select__container" label="카테고리" required>
+          <Select bordered={false} style={{ borderBottom: '1px solid #dbdbdb' }}>
+            {categories.map((list) => (
+              <Select.Option key={list.category} value={list.category} children={list.category}></Select.Option>
+            ))}
+          </Select>
+        </Item>
+        <Item className="title__container" name="title" label="제목" required>
+          <Input placeholder="제목입력" />
+        </Item>
 
         <Item name="preview">
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />

@@ -94,6 +94,17 @@ const Upload = () => {
     },
     [tags],
   );
+  // 제출 시 텍스트를 html로 파싱하여 제출합니다.
+  //   const onSubmit = useCallback(() => {
+  //     const submit = {
+  //       title,
+  //       description: desc,
+  //       content: text,
+  //       creator: user._id ? user._id : '',
+  //       stack,
+  //       secret,
+  //     };
+  //   }, [text, title]);
 
   const handleFinish = useCallback(
     (e) => {
@@ -163,15 +174,6 @@ const Upload = () => {
 
   //  여기부턴 수정 시~
   useEffect(() => {
-    if (router.query.edit) {
-      const { title } = router.query;
-      const post = async () =>
-        await axios.get(`/post/${encodeURIComponent(title as string)}`).then((res) => setEditPost(() => res.data));
-      post();
-    }
-  }, [router.query]);
-
-  useEffect(() => {
     if (editPost) {
       const { title, description, tags, category, preview } = editPost;
       uploadForm.setFieldsValue({ title, category, preview });
@@ -180,6 +182,15 @@ const Upload = () => {
       setTags(() => tags);
     }
   }, [uploadForm, editPost]);
+
+  useEffect(() => {
+    if (router.query.edit) {
+      const { title } = router.query;
+      const post = async () =>
+        await axios.get(`/post/${encodeURIComponent(title as string)}`).then((res) => setEditPost(() => res.data));
+      post();
+    }
+  }, [router.query]);
 
   return (
     <Container>
@@ -201,7 +212,7 @@ const Upload = () => {
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />
         </Item>
 
-        <MarkEditor value={prevDesc} title={form?.title || ''} />
+        <MarkEditor value={prevDesc} title={form?.title || ''} setDesc={setDesc} desc={desc} />
         {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
 
         {tags.map((tag) => (

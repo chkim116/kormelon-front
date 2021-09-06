@@ -1,10 +1,10 @@
-import { title } from 'process';
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import ToolbarComponent from './write/ToolbarComponent';
 import Axios from 'axios';
 import styled from '@emotion/styled';
 import { addMark } from '../lib/toolbar';
 import marked from 'marked';
+import { highlights } from '../lib/highlight';
 
 const WriteContainer = styled.div`
   width: 100%;
@@ -75,10 +75,6 @@ const Preview = styled.div`
   @media all and (max-width: ${(props) => props.theme.desktop}) {
     display: none;
   }
-
-  pre {
-    margin: 8px 0;
-  }
 `;
 
 export const ContentDetail = styled.div`
@@ -112,13 +108,6 @@ export const ContentDetail = styled.div`
     margin: 5px 0;
   }
 
-  pre {
-    background-color: #fafbfc;
-    overflow: auto;
-    padding: 8px;
-    margin: 8px 0;
-  }
-
   a {
     &:hover {
       color: #1890ff;
@@ -138,12 +127,13 @@ export const ContentDetail = styled.div`
 type Props = {
   value?: string;
   title?: string;
+  setDesc: React.Dispatch<React.SetStateAction<string>>;
+  desc: string;
 };
 
-const MarkEditor = ({ value, title }: Props) => {
+const MarkEditor = ({ value, title, setDesc, desc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
-  const [text, setText] = useState<string>(value || '');
   const editor = useRef<HTMLTextAreaElement>(null);
 
   // 에디터 입력시
@@ -151,23 +141,24 @@ const MarkEditor = ({ value, title }: Props) => {
     const edit = editor.current as HTMLTextAreaElement;
     setStartText(edit.selectionStart);
     setEndText(edit.selectionEnd);
-    setText(e.target.value);
+    setDesc(e.target.value);
   }, []);
 
   // 툴바버튼 클릭시 이벤트
   const onHeader = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const { toolbar, lnline } = e.currentTarget.dataset;
-      const newText = addMark(text, startText, endText, toolbar as string, lnline as string);
+      const newText = addMark(desc, startText, endText, toolbar as string, lnline as string);
       const edit = editor.current;
+
       if (edit) {
         const end = endText;
         edit.setSelectionRange(0, end);
         edit.focus();
-        setText(newText);
+        setDesc(newText);
       }
     },
-    [text, startText, endText, editor.current],
+    [desc, startText, endText, editor.current],
   );
 
   // 툴바가 이미지일시
@@ -184,11 +175,11 @@ const MarkEditor = ({ value, title }: Props) => {
             'Content-Type': 'multipart/form-data',
           },
         }).then((res) => res.data);
-        setText(() => addMark(text, startText, endText, 'img', '', img));
+        setDesc(() => addMark(desc, startText, endText, 'img', '', img));
       };
       postImg();
     },
-    [text, startText, endText],
+    [desc, startText, endText],
   );
 
   // 글자를 드래그했을 시 시작, 끝을 저장
@@ -216,38 +207,30 @@ const MarkEditor = ({ value, title }: Props) => {
     }
   }, []);
 
-  // 제출 시 텍스트를 html로 파싱하여 제출합니다.
-  //   const onSubmit = useCallback(() => {
-  //     const submit = {
-  //       title,
-  //       description: desc,
-  //       content: text,
-  //       creator: user._id ? user._id : '',
-  //       stack,
-  //       secret,
-  //     };
-  //   }, [text, title]);
+  useEffect(() => {
+    const nodes = document.querySelectorAll('pre');
+    highlights(nodes);
+  }, [desc || value]);
 
   return (
     <WriteContainer>
       <EditorContainer>
         <ToolbarComponent onHeader={onHeader} onClickImg={onClickImg} />
         <Editor
-          id="editor"
           onKeyUp={onKeyUp}
           onKeyDown={onKeyDown}
           onSelect={onSelect}
           ref={editor}
-          value={text}
+          value={value || desc}
           onChange={onChange}
         ></Editor>
       </EditorContainer>
 
-      <Preview className="editor__container">
+      <Preview>
         <h1>{title ? title : '문서 제목을 입력바랍니다.'}</h1>
         <ContentDetail
           dangerouslySetInnerHTML={{
-            __html: marked(text),
+            __html: marked(desc),
           }}
         ></ContentDetail>
       </Preview>

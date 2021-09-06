@@ -30,9 +30,10 @@ export const AppContext = createContext(initial);
 
 function MyApp({ Component, pageProps, user }: AppProps) {
   const [isglobalLoading, setIsGlobalLoading] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initial);
+  const [state] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
+  const [isShowSider, setIsShowSider] = useGlobalState('isShowSider', false);
   // eslint-disable-next-line no-unused-vars
   const [_, setIsUser] = useGlobalState('auth', {
     username: '',
@@ -50,10 +51,18 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     });
   };
 
-  const handleShowSider = useCallback((e) => {
-    e.stopPropagation();
-    dispatch({ type: 'SHOWING' });
-  }, []);
+  const handleShowSider = useCallback(
+    (e) => {
+      e.stopPropagation();
+      setIsShowSider(!isShowSider);
+    },
+    [isShowSider, setIsShowSider],
+  );
+
+  // const handleShowSider = useCallback((e) => {
+  //   e.stopPropagation();
+  //   dispatch({ type: 'SHOWING' });
+  // }, []);
 
   useEffect(() => {
     if (state.showSider) {
@@ -105,20 +114,20 @@ function MyApp({ Component, pageProps, user }: AppProps) {
   return (
     <>
       <DefaultSeo
-        title={'개발자의 생각창고'}
-        description={`개발은 즐겁게`}
+        title={'김개발 블로그'}
+        description={`가끔 생각날 적, 정리하고플 적 끄적이는 창고`}
         canonical="https://www.kormelon.com/"
         openGraph={{
-          title: '개발자의 생각창고',
-          description: '개발은 재밌게 해야죠?',
+          title: '김개발 블로그',
+          description: '가끔 생각날 적, 정리하고플 적 끄적이는 창고',
           type: 'blog',
           locale: 'ko_KR',
           url: 'https://www.kormelon.com/',
-          site_name: '생각창고',
+          site_name: '김개발 블로그',
           images: [
             {
               url: `https://images.unsplash.com/photo-1616812757130-aca5451b0243?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80`,
-              alt: `생각창고`,
+              alt: `김개발 블로그`,
             },
           ],
         }}
@@ -134,17 +143,19 @@ function MyApp({ Component, pageProps, user }: AppProps) {
           href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3241811705564924"
-          crossOrigin="anonymous"
-        ></script>
+        {process.env.NODE_ENV === 'production' && (
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3241811705564924"
+            crossOrigin="anonymous"
+          ></script>
+        )}
       </Head>
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={state}>
           <AppLayouts>
             <>{isglobalLoading && <AppLoading scroll />}</>;
-            <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
+            <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} />
             <Component {...pageProps} />
             <AppFooter>
               <>

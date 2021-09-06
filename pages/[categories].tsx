@@ -57,7 +57,7 @@ const Category = ({ post, postCount }: Props) => {
 
   return (
     <>
-      <SEO desc={`${router.query.categories}에 대한 생각`} />
+      <SEO desc={`${router.query.categories}에 대한 정리`} />
       <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents>
         <>
@@ -82,7 +82,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post: Props = await axios
     .get(`/post?filter=${encodeURI(params?.categories as string)}`)
     .then((res) => res.data);
-  console.log(post);
 
   return {
     props: { post: post.post, postCount: post.postCount },

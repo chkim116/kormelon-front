@@ -115,11 +115,18 @@ const Upload = () => {
       router.prefetch(`/contents/${form?.title}`);
 
       const { id } = e.currentTarget.dataset;
-
-      if (!form?.title || !form?.category || desc === '') {
+      if (!form?.title || !form?.category || !thumbPreview) {
         setLoading(() => false);
         return notification.error({
           message: '다 입력해 주세요',
+          placement: 'bottomLeft',
+        });
+      }
+
+      if (!desc && !prevDesc) {
+        setLoading(() => false);
+        return notification.error({
+          message: '본문을 입력해 주세요',
           placement: 'bottomLeft',
         });
       }
@@ -128,7 +135,7 @@ const Upload = () => {
         ...form,
         thumb: thumbPreview,
         tags: tags,
-        description: desc,
+        description: desc || prevDesc,
         createDate: new Date().toDateString(),
       };
 
@@ -169,7 +176,7 @@ const Upload = () => {
           });
         });
     },
-    [desc, form, tags, router],
+    [desc, form, tags, router, thumbPreview],
   );
 
   const handleUploadThumb = useCallback((e) => {

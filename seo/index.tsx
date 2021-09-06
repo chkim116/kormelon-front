@@ -9,8 +9,8 @@ type Props = {
 };
 
 const SEO = ({
-  title = '개발자의 생각창고',
-  desc = '개발은 재밌게 해야죠?',
+  title = '김개발 블로그',
+  desc = '가끔 생각날 적, 정리하고플 적 끄적이는 창고',
   url = 'https://www.kormelon.com',
   image = 'https://images.unsplash.com/photo-1616812757130-aca5451b0243?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
 }: Props) => {
@@ -28,7 +28,7 @@ const SEO = ({
         type: 'article',
         locale: 'ko_KR',
         url,
-        site_name: '생각창고',
+        site_name: '김개발 블로그',
         images: [
           {
             url: `${image}`,

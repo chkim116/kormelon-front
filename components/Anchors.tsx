@@ -7,6 +7,7 @@ const BookAnchor = styled(Anchor)`
   width: 100%;
   letter-spacing: -0.5px;
   padding: 0;
+  opacity: 0;
   margin-bottom: 36px;
   position: fixed;
   top: 100px;

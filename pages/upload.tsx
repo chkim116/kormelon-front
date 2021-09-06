@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import QuillEditor from '../components/QuillEditor';
 import styled from '@emotion/styled';
 import { Button, Form, Input, notification, Select, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -8,12 +7,14 @@ import { getCate, postFetcher } from '../fetch';
 import { Categories } from './[categories]';
 import { Post } from '.';
 import axios from 'axios';
+import MarkEditor from '../components/MarkEditor';
 
 const { Item } = Form;
 
 const Container = styled.div`
   margin: 120px auto 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
+  width: 100%;
 
   .upload__header {
     display: flex;
@@ -24,7 +25,7 @@ const Container = styled.div`
   }
 
   .title__container {
-    width: 500px;
+    width: 90%;
     input {
       border: none;
       border-bottom: 1px solid #dbdbdb;
@@ -75,9 +76,9 @@ const Upload = () => {
     setForm(() => all);
   }, []);
 
-  const handleQuillChange = useCallback((values: any) => {
-    setDesc(() => values);
-  }, []);
+  // const handleQuillChange = useCallback((values: any) => {
+  //   setDesc(() => values);
+  // }, []);
 
   const handleTags = useCallback(() => {
     if (form?.tags) {
@@ -93,6 +94,17 @@ const Upload = () => {
     },
     [tags],
   );
+  // 제출 시 텍스트를 html로 파싱하여 제출합니다.
+  //   const onSubmit = useCallback(() => {
+  //     const submit = {
+  //       title,
+  //       description: desc,
+  //       content: text,
+  //       creator: user._id ? user._id : '',
+  //       stack,
+  //       secret,
+  //     };
+  //   }, [text, title]);
 
   const handleFinish = useCallback(
     (e) => {
@@ -162,15 +174,6 @@ const Upload = () => {
 
   //  여기부턴 수정 시~
   useEffect(() => {
-    if (router.query.edit) {
-      const { title } = router.query;
-      const post = async () =>
-        await axios.get(`/post/${encodeURIComponent(title as string)}`).then((res) => setEditPost(() => res.data));
-      post();
-    }
-  }, [router.query]);
-
-  useEffect(() => {
     if (editPost) {
       const { title, description, tags, category, preview } = editPost;
       uploadForm.setFieldsValue({ title, category, preview });
@@ -179,6 +182,15 @@ const Upload = () => {
       setTags(() => tags);
     }
   }, [uploadForm, editPost]);
+
+  useEffect(() => {
+    if (router.query.edit) {
+      const { title } = router.query;
+      const post = async () =>
+        await axios.get(`/post/${encodeURIComponent(title as string)}`).then((res) => setEditPost(() => res.data));
+      post();
+    }
+  }, [router.query]);
 
   return (
     <Container>
@@ -200,7 +212,8 @@ const Upload = () => {
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />
         </Item>
 
-        <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} />
+        <MarkEditor prevDesc={prevDesc} title={form?.title || ''} setDesc={setDesc} />
+        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
 
         {tags.map((tag) => (
           <Tag key={tag} onClick={handleDeleteTags}>

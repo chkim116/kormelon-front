@@ -1,11 +1,13 @@
 @import '~antd/dist/antd.css';
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400&display=swap'); /* h 태그 */
 
 body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: -apple-system, 'Noto Sans KR', Sans-serif;
-  font-size: 15px;
+  font-family: 'Noto Sans KR', Sans-serif, -apple-system;
+  font-size: 14px;
   font-weight: 400;
   color: #212729;
   line-height: 1.65em;
@@ -15,17 +17,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 30px !important;
+.header__container {
+  font-family: 'Nanum Myeongjo', serif;
 }
 
-p {
-  font-size: 1.125rem;
-  line-height: 1.65em;
-  margin: 0 !important;
-}
-
-.hljs-string {
+/* .hljs-string {
   color: #b97b00;
 }
 
@@ -47,15 +43,4 @@ p {
 
 .hljs-tag {
   color: #333;
-}
-
-@media all and (max-width: 540px) {
-  h1 {
-    font-size: 24px !important;
-  }
-
-  p {
-    margin: 0 !important;
-    font-size: 1.125rem;
-  }
-}
+} */

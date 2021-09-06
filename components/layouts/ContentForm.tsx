@@ -1,21 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Text from 'antd/lib/typography/Text';
-import Title from 'antd/lib/typography/Title';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { Tag } from 'antd';
 
 const ContentLayout = styled.div`
   margin-bottom: 3em;
 
-  .content__title {
-    margin-top: 0.9em !important;
-    padding-bottom: 1em;
-    border-bottom: 1px dashed #dbdbdc;
-  }
   img {
     width: 100%;
   }
+`;
+
+const ContentDescription = styled.div`
+  padding: 0.5em;
 `;
 
 interface Props {
@@ -29,7 +26,7 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
   return (
     <ContentLayout>
       <Text>{date}</Text>
-      <Title className="content__title">
+      <div className="content-title">
         {title}
         <div>
           {tags.map((tag) => (
@@ -38,10 +35,8 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
             </Tag>
           ))}
         </div>
-      </Title>
-      <Paragraph>
-        <div dangerouslySetInnerHTML={{ __html: p }} />
-      </Paragraph>
+      </div>
+      <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />
     </ContentLayout>
   );
 };

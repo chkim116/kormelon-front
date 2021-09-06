@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { addMark } from '../lib/toolbar';
 import marked from 'marked';
 import { highlights } from '../lib/highlight';
+import { Switch } from 'antd';
 
 const WriteContainer = styled.div`
   width: 100%;
@@ -14,9 +15,9 @@ const WriteContainer = styled.div`
   justify-content: center;
 `;
 
-const EditorContainer = styled.div`
+const EditorContainer = styled.div<{ isPreviewOn: boolean }>`
   min-height: 600px;
-  width: 50%;
+  width: ${({ isPreviewOn }) => (isPreviewOn ? `50%` : `80%`)};
   border: 1px solid ${({ theme }) => theme.border};
   input {
     all: unset;
@@ -34,7 +35,7 @@ const EditorContainer = styled.div`
 const Editor = styled.textarea`
   min-height: 600px;
   width: 100%;
-  max-height: 990px;
+  max-height: 600px;
   border: 1px solid ${(props) => props.theme.border};
   padding: 10px;
   resize: none;
@@ -45,8 +46,8 @@ const Preview = styled.div`
   overflow: auto;
   margin-left: 1px;
   width: 50%;
-  max-height: 990px;
-  min-height: 600px;
+  max-height: 660px;
+  min-height: 660px;
   border: 1px solid #dbdbdb;
   padding: 10px;
   ::-webkit-scrollbar {
@@ -77,12 +78,13 @@ type Props = {
   setDesc: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
+const MarkEditor = ({ prevDesc = '', title = '', setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
-  const [txt, setTxt] = useState('');
+  const [txt, setTxt] = useState<string | null>(null);
   const [range, setRange] = useState({ selStart: 0, selEnd: 0 });
   const editor = useRef<HTMLTextAreaElement>(null);
+  const [isPreviewOn, setIsPreviewOn] = useState(true);
 
   // 에디터 입력시
   const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -96,7 +98,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
   const onHeader = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const { toolbar, lnline } = e.currentTarget.dataset;
-      const newText = addMark(txt, startText, endText, toolbar as string, lnline as string);
+      const newText = addMark(txt ?? '', startText, endText, toolbar as string, lnline as string);
       const edit = editor.current;
 
       if (edit) {
@@ -138,7 +140,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
             'Content-Type': 'multipart/form-data',
           },
         }).then((res) => res.data);
-        setTxt(() => addMark(txt, startText, endText, 'img', '', img));
+        setTxt(() => addMark(txt ?? '', startText, endText, 'img', '', img));
       };
       postImg();
     },
@@ -221,6 +223,10 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
     [txt],
   );
 
+  const handlePreviewMode = useCallback((checked) => {
+    setIsPreviewOn(checked);
+  }, []);
+
   useEffect(() => {
     const edit = editor.current;
     if (!edit) return;
@@ -229,37 +235,46 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
     edit.focus();
   }, [range]);
 
+  // TODO: pre 중복처리 체크
   useEffect(() => {
-    setDesc(txt);
     const nodes = document.querySelectorAll('pre');
+    if (txt) {
+      setDesc(txt);
+    }
     highlights(nodes);
   }, [txt]);
 
   return (
-    <WriteContainer>
-      <EditorContainer>
-        <ToolbarComponent onHeader={onHeader} onClickImg={onClickImg} />
-        <Editor
-          onKeyUp={onKeyUp}
-          onKeyDown={onKeyDown}
-          onSelect={onSelect}
-          ref={editor}
-          value={txt || prevDesc}
-          onChange={onChange}
-          spellCheck={false}
-        ></Editor>
-      </EditorContainer>
-
-      <Preview>
-        <div className="content-title">{title ? title : '문서 제목을 입력바랍니다.'}</div>
-        <div
-          id="content"
-          dangerouslySetInnerHTML={{
-            __html: marked(txt || prevDesc || ''),
-          }}
-        ></div>
-      </Preview>
-    </WriteContainer>
+    <>
+      <div style={{ margin: '0 auto', width: isPreviewOn ? '100%' : '80%' }}>
+        <Switch defaultChecked={isPreviewOn} onChange={handlePreviewMode} />
+      </div>
+      <WriteContainer>
+        <EditorContainer isPreviewOn={isPreviewOn}>
+          <ToolbarComponent onHeader={onHeader} onClickImg={onClickImg} />
+          <Editor
+            onKeyUp={onKeyUp}
+            onKeyDown={onKeyDown}
+            onSelect={onSelect}
+            ref={editor}
+            value={txt ?? prevDesc}
+            onChange={onChange}
+            spellCheck={false}
+          ></Editor>
+        </EditorContainer>
+        {isPreviewOn && (
+          <Preview>
+            {/* <div className="content-title">{title ? title : '문서 제목을 입력바랍니다.'}</div> */}
+            <div
+              id="content"
+              dangerouslySetInnerHTML={{
+                __html: marked(txt ?? prevDesc),
+              }}
+            ></div>
+          </Preview>
+        )}
+      </WriteContainer>
+    </>
   );
 };
 

@@ -7,13 +7,14 @@ const Arrow = styled.div`
   bottom: 5%;
   right: 5%;
   border-radius: 9999px;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #dbdbdb;
+  width: 45px;
+  height: 45px;
+  border: 1px solid ${({ theme }) => theme.border};
+  background-color: ${({ theme }) => theme.white};
   text-align: center;
-  line-height: 40px;
+  line-height: 45px;
   cursor: pointer;
-  opacity: 0.4;
+  opacity: 0.8;
 
   &:hover {
     opacity: 1;

@@ -1,10 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import ContentForm from '../../components/layouts/ContentForm';
 import { Button, Modal, notification } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AppContents from '../../components/layouts/AppContents';
-import AppSider from '../../components/layouts/AppSider';
 import axios from 'axios';
 import { Categories } from '../[categories]';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
@@ -14,11 +13,11 @@ import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
-import { NextSeo } from 'next-seo';
 import { useGlobalState } from '../../hooks';
 import marked from 'marked';
 import { highlights } from '../../lib/highlight';
 import Anchors from '../../components/Anchors';
+import SEO from '../../seo';
 
 const Content = styled.section`
   width: 100%;
@@ -27,6 +26,23 @@ const Content = styled.section`
 const ContentEditBtn = styled.div`
   margin-left: auto;
   width: 120px;
+`;
+
+const ContentThumb = styled.div<{ url: string }>`
+  background-attachment: fixed;
+  position: relative;
+  top: 75px;
+  max-height: 500px;
+  height: 100%;
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  img {
+    height: 100%;
+    max-height: 500px;
+  }
 `;
 
 interface Props {
@@ -40,7 +56,7 @@ const Contents = ({ post, anchor }: Props) => {
   const { showSider } = useContext(AppContext);
   const [user] = useGlobalState('auth');
   const router = useRouter();
-
+  const thumbRef = useRef<HTMLDivElement>(null);
   const handleEdit = useCallback(() => {
     router.push(`/upload?title=${post?.title}&edit=true`);
   }, [post, router]);
@@ -61,6 +77,18 @@ const Contents = ({ post, anchor }: Props) => {
     });
   }, [post, router]);
 
+  const handleOpacityAnchor = useCallback(() => {
+    const thumbEl = thumbRef.current;
+    if (thumbEl) {
+      const height = thumbEl.clientHeight;
+      const opa = 1 - (height - scrollY) / height;
+      const anchor = document.querySelector('.anchor') as HTMLDivElement;
+      if (anchor) {
+        anchor.style.opacity = `${opa}`;
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (categories) {
       return;
@@ -78,6 +106,13 @@ const Contents = ({ post, anchor }: Props) => {
     }
   }, []);
 
+  useEffect(() => {
+    document.addEventListener('scroll', handleOpacityAnchor);
+    return () => {
+      document.removeEventListener('scroll', handleOpacityAnchor);
+    };
+  }, []);
+
   if (loading) {
     return <AppLoading />;
   }
@@ -90,46 +125,36 @@ const Contents = ({ post, anchor }: Props) => {
     return <AppEmpty />;
   }
 
-  // TODO: 에딧, 삭제 등은 고유 아이디로 이동~
+  const replace = (string: string) => string.replace(/<[^>]*>?/gm, '');
   return (
     <>
-      <NextSeo
-        title={`${post.title}`}
-        description={`${post.preview}`}
-        canonical="https://www.kormelon.com/"
-        openGraph={{
-          title: `${post.title}`,
-          description: `${post.preview}`,
-          type: 'article',
-          locale: 'ko_KR',
-          url: `https://www.kormelon.com/contents/${post.title}`,
-          site_name: '생각창고',
-        }}
-        twitter={{
-          handle: '@handle',
-          site: '@site',
-          cardType: 'summary_large_image',
-        }}
+      <SEO
+        title={post.title}
+        desc={`${post.preview} | ${replace(post.description).replace(/\n/gi, ' ').slice(0, 180)}`}
+        image={post.thumb}
+        url={`https://www.kormelon.com/contents/${post.title}`}
       />
-      <AppContents>
-        <>
-          <Content>
-            {user?.admin && (
-              <ContentEditBtn>
-                <Button type="link" size="large" onClick={handleEdit}>
-                  <EditOutlined />
-                </Button>
-                <Button type="link" size="large" onClick={handleDelete}>
-                  <DeleteOutlined />
-                </Button>
-              </ContentEditBtn>
-            )}
+      <>
+        <Content>
+          <ContentThumb url={post.thumb} ref={thumbRef}>
+            <img src={post.thumb} alt="썸네일 이미지" />
+          </ContentThumb>
+          {user?.admin && (
+            <ContentEditBtn>
+              <Button type="link" size="large" onClick={handleEdit}>
+                <EditOutlined />
+              </Button>
+              <Button type="link" size="large" onClick={handleDelete}>
+                <DeleteOutlined />
+              </Button>
+            </ContentEditBtn>
+          )}
+          <AppContents>
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
-          </Content>
-          {categories && showSider && <AppSider categories={categories} />}
+          </AppContents>
           <Anchors anchor={anchor} />
-        </>
-      </AppContents>
+        </Content>
+      </>
     </>
   );
 };
@@ -145,6 +170,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post = { ...fetch, description: html };
   // eslint-disable-next-line no-useless-escape
   const reg = /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~']+<\/\1>/g;
-  const anchor = html.match(reg) as string[];
+  const anchor = html.match(reg) || [];
   return { props: { post, anchor } };
 };

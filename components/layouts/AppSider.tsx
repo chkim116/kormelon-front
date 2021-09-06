@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import Sider from 'antd/lib/layout/Sider';
@@ -9,36 +9,39 @@ import { Button, Input, Modal, notification } from 'antd';
 import { delCategory, postCategory } from '../../fetch';
 import { AppContext } from '../../pages/_app';
 import { useGlobalState } from '../../hooks';
+import axios from 'axios';
 
 const App = styled(Sider)<{ show?: string }>`
-  background-color: #ffffff;
-  padding: 1em;
-  margin-top: 1em;
-
-  ${({ show }) =>
-    show === 'true' &&
-    css`
-      position: fixed;
-      right: 0;
-      top: 0;
-      margin-top: 90px;
-    `}
-  ul {
-    li {
-      cursor: pointer;
-      font-size: 18px;
-      list-style: none;
-      line-height: 38px;
-      color: #828282;
-      @media all and (max-width: 540px) {
-        font-size: 16px !important;
-        line-height: 34px;
-      }
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
+  ${({ show, theme }) =>
+    show === 'true'
+      ? css`
+          position: fixed;
+          left: 0;
+          top: 53px;
+          width: 100px;
+          height: 100vh;
+          background-color: #ffffff;
+          padding: 1em;
+          ul {
+            li {
+              color: ${theme.black};
+              cursor: pointer;
+              font-size: 16px;
+              line-height: 32px;
+              list-style: none;
+              @media all and (max-width: 540px) {
+                font-size: 14px !important;
+                line-height: 30px;
+              }
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        `
+      : css`
+          display: none;
+        `}
 
   @media all and (max-width: 540px) {
     ${({ show }) =>
@@ -46,9 +49,8 @@ const App = styled(Sider)<{ show?: string }>`
         ? css`
             display: block;
             position: fixed;
-            right: 0;
-            top: 0;
-            margin-top: 90px;
+            left: 0;
+            top: 53px;
           `
         : css`
             display: none;
@@ -70,17 +72,16 @@ const getAllLength = (category: Categories[]): number => {
   return res;
 };
 
-const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
-  const allPost = useState(getAllLength(categories) || 0);
+const AppSider = () => {
+  const [allPost, setAllPost] = useState(0);
   const { showSider } = useContext(AppContext);
   const [categoryName, setCategoryName] = useState('');
   const [add, setAdd] = useState(false);
-  const [categoryList, setCategoryList] = useState<Categories[]>(categories);
+  const [categoryList, setCategoryList] = useState<Categories[]>([]);
   const [delCategories, setDelCategories] = useState(false);
   const handleShowingAdd = useCallback(() => {
     setAdd((prev) => !prev);
   }, []);
-
   const [user] = useGlobalState('auth');
 
   const handleAddCategory = useCallback(() => {
@@ -115,14 +116,53 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
         notification.success({
           message: `${cate} 제거 성공`,
         });
+        setCategoryList((prev) => prev.filter((lst) => lst._id !== id));
       },
     });
-    setCategoryList((prev) => prev.filter((lst) => lst._id !== id));
   }, []);
 
   const handleDelete = useCallback(() => {
     setDelCategories((prev) => !prev);
   }, []);
+
+  useEffect(() => {
+    (async () =>
+      await axios.get('/category').then((res) => {
+        setCategoryList(res.data);
+        setAllPost(getAllLength(res.data));
+      }))();
+  }, []);
+
+  const CategoryLists = ({ categoryList }: { categoryList: Categories[] }) => {
+    return (
+      <>
+        {categoryList.map((list) => (
+          <div key={list._id}>
+            {delCategories ? (
+              <li>
+                <DeleteOutlined
+                  data-id={list._id}
+                  data-cate={list.category}
+                  onClick={handleSelectForDel}
+                  style={{
+                    marginRight: '3px',
+                    color: 'red',
+                  }}
+                ></DeleteOutlined>
+                {list.category} ({list.post.length})
+              </li>
+            ) : (
+              <Link href={`/${list.category}`} key={list._id}>
+                <li>
+                  {list.category} ({list.post.length})
+                </li>
+              </Link>
+            )}
+          </div>
+        ))}
+      </>
+    );
+  };
 
   return (
     <>
@@ -131,30 +171,7 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
           <Link href="/">
             <li>All ({allPost})</li>
           </Link>
-          {categoryList.map((list) => (
-            <div key={list._id}>
-              {delCategories ? (
-                <li>
-                  <DeleteOutlined
-                    data-id={list._id}
-                    data-cate={list.category}
-                    onClick={handleSelectForDel}
-                    style={{
-                      marginRight: '3px',
-                      color: 'red',
-                    }}
-                  ></DeleteOutlined>
-                  {list.category} ({list.post.length})
-                </li>
-              ) : (
-                <Link href={`/${list.category}`} key={list._id}>
-                  <li>
-                    {list.category} ({list.post.length})
-                  </li>
-                </Link>
-              )}
-            </div>
-          ))}
+          <CategoryLists categoryList={categoryList} />
         </ul>
         {add && (
           <div style={{ display: 'flex' }}>

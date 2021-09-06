@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { AppTitle, Post } from '..';
+import { Post } from '..';
 import ContentList from '../../components/ContentList';
 import AppContents from '../../components/layouts/AppContents';
 import AppLoading from '../../components/layouts/AppLoading';
+import AppTitle from '../../components/layouts/AppTitle';
 
 const tagSearch = async (search: string) => {
   return await axios.get(`/tag/search?tag=${search}`);
@@ -30,7 +31,7 @@ const Search = () => {
 
   return (
     <>
-      <AppTitle>{router.query.categories}에 대한 검색 결과</AppTitle>
+      <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents>
         <>
           <ContentList postList={postList}></ContentList>

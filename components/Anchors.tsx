@@ -10,7 +10,8 @@ const BookAnchor = styled(Anchor)`
   margin-bottom: 36px;
   position: fixed;
   top: 100px;
-  right: 20px;
+  padding: 0 1em;
+  right: 0;
   background-color: ${({ theme }) => theme.white};
   .ant-anchor-ink::before {
     background-color: ${({ theme }) => theme.border};
@@ -21,7 +22,7 @@ const BookAnchor = styled(Anchor)`
 `;
 
 const AnchorBox = styled.div`
-  font-size: 0.73em;
+  font-size: 1em;
   color: ${(props) => props.theme.black};
 `;
 
@@ -38,7 +39,7 @@ const Anchors = ({ anchor }: Props) => {
   return (
     <>
       {a && (
-        <BookAnchor affix={false}>
+        <BookAnchor className="anchor" affix={false}>
           {a.map((word) => (
             <AnchorBox key={word}>
               <Anchor.Link

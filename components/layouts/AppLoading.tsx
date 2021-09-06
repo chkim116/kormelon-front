@@ -26,7 +26,7 @@ const AppLoading = ({ text, scroll }: any) => {
       <Content>
         <Loading>
           <Spin size="large"></Spin>
-          {text && <div>글 불러오는 중</div>}
+          {text || <div>글 불러오는 중</div>}
         </Loading>
       </Content>
     </AppContents>

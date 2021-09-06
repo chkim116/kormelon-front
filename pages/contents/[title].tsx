@@ -16,6 +16,7 @@ import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
 import { NextSeo } from 'next-seo';
 import { useGlobalState } from '../../hooks';
+import marked from 'marked';
 
 const Content = styled.section`
   width: 100%;
@@ -28,9 +29,10 @@ const ContentEditBtn = styled.div`
 
 interface Props {
   post: Post;
+  anchor: string[];
 }
 
-const Contents = ({ post }: Props) => {
+const Contents = ({ post, anchor }: Props) => {
   const [categories, setCategories] = useState<Categories[]>();
   const [loading, setLoading] = useState(false);
   const { showSider } = useContext(AppContext);
@@ -127,6 +129,12 @@ export default Contents;
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { params } = ctx;
 
-  const post = await axios.get(`/post/${encodeURIComponent(params?.title as string)}`).then((res) => res.data);
-  return { props: { post } };
+  const fetch = await axios.get(`/post/${encodeURIComponent(params?.title as string)}`).then((res) => res.data);
+  const html = marked(fetch.description);
+
+  const post = { ...fetch, description: html };
+  // eslint-disable-next-line no-useless-escape
+  const reg = /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~']+<\/\1>/g;
+  const anchor = html.match(reg) as string[];
+  return { props: { post, anchor } };
 };

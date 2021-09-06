@@ -133,7 +133,7 @@ type Props = {
 const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
-  const [txt, setTxt] = useState(prevDesc || '');
+  const [txt, setTxt] = useState('');
   const [range, setRange] = useState({ selStart: 0, selEnd: 0 });
   const editor = useRef<HTMLTextAreaElement>(null);
 
@@ -297,7 +297,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
           onKeyDown={onKeyDown}
           onSelect={onSelect}
           ref={editor}
-          value={txt}
+          value={txt || prevDesc}
           onChange={onChange}
           spellCheck={false}
         ></Editor>
@@ -307,7 +307,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
         <h1>{title ? title : '문서 제목을 입력바랍니다.'}</h1>
         <ContentDetail
           dangerouslySetInnerHTML={{
-            __html: marked(txt),
+            __html: marked(txt || prevDesc || ''),
           }}
         ></ContentDetail>
       </Preview>

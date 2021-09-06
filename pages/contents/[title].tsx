@@ -17,6 +17,7 @@ import AppEmpty from '../../components/layouts/AppEmpty';
 import { NextSeo } from 'next-seo';
 import { useGlobalState } from '../../hooks';
 import marked from 'marked';
+import { highlights } from '../../lib/highlight';
 
 const Content = styled.section`
   width: 100%;
@@ -68,6 +69,13 @@ const Contents = ({ post, anchor }: Props) => {
       getCate().then((res) => setCategories(res.data));
     }
   }, [showSider]);
+
+  useEffect(() => {
+    const nodes = document.querySelectorAll('pre');
+    if (nodes) {
+      highlights(nodes);
+    }
+  }, []);
 
   if (loading) {
     return <AppLoading />;

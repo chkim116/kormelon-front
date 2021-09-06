@@ -107,21 +107,21 @@ function MyApp({ Component, pageProps, user }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <AppContext.Provider value={state}>
-          <div
-            style={{
-              position: 'fixed',
-              left: 0,
-              zIndex: 999,
-              fontSize: 8,
-            }}
-          >
-            Today{view.views} <span>Total{view.totalView}</span>
-          </div>
           <AppLayouts>
             <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} showSider={state.showSider} />
             <Component {...pageProps} />
             <AppFooter>
-              <div>KimChanghoe &copy; 2021</div>
+              <>
+                <div>KimChanghoe &copy; 2021</div>
+                <div>
+                  <small>
+                    Today <span>{view.views}</span>{' '}
+                    <span>
+                      Total <span>{view.totalView}</span>
+                    </span>
+                  </small>
+                </div>
+              </>
             </AppFooter>
           </AppLayouts>
           <AppTop></AppTop>

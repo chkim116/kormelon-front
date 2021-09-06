@@ -40,9 +40,8 @@ const Anchors = ({ anchor }: Props) => {
       {a && (
         <BookAnchor affix={false}>
           {a.map((word) => (
-            <AnchorBox>
+            <AnchorBox key={word}>
               <Anchor.Link
-                key={word}
                 href={`#${word
                   // eslint-disable-next-line no-useless-escape
                   .replace(/[\!\@\#\$\%\^\&\*\(\)\_\+\?\.\,\_\=\~\`\/\*\-\+]+/g, '')

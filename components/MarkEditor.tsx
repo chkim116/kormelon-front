@@ -186,7 +186,7 @@ const MarkEditor = ({ prevDesc, title, setDesc }: Props) => {
 
       // 이미지 api
       const postImg = async () => {
-        const img = await Axios.post('/docs/img', formData, {
+        const img = await Axios.post('/post/img', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

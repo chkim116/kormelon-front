@@ -3,14 +3,14 @@ import { Anchor } from 'antd';
 import { useMemo } from 'react';
 
 const BookAnchor = styled(Anchor)`
-  max-width: 200px;
+  max-width: 400px;
   width: 100%;
   letter-spacing: -0.5px;
   padding: 0;
   margin-bottom: 36px;
   position: fixed;
   top: 100px;
-  right: 20px;
+  right: 0;
   background-color: ${({ theme }) => theme.white};
   .ant-anchor-ink::before {
     background-color: ${({ theme }) => theme.border};
@@ -21,7 +21,7 @@ const BookAnchor = styled(Anchor)`
 `;
 
 const AnchorBox = styled.div`
-  font-size: 0.73em;
+  font-size: 0.8em;
   color: ${(props) => props.theme.black};
 `;
 

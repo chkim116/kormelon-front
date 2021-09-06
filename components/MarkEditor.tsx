@@ -34,7 +34,7 @@ const EditorContainer = styled.div`
 const Editor = styled.textarea`
   min-height: 600px;
   width: 100%;
-  max-height: 990px;
+  max-height: 600px;
   border: 1px solid ${(props) => props.theme.border};
   padding: 10px;
   resize: none;
@@ -45,8 +45,8 @@ const Preview = styled.div`
   overflow: auto;
   margin-left: 1px;
   width: 50%;
-  max-height: 990px;
-  min-height: 600px;
+  max-height: 660px;
+  min-height: 660px;
   border: 1px solid #dbdbdb;
   padding: 10px;
   ::-webkit-scrollbar {

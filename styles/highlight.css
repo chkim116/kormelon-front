@@ -1,0 +1,43 @@
+/* basic */
+.hljs {
+  margin: 8px 0;
+  padding: 10px 8px;
+  color: #45bce7;
+  background-color: #212227 !important;
+  box-shadow: 2px 2px 4px #212227;
+}
+
+/* const, let, etc */
+.hljs-keyword {
+  color: #ae81ff;
+}
+
+/*  null, undefined, boolean .. etc */
+.hljs-literal {
+  color: #539bff;
+}
+
+/* class name or function name */
+.hljs-title {
+  color: #e7b247;
+}
+
+.hljs-comment {
+  color: #6d9144;
+}
+
+.hljs-string {
+  color: #f49822;
+}
+
+.hljs-number {
+  color: #a2d468;
+}
+
+.hljs-built_in {
+  color: #6184c6;
+}
+
+.hljs-regexp {
+  color: #cf4856;
+}

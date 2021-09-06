@@ -111,7 +111,7 @@ const Contents = ({ post, anchor }: Props) => {
           cardType: 'summary_large_image',
         }}
       />
-      <AppContents>
+      <AppContents categories={categories}>
         <>
           <Content>
             {user?.admin && (
@@ -126,7 +126,6 @@ const Contents = ({ post, anchor }: Props) => {
             )}
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
           </Content>
-          {categories && showSider && <AppSider categories={categories} />}
           <Anchors anchor={anchor} />
         </>
       </AppContents>

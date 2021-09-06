@@ -16,20 +16,24 @@ const App = styled(Sider)<{ show?: string }>`
   margin-top: 1em;
 
   ${({ show }) =>
-    show === 'true' &&
-    css`
-      position: fixed;
-      right: 0;
-      top: 0;
-      margin-top: 90px;
-    `}
+    show === 'true'
+      ? css`
+          position: fixed;
+          left: 0;
+          top: 0;
+          margin-top: 90px;
+        `
+      : css`
+          display: none;
+        `}
+
   ul {
     li {
       cursor: pointer;
       font-size: 18px;
       list-style: none;
       line-height: 38px;
-      color: #828282;
+      color: #959595;
       @media all and (max-width: 540px) {
         font-size: 16px !important;
         line-height: 34px;
@@ -80,7 +84,6 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
   const handleShowingAdd = useCallback(() => {
     setAdd((prev) => !prev);
   }, []);
-
   const [user] = useGlobalState('auth');
 
   const handleAddCategory = useCallback(() => {
@@ -124,14 +127,11 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
     setDelCategories((prev) => !prev);
   }, []);
 
-  return (
-    <>
-      <App show={showSider?.toString()}>
-        <ul>
-          <Link href="/">
-            <li>All ({allPost})</li>
-          </Link>
-          {categoryList.map((list) => (
+  const CategoryLists = () => {
+    return (
+      <>
+        {categoryList.map((list) => (
+          <>
             <div key={list._id}>
               {delCategories ? (
                 <li>
@@ -154,7 +154,20 @@ const AppSider = ({ categories = [] }: { categories: Categories[] }) => {
                 </Link>
               )}
             </div>
-          ))}
+          </>
+        ))}
+      </>
+    );
+  };
+
+  return (
+    <>
+      <App show={showSider?.toString()}>
+        <ul>
+          <Link href="/">
+            <li>All ({allPost})</li>
+          </Link>
+          <CategoryLists />
         </ul>
         {add && (
           <div style={{ display: 'flex' }}>

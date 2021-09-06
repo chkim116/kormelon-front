@@ -24,7 +24,7 @@ const Category = ({ post, postCount }: Props) => {
   const [postList, setPostList] = useState(post);
   const [isLoading, setIsLoading] = useState(false);
   const viewPort = useRef<any>(null);
-  console.log('d');
+
   const data = {
     viewPort: viewPort.current,
     isLoading,

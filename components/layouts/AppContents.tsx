@@ -20,20 +20,11 @@ export const AppContent = styled(Content)`
   margin: 0 auto;
 `;
 
-const AppContents = ({
-  children,
-  categories,
-  showSider,
-}: {
-  children: React.ReactChild;
-  categories?: Categories[];
-  showSider?: boolean;
-}) => {
+const AppContents = ({ children, categories }: { children: React.ReactChild; categories?: Categories[] }) => {
   return (
     <AppContentLayout>
       <AppContent>{children}</AppContent>
-      {categories && <AppSider categories={categories} />}
-      {showSider && categories && <AppSider categories={categories} />}
+      <AppSider categories={categories || []} />
     </AppContentLayout>
   );
 };

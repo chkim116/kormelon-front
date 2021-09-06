@@ -18,6 +18,7 @@ import { NextSeo } from 'next-seo';
 import { useGlobalState } from '../../hooks';
 import marked from 'marked';
 import { highlights } from '../../lib/highlight';
+import Anchors from '../../components/Anchors';
 
 const Content = styled.section`
   width: 100%;
@@ -126,6 +127,7 @@ const Contents = ({ post, anchor }: Props) => {
             <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
           </Content>
           {categories && showSider && <AppSider categories={categories} />}
+          <Anchors anchor={anchor} />
         </>
       </AppContents>
     </>

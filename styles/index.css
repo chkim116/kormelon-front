@@ -25,7 +25,7 @@ p {
   margin: 0 !important;
 }
 
-.hljs-string {
+/* .hljs-string {
   color: #b97b00;
 }
 
@@ -47,7 +47,7 @@ p {
 
 .hljs-tag {
   color: #333;
-}
+} */
 
 @media all and (max-width: 540px) {
   h1 {

@@ -15,7 +15,7 @@ import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
 import { useGlobalState } from '../../hooks';
 import marked from 'marked';
-import { highlights } from '../../lib/highlight';
+import '../../lib/highlight';
 import Anchors from '../../components/Anchors';
 import SEO from '../../seo';
 
@@ -98,13 +98,6 @@ const Contents = ({ post, anchor }: Props) => {
       getCate().then((res) => setCategories(res.data));
     }
   }, [showSider]);
-
-  useEffect(() => {
-    const nodes = document.querySelectorAll('pre');
-    if (nodes) {
-      highlights(nodes);
-    }
-  }, []);
 
   useEffect(() => {
     document.addEventListener('scroll', handleOpacityAnchor);

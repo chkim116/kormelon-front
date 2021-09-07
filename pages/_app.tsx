@@ -1,8 +1,6 @@
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import styled from '@emotion/styled';
-import '../styles/index.css';
 import '../styles/highlight.css';
-import '../styles/content.css';
 import React, { createContext, useCallback, useEffect, useReducer, useState } from 'react';
 import Layout from 'antd/lib/layout/layout';
 import AppFooter from '../components/layouts/AppFooter';
@@ -13,10 +11,11 @@ import { DefaultSeo } from 'next-seo';
 import { useGlobalState, useScrollTop } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
-import { ThemeProvider } from '@emotion/react';
+import { Global, ThemeProvider } from '@emotion/react';
 import { theme } from '../styles/theme';
 import router from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
+import { global } from '../styles/global';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -155,6 +154,12 @@ function MyApp({ Component, pageProps, user }: AppProps) {
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff"></meta>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet"
+        />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
@@ -169,6 +174,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
         )}
       </Head>
       <ThemeProvider theme={theme}>
+        <Global styles={global} />
         <AppContext.Provider value={state}>
           <AppLayouts>
             <>{isglobalLoading && <AppLoading scroll />}</>;

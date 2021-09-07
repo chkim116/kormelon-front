@@ -4,7 +4,7 @@ import Axios from 'axios';
 import styled from '@emotion/styled';
 import { addMark } from '../lib/toolbar';
 import marked from 'marked';
-import { highlights } from '../lib/highlight';
+import '../lib/highlight';
 import { Switch } from 'antd';
 
 const WriteContainer = styled.div`
@@ -235,13 +235,10 @@ const MarkEditor = ({ prevDesc = '', title = '', setDesc }: Props) => {
     edit.focus();
   }, [range]);
 
-  // TODO: pre 중복처리 체크
   useEffect(() => {
-    const nodes = document.querySelectorAll('pre');
     if (txt) {
       setDesc(txt);
     }
-    highlights(nodes);
   }, [txt]);
 
   return (

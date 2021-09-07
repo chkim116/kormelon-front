@@ -68,7 +68,7 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
       <ContentContainer>
         {postList.map((post, index) => (
           <Link key={index} href={`/contents/${post.title}`}>
-            <ContentLayout ref={postList.length === index + 1 ? lastElement : null}>
+            <ContentLayout>
               <ContentImage>
                 <img
                   src={
@@ -81,7 +81,7 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
               <div>
                 <Link href={`/${post.category}`}>{post.category}</Link>
               </div>
-              <h3>{post.title}</h3>
+              <h3 ref={postList.length === index + 1 ? lastElement : null}>{post.title}</h3>
               <p>{post.preview}</p>
               <p>
                 <small>{post.createDate}</small>

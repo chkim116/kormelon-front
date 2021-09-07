@@ -37,11 +37,9 @@ export default function Home({ post, postCount }: Props) {
   const isLimit = useMemo(() => {
     return Math.ceil(postCount / 6);
   }, [postCount]);
-  const data = {
-    viewPort: viewPort.current,
-    isLoading,
-    limit: isLimit,
-  };
+  const data = useMemo(() => {
+    return { viewPort: viewPort.current, isLoading, limit: isLimit };
+  }, [viewPort, isLoading, isLimit]);
   const [lastElement, page] = useInfiniteScroll(data);
 
   useEffect(() => {
@@ -53,10 +51,11 @@ export default function Home({ post, postCount }: Props) {
       setIsLoading(false);
     });
   }, [page]);
-
   return (
     <>
       <AppTitle title="all"></AppTitle>
+      <div>??@?!@#!@</div>
+
       <AppContents>
         <>
           <ContentList viewPort={viewPort} postList={postList} lastElement={lastElement}></ContentList>

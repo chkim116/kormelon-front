@@ -1,10 +1,10 @@
 import hljs from 'highlight.js';
 hljs.registerLanguage('javascript', require('../node_modules/highlight.js/lib/languages/javascript'));
+import marked from 'marked';
 
-export const highlights = (node: any) => {
-  if (node) {
-    node.forEach((node: HTMLElement) => {
-      hljs.highlightBlock(node);
-    });
-  }
-};
+marked.setOptions({
+  langPrefix: 'hljs language-',
+  highlight: function (code) {
+    return hljs.highlightAuto(code, ['html', 'javascript', 'js', 'python']).value;
+  },
+});

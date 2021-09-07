@@ -50,7 +50,7 @@ const Sider = styled.div`
 
 const AppCategories = () => {
   const [, setIsShowSider] = useGlobalState('isShowSider');
-  const categories = ['tech', 'development', 'lifestyle', 'me'];
+  const categories = ['tech', 'development', 'essay', 'me'];
 
   const handleIsShowSider = useCallback(() => {
     setIsShowSider(false);

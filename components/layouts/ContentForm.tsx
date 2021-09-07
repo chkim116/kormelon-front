@@ -6,6 +6,9 @@ import Link from 'next/link';
 
 const ContentLayout = styled.div`
   margin-bottom: 3em;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 
   img {
     width: 100%;

@@ -55,6 +55,14 @@ const ContentImage = styled.div`
 `;
 
 const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; viewPort?: any; lastElement?: any }) => {
+  if (postList.length < 1) {
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <h3>아직 발행된 글이 없습니다 :)</h3>
+      </div>
+    );
+  }
+
   const PostCard = () => {
     return (
       <ContentContainer>

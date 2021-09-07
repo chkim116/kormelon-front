@@ -150,14 +150,14 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           </Link>
         </NavBtn>
         <NavMenu>
-          <Link href={`/tech`}>
-            <li>TECH</li>
-          </Link>
           <Link href="/development">
             <li>DEVELOPMENT</li>
           </Link>
-          <Link href="/lifestyle">
-            <li>LIFESTYLE</li>
+          <Link href="/essay">
+            <li>ESSAY</li>
+          </Link>
+          <Link href={`/tech`}>
+            <li>TECH</li>
           </Link>
           <Link href="me">
             <li>ME</li>

@@ -17,8 +17,18 @@
   color: #539bff;
 }
 
+/*  (a : any, b: any) */
+.hljs-params {
+  color: #539bff;
+}
+
 /* class name or function name */
 .hljs-title {
+  color: #e7b247;
+}
+
+/* css selector Only css */
+.hljs-selector-class {
   color: #e7b247;
 }
 

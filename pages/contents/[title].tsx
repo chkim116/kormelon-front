@@ -99,8 +99,6 @@ const Contents = ({ post, anchor }: Props) => {
     }
   }, [showSider]);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     document.addEventListener('scroll', handleOpacityAnchor);
     return () => {

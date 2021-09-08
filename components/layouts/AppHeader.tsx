@@ -7,6 +7,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { useGlobalState } from '../../hooks';
 import AppCategories from './AppCategories';
+import { FaSearch } from 'react-icons/fa';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -78,6 +79,7 @@ const NavMenu = styled.ul`
     margin-right: 2em;
     list-style: none;
     position: relative;
+
     &:hover {
       &::after {
         position: absolute;
@@ -87,6 +89,16 @@ const NavMenu = styled.ul`
         left: 0;
         content: '';
         background-color: ${({ theme }) => theme.black};
+      }
+    }
+  }
+  span {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    svg {
+      path {
+        color: ${({ theme }) => theme.black};
       }
     }
   }
@@ -162,6 +174,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           <Link href="me">
             <li>ME</li>
           </Link>
+          <span>
+            <FaSearch size={18} />
+          </span>
         </NavMenu>
         <MobileNav type="text" size="large" onClick={handleShowSider}>
           {isShowSider ? <CloseOutlined /> : <MenuOutlined />}

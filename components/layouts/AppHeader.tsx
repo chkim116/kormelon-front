@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useGlobalState } from '../../hooks';
 import AppCategories from './AppCategories';
 import { FaSearch } from 'react-icons/fa';
+import router from 'next/router';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -110,7 +111,7 @@ const MobileNav = styled(Button)`
   }
 `;
 
-const SearchingBar = styled.div`
+const SearchingBar = styled.form`
   position: absolute;
   width: 50%;
   background-color: ${({ theme }) => theme.white};
@@ -137,6 +138,8 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const [isShowSider] = useGlobalState('isShowSider');
   const [isSearch, setIsSearch] = useState(false);
   const searchRef = useRef<any>(null);
+  const [searchText, setSearchText] = useState('');
+
   const handleLogOut = useCallback(() => {
     logoutFetcher('/auth/logout');
     handleLogout();
@@ -151,6 +154,18 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const handleSearching = useCallback(() => {
     setIsSearch((prev) => !prev);
   }, []);
+
+  const handleSearchText = useCallback((e) => {
+    setSearchText(e.target.value);
+  }, []);
+
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      router.push(`/search/${searchText}`);
+    },
+    [searchText, router],
+  );
 
   useEffect(() => {
     if (isSearch && searchRef) {
@@ -185,8 +200,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
         </NavBtn>
         <NavMenu>
           {isSearch && (
-            <SearchingBar>
+            <SearchingBar onSubmit={handleSearchSubmit}>
               <Input
+                onChange={handleSearchText}
                 ref={searchRef}
                 suffix={
                   <div onClick={handleSearching}>

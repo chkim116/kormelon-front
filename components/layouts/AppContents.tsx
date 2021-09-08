@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import Layout, { Content } from 'antd/lib/layout/layout';
-import AppSider from './AppSider';
 
 export const AppContentLayout = styled(Layout)`
   width: 100%;
@@ -23,7 +22,7 @@ const AppContents = ({ children }: { children: React.ReactChild }) => {
   return (
     <AppContentLayout>
       <AppContent>{children}</AppContent>
-      <AppSider />
+      {/* <AppSider /> */}
     </AppContentLayout>
   );
 };

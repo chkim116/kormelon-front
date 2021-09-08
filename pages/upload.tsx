@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
-import { Button, Form, Input, notification, Select, Tag } from 'antd';
+import { Button, Form, Input, Modal, notification, Select, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useRouter } from 'next/router';
 import { getCate, postFetcher } from '../fetch';
@@ -17,6 +17,13 @@ const Container = styled.div`
   @media all and (max-width: ${({ theme }) => theme.desktop}) {
     width: 95%;
   }
+
+  img {
+    max-width: 350px;
+    width: 100%;
+    object-fit: contain;
+  }
+
   .upload__header {
     display: flex;
   }
@@ -74,6 +81,11 @@ const Upload = () => {
   const [prevDesc, setPrevDesc] = useState<string>();
   // 여긴 에디터일때
   const [editPost, setEditPost] = useState<Post>();
+
+  // 임시저장
+  const savePosts = typeof window === 'object' && localStorage.getItem('saved');
+  const [savedId, setSaveId] = useState(-1);
+  const [isSaveVisible, setIsSaveVisible] = useState(false);
 
   const handleFormChange = useCallback((_: any, all: any) => {
     setForm(() => all);
@@ -199,6 +211,64 @@ const Upload = () => {
     postImg();
   }, []);
 
+  const handleSavePost = useCallback(() => {
+    const save = {
+      ...form,
+      id: 1,
+      thumb: thumbPreview,
+      tags: tags,
+      description: desc || prevDesc,
+    };
+    if (savePosts) {
+      const s: any[] = JSON.parse(savePosts);
+      let id = savedId;
+      let index = -1;
+      if (id) {
+        index = s.findIndex((lst) => lst.id === parseInt(JSON.parse(id.toString())));
+      }
+      if (index >= 0) {
+        s[index] = { ...save, id: index + 1 };
+        localStorage.setItem('saved', JSON.stringify([...s]));
+      } else {
+        localStorage.setItem('saved', JSON.stringify([...s, { ...save, id: s.length + 1 }]));
+        setSaveId(s.length + 1);
+      }
+    } else {
+      localStorage.setItem('saved', JSON.stringify([save]));
+      setSaveId(1);
+    }
+
+    notification.success({ message: '임시 저장 완료', placement: 'bottomLeft' });
+  }, [notification, savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
+
+  const handleSaveVisible = useCallback(() => {
+    setIsSaveVisible(true);
+  }, []);
+
+  const handleSaveVisibleClose = useCallback(() => {
+    setIsSaveVisible(false);
+  }, []);
+
+  const handleSelectSavePost = useCallback(
+    (e) => {
+      const { index } = e.currentTarget.dataset;
+
+      if (!savePosts) return;
+      const saved = JSON.parse(savePosts);
+      const post = saved.filter((lst: any) => lst.id === +index);
+      const { title, category, preview, description, tags, thumb } = post[0];
+
+      uploadForm.setFieldsValue({ title, category, preview });
+      setSaveId(index);
+      setForm(() => ({ title, category, preview, tags }));
+      setPrevDesc(() => description);
+      setTags(() => tags);
+      setThumbPreview(() => thumb || '');
+      setIsSaveVisible(false);
+    },
+    [savePosts, uploadForm],
+  );
+
   useEffect(() => {
     getCate().then((res) => setCategories(res.data || []));
   }, []);
@@ -219,17 +289,37 @@ const Upload = () => {
     if (router.query.edit) {
       const { title } = router.query;
       const post = async () =>
-        await axios.get(`/post/${encodeURIComponent(title as string)}`).then((res) => setEditPost(() => res.data));
+        await axios
+          .get(`/post/${encodeURIComponent(title as string)}`)
+          .then((res) => setEditPost(() => res.data.postByTitle));
       post();
     }
   }, [router.query]);
 
   return (
     <Container>
+      <Modal visible={isSaveVisible} onOk={handleSaveVisible} onCancel={handleSaveVisibleClose}>
+        {savePosts ? (
+          JSON.parse(savePosts).map((lst: any, index: number) => (
+            <Fragment key={index}>
+              <div data-index={lst.id} style={{ cursor: 'pointer' }} onClick={handleSelectSavePost}>
+                <h3>{lst.title}</h3>
+                <h5>{lst.category}</h5>
+                <small>{lst.description?.slice(0, 70)}</small>
+              </div>
+              <hr style={{ border: '1px solid #dbdbdb' }} />
+            </Fragment>
+          ))
+        ) : (
+          <h2>저장된 글이 없어요 :)</h2>
+        )}
+      </Modal>
+
       <Form size="large" form={uploadForm} name="uploadForm" layout="horizontal" onValuesChange={handleFormChange}>
+        <Button onClick={handleSaveVisible}>임시저장글 불러오기</Button>
         <Item label="썸네일">
           <div>
-            <img src={thumbPreview} alt="이 글의 썸네일이 될 사진" width={150} height={150} />
+            <img src={thumbPreview} alt="이 글의 썸네일이 될 사진" />
             <input type="file" accept="image/*" onChange={handleUploadThumb} />
           </div>
         </Item>
@@ -247,15 +337,6 @@ const Upload = () => {
         <Item name="preview">
           <TextArea placeholder="미리보기 텍스트를 적어주세요." />
         </Item>
-
-        <MarkEditor prevDesc={prevDesc} title={form?.title || ''} setDesc={setDesc} />
-        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
-
-        {tags.map((tag) => (
-          <Tag key={tag} onClick={handleDeleteTags}>
-            {tag}
-          </Tag>
-        ))}
         <TagForm>
           <Item name="tags" label="태그 작성" className="tag__container">
             <Input placeholder="태그를 입력하세요." />
@@ -264,10 +345,20 @@ const Upload = () => {
             입력
           </Button>
         </TagForm>
+        {tags?.map((tag) => (
+          <Tag key={tag} style={{ marginBottom: '1em' }} onClick={handleDeleteTags}>
+            {tag}
+          </Tag>
+        ))}
+        <MarkEditor prevDesc={prevDesc} title={form?.title || ''} setDesc={setDesc} />
+        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
       </Form>
 
       <Button data-id={editPost?._id} onClick={handleFinish} loading={loading} type="primary" htmlType="submit">
         확인
+      </Button>
+      <Button style={{ marginLeft: '6px', background: 'green' }} type="primary" onClick={handleSavePost}>
+        임시저장
       </Button>
     </Container>
   );

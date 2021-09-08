@@ -182,7 +182,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
             <Component {...pageProps} />
             <AppFooter>
               <>
-                <div>KimChanghoe &copy; 2021</div>
+                <div>Kormelon &copy; 2021</div>
                 <div>
                   <small>
                     Today <span>{view.views}</span>{' '}

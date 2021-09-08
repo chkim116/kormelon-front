@@ -10,6 +10,7 @@ import AppEmpty from '../components/layouts/AppEmpty';
 import { useInfiniteScroll } from '../hooks';
 import AppTitle from '../components/layouts/AppTitle';
 import SEO from '../seo';
+import ContentMe from '../components/ContentMe';
 
 interface Props {
   post: Post[];
@@ -54,14 +55,17 @@ const Category = ({ post, postCount }: Props) => {
   if (!post) {
     return <AppEmpty />;
   }
-
   return (
     <>
       <SEO desc={`${router.query.categories}에 대한 정리`} />
       <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents>
         <>
-          <ContentList lastElement={lastElement} viewPort={viewPort} postList={postList}></ContentList>
+          {router.asPath === '/me' ? (
+            <ContentMe />
+          ) : (
+            <ContentList lastElement={lastElement} viewPort={viewPort} postList={postList}></ContentList>
+          )}
           {isLoading && <AppLoading scroll={true} />}
         </>
       </AppContents>

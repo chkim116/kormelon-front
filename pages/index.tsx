@@ -53,7 +53,7 @@ export default function Home({ post, postCount }: Props) {
   }, [page]);
   return (
     <>
-      <AppTitle title="all"></AppTitle>
+      <AppTitle title="all" count={postCount}></AppTitle>
       <AppContents>
         <>
           <ContentList viewPort={viewPort} postList={postList} lastElement={lastElement}></ContentList>

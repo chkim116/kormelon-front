@@ -20,26 +20,35 @@ import React from 'react';
 //   background-attachment: fixed;
 // `;
 
-const Header = styled.h2`
+const Header = styled.div`
   display: flex;
   position: relative;
+  flex-direction: column;
   justify-content: center;
   text-align: center;
-  top: 55px;
-  font-weight: 700;
+  top: 90px;
+
+  h2 {
+    font-weight: 700;
+    padding-bottom: 0.6em;
+  }
 `;
 
 type Props = {
   title: string;
+  count: number | null;
 };
 
-const AppTitle = ({ title }: Props) => {
+const AppTitle = ({ title, count }: Props) => {
   // return <TitleContaier>{title.toUpperCase()}</TitleContaier>;
   return (
     <Header>
-      {'< '}
-      {title.toUpperCase()}
-      {' />'}
+      <h2>
+        {'< '}
+        {title.toUpperCase()}
+        {' />'}
+      </h2>
+      {count !== null && <h3>{count} Post</h3>}
     </Header>
   );
 };

@@ -226,7 +226,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           <Link href="me">
             <li>ME</li>
           </Link>
-          <span onClick={handleSearching}>
+          <span onClick={handleShowingSearchbar}>
             <FaSearch size={18} />
           </span>
         </NavMenu>

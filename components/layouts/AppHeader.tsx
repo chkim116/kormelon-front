@@ -151,7 +151,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
     });
   }, []);
 
-  const handleSearching = useCallback(() => {
+  const handleShowingSearchbar = useCallback(() => {
     setIsSearch((prev) => !prev);
   }, []);
 
@@ -202,10 +202,11 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           {isSearch && (
             <SearchingBar onSubmit={handleSearchSubmit}>
               <Input
+                placeholder="제목을 검색하세요."
                 onChange={handleSearchText}
                 ref={searchRef}
                 suffix={
-                  <div onClick={handleSearching}>
+                  <div onClick={handleShowingSearchbar}>
                     <span>X</span>
                   </div>
                 }

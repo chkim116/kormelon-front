@@ -74,7 +74,7 @@ export const global = css`
   }
 
   #content hr {
-    margin: 0.8em auto;
+    margin: 3.5em auto;
     text-align: center;
     width: 10rem;
     border: 1px solid #dbdbdb;

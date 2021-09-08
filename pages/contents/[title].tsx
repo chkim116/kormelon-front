@@ -18,6 +18,8 @@ import marked from 'marked';
 import '../../lib/highlight';
 import Anchors from '../../components/Anchors';
 import SEO from '../../seo';
+import Link from 'next/link';
+import { FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
 
 const Content = styled.section`
   width: 100%;
@@ -45,12 +47,46 @@ const ContentThumb = styled.div<{ url: string }>`
   }
 `;
 
+const ContentOtherPost = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 1em 0 2em 0;
+  border-top: 2px solid ${({ theme }) => theme.border};
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+`;
+
+const PrevContent = styled.div`
+  cursor: pointer;
+  text-align: right;
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+const NextContent = styled.div`
+  cursor: pointer;
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+type PostItem = {
+  id: string;
+  title: string;
+};
+
 interface Props {
   post: Post;
   anchor: string[];
+  prev: PostItem | null;
+  next: PostItem | null;
 }
 
-const Contents = ({ post, anchor }: Props) => {
+const Contents = ({ post, anchor, prev, next }: Props) => {
   const [categories, setCategories] = useState<Categories[]>();
   const [loading, setLoading] = useState(false);
   const { showSider } = useContext(AppContext);
@@ -147,6 +183,31 @@ const Contents = ({ post, anchor }: Props) => {
           </AppContents>
           <Anchors anchor={anchor} />
         </Content>
+        <ContentOtherPost>
+          <div>
+            <NextContent>
+              {next && (
+                <Link href={`/contents/${next.title}`}>
+                  <div>
+                    <FaArrowCircleLeft size={26} />
+                    <div>{next.title}</div>
+                  </div>
+                </Link>
+              )}
+            </NextContent>
+
+            <PrevContent>
+              {prev && (
+                <Link href={`/contents/${prev.title}`}>
+                  <div>
+                    <FaArrowCircleRight size={26} />
+                    <div>{prev.title}</div>
+                  </div>
+                </Link>
+              )}
+            </PrevContent>
+          </div>
+        </ContentOtherPost>
       </>
     </>
   );
@@ -158,11 +219,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const { params } = ctx;
 
   const fetch = await axios.get(`/post/${encodeURIComponent(params?.title as string)}`).then((res) => res.data);
-  const html = marked(fetch.description);
+  const html = await marked(fetch.postByTitle.description);
 
-  const post = { ...fetch, description: html };
+  const post = { ...fetch.postByTitle, description: html };
+  const next = fetch.next;
+  const prev = fetch.prev;
   // eslint-disable-next-line no-useless-escape
   const reg = /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~']+<\/\1>/g;
   const anchor = html.match(reg) || [];
-  return { props: { post, anchor } };
+  return { props: { post, anchor, next, prev } };
 };

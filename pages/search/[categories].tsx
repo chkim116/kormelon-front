@@ -8,7 +8,7 @@ import AppLoading from '../../components/layouts/AppLoading';
 import AppTitle from '../../components/layouts/AppTitle';
 
 const tagSearch = async (search: string) => {
-  return await axios.get(`/tag/search?tag=${search}`);
+  return await axios.get(`/tag/search?select=title&text=${search}`);
 };
 
 const Search = () => {
@@ -31,7 +31,7 @@ const Search = () => {
 
   return (
     <>
-      <AppTitle title={router.query?.categories as string}></AppTitle>
+      <AppTitle title={router.query?.categories as string} count={postList.length || null}></AppTitle>
       <AppContents>
         <>
           <ContentList postList={postList}></ContentList>

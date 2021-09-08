@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Input } from 'antd';
 import Link from 'next/link';
 import axios from 'axios';
 import { useGlobalState } from '../../hooks';
 import AppCategories from './AppCategories';
+import { FaSearch } from 'react-icons/fa';
+import router from 'next/router';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -78,6 +80,7 @@ const NavMenu = styled.ul`
     margin-right: 2em;
     list-style: none;
     position: relative;
+
     &:hover {
       &::after {
         position: absolute;
@@ -90,11 +93,32 @@ const NavMenu = styled.ul`
       }
     }
   }
+  span {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    svg {
+      path {
+        color: ${({ theme }) => theme.black};
+      }
+    }
+  }
 `;
 
 const MobileNav = styled(Button)`
   @media all and (min-width: 768px) {
     display: none;
+  }
+`;
+
+const SearchingBar = styled.form`
+  position: absolute;
+  width: 50%;
+  background-color: ${({ theme }) => theme.white};
+  z-index: 1;
+
+  span {
+    font-size: 20px;
   }
 `;
 
@@ -112,6 +136,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const [scaleHeight, setScaleHeight] = useState(false);
   const [isUser, setIsUser] = useGlobalState('auth');
   const [isShowSider] = useGlobalState('isShowSider');
+  const [isSearch, setIsSearch] = useState(false);
+  const searchRef = useRef<any>(null);
+  const [searchText, setSearchText] = useState('');
 
   const handleLogOut = useCallback(() => {
     logoutFetcher('/auth/logout');
@@ -123,6 +150,28 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
       admin: false,
     });
   }, []);
+
+  const handleShowingSearchbar = useCallback(() => {
+    setIsSearch((prev) => !prev);
+  }, []);
+
+  const handleSearchText = useCallback((e) => {
+    setSearchText(e.target.value);
+  }, []);
+
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      router.push(`/search/${searchText}`);
+    },
+    [searchText, router],
+  );
+
+  useEffect(() => {
+    if (isSearch && searchRef) {
+      searchRef?.current.focus();
+    }
+  }, [isSearch]);
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -150,6 +199,21 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           </Link>
         </NavBtn>
         <NavMenu>
+          {isSearch && (
+            <SearchingBar onSubmit={handleSearchSubmit}>
+              <Input
+                placeholder="제목을 검색하세요."
+                onChange={handleSearchText}
+                ref={searchRef}
+                suffix={
+                  <div onClick={handleShowingSearchbar}>
+                    <span>X</span>
+                  </div>
+                }
+                type="search"
+              />
+            </SearchingBar>
+          )}
           <Link href="/development">
             <li>DEVELOPMENT</li>
           </Link>
@@ -162,6 +226,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           <Link href="me">
             <li>ME</li>
           </Link>
+          <span onClick={handleShowingSearchbar}>
+            <FaSearch size={18} />
+          </span>
         </NavMenu>
         <MobileNav type="text" size="large" onClick={handleShowSider}>
           {isShowSider ? <CloseOutlined /> : <MenuOutlined />}

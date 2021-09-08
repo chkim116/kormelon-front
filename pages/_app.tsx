@@ -177,7 +177,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
         <Global styles={global} />
         <AppContext.Provider value={state}>
           <AppLayouts>
-            <>{isglobalLoading && <AppLoading scroll />}</>;
+            <>{isglobalLoading && <AppLoading scroll />}</>
             <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} />
             <Component {...pageProps} />
             <AppFooter>

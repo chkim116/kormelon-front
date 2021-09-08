@@ -57,7 +57,7 @@ const Category = ({ post, postCount }: Props) => {
   }
   return (
     <>
-      <SEO desc={`${router.query.categories}에 대한 정리`} />
+      <SEO desc={`${router.query.categories}에 대한 생각을 끄적인 곳`} />
       <AppTitle title={router.query?.categories as string}></AppTitle>
       <AppContents>
         <>

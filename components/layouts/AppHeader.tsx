@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Input } from 'antd';
 import Link from 'next/link';
 import axios from 'axios';
 import { useGlobalState } from '../../hooks';
@@ -110,6 +110,17 @@ const MobileNav = styled(Button)`
   }
 `;
 
+const SearchingBar = styled.div`
+  position: absolute;
+  width: 50%;
+  background-color: ${({ theme }) => theme.white};
+  z-index: 1;
+
+  span {
+    font-size: 20px;
+  }
+`;
+
 interface Props {
   handleLogout: () => void;
   // eslint-disable-next-line no-unused-vars
@@ -124,7 +135,8 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const [scaleHeight, setScaleHeight] = useState(false);
   const [isUser, setIsUser] = useGlobalState('auth');
   const [isShowSider] = useGlobalState('isShowSider');
-
+  const [isSearch, setIsSearch] = useState(false);
+  const searchRef = useRef<any>(null);
   const handleLogOut = useCallback(() => {
     logoutFetcher('/auth/logout');
     handleLogout();
@@ -135,6 +147,16 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
       admin: false,
     });
   }, []);
+
+  const handleSearching = useCallback(() => {
+    setIsSearch((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    if (isSearch && searchRef) {
+      searchRef?.current.focus();
+    }
+  }, [isSearch]);
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -162,6 +184,19 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           </Link>
         </NavBtn>
         <NavMenu>
+          {isSearch && (
+            <SearchingBar>
+              <Input
+                ref={searchRef}
+                suffix={
+                  <div onClick={handleSearching}>
+                    <span>X</span>
+                  </div>
+                }
+                type="search"
+              />
+            </SearchingBar>
+          )}
           <Link href="/development">
             <li>DEVELOPMENT</li>
           </Link>
@@ -174,7 +209,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           <Link href="me">
             <li>ME</li>
           </Link>
-          <span>
+          <span onClick={handleSearching}>
             <FaSearch size={18} />
           </span>
         </NavMenu>

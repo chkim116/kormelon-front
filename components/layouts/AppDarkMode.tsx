@@ -37,8 +37,10 @@ const AppDarkMode = () => {
   const handleModeChange = useCallback(() => {
     if (mode === 'light') {
       setMode('dark');
+      localStorage.setItem('mode', JSON.stringify('dark'));
     } else {
       setMode('light');
+      localStorage.setItem('mode', JSON.stringify('light'));
     }
   }, [mode, setMode]);
 

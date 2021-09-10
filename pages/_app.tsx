@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     id: '',
     admin: false,
   });
-  const [mode] = useGlobalState('mode', 'white');
+  const [mode, setMode] = useGlobalState('mode');
   const modeTheme = useMemo(() => {
     if (mode === 'dark') {
       return { ...theme, white: '#212729', black: '#fff' };
@@ -104,6 +104,12 @@ function MyApp({ Component, pageProps, user }: AppProps) {
   }, [user]);
 
   useEffect(() => {
+    if (typeof window === 'object') {
+      const modeOption = JSON.parse(localStorage.getItem('mode') || 'light');
+      if (modeOption) {
+        setMode(modeOption);
+      }
+    }
     router.events.on('routeChangeStart', () => {
       setIsGlobalLoading(true);
     });

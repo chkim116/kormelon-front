@@ -1,4 +1,4 @@
-import { AppProps } from 'next/dist/next-server/lib/router/router';
+import { AppProps } from 'next/dist/shared/lib/router/router';
 import styled from '@emotion/styled';
 import '../styles/highlight.css';
 import React, { createContext, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
@@ -102,7 +102,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (typeof window === 'object') {
-      const modeOption = JSON.parse(localStorage.getItem('mode') || 'light');
+      const modeOption = JSON.parse(localStorage.getItem('mode') || JSON.stringify('light'));
       if (modeOption) {
         setMode(modeOption);
       }

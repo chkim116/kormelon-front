@@ -168,6 +168,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const handleSearchSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      setIsSearch(false);
       router.push(`/search?select=title&text=${searchText}`);
     },
     [searchText, router],

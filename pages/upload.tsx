@@ -59,6 +59,7 @@ const Container = styled.div`
   }
 
   input {
+    color: ${({ theme }) => theme.black};
     background-color: ${({ theme }) => theme.white};
   }
 `;

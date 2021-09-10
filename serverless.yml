@@ -4,6 +4,7 @@
 falsyExempleServerlessNext:
   component: '@sls-next/serverless-component@1.20.0-alpha.7'
   inputs:
+    useServerlessTraceTarget: true
     memory:
       defaultLambda: 1024
     roleArn: arn:aws:iam::195592554540:role/serverless_kormelon

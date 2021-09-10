@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button, Input } from 'antd';
+import { Button, Input, Switch } from 'antd';
 import Link from 'next/link';
 import axios from 'axios';
 import { useGlobalState } from '../../hooks';
@@ -65,7 +65,7 @@ const NavMenu = styled.ul`
   margin: 0;
   margin-left: 1.5em;
   flex: 1;
-  justify-content: right;
+  justify-content: flex-end;
   font-family: 'Noto Sans KR';
 
   @media all and (max-width: 768px) {
@@ -106,6 +106,12 @@ const NavMenu = styled.ul`
 `;
 
 const MobileNav = styled(Button)`
+  svg {
+    color: ${({ theme }) => theme.black};
+    path {
+    }
+  }
+
   @media all and (min-width: 768px) {
     display: none;
   }
@@ -162,7 +168,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const handleSearchSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      router.push(`/search/${searchText}`);
+      router.push(`/search?select=title&text=${searchText}`);
     },
     [searchText, router],
   );

@@ -4,7 +4,7 @@ import Layout, { Content } from 'antd/lib/layout/layout';
 
 export const AppContentLayout = styled(Layout)`
   width: 100%;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
   max-width: 1000px;
   margin: 0 auto;
   margin-top: 90px;

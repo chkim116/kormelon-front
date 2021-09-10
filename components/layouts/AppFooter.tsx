@@ -4,7 +4,7 @@ import { Footer } from 'antd/lib/layout/layout';
 
 const App = styled(Footer)`
   text-align: center;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
   padding: 4em 0;
 `;
 interface AppProp {

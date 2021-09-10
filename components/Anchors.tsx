@@ -14,6 +14,10 @@ const BookAnchor = styled(Anchor)`
   padding: 0 1em;
   right: 0;
   background-color: ${({ theme }) => theme.white};
+  & * {
+    color: ${({ theme }) => theme.black};
+    background-color: ${({ theme }) => theme.white};
+  }
   .ant-anchor-ink::before {
     background-color: ${({ theme }) => theme.border};
   }

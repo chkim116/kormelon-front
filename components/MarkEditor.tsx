@@ -13,6 +13,8 @@ const WriteContainer = styled.div`
   padding: 0 3px;
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => theme.black};
+  background-color: ${({ theme }) => theme.white};
 `;
 
 const EditorContainer = styled.div<{ isPreviewOn: boolean }>`
@@ -37,6 +39,7 @@ const Editor = styled.textarea`
   width: 100%;
   max-height: 600px;
   border: 1px solid ${(props) => props.theme.border};
+  background-color: ${({ theme }) => theme.white};
   padding: 10px;
   resize: none;
   outline: none;
@@ -49,6 +52,7 @@ const Preview = styled.div`
   max-height: 660px;
   min-height: 660px;
   border: 1px solid #dbdbdb;
+  background-color: ${({ theme }) => theme.white};
   padding: 10px;
   ::-webkit-scrollbar {
     width: 5.2px;

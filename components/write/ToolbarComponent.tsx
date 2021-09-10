@@ -11,8 +11,9 @@ const Toolbar = styled.div`
   z-index: 55;
   flex-wrap: wrap;
   background-color: ${(props) => props.theme.white};
-
   button {
+    color: ${({ theme }) => theme.black};
+    background-color: ${(props) => props.theme.white};
     flex: 1;
     line-height: 100%;
     padding: 10px;

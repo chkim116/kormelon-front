@@ -20,7 +20,7 @@ const App = styled(Sider)<{ show?: string }>`
           top: 53px;
           width: 100px;
           height: 100vh;
-          background-color: #ffffff;
+          background-color: ${theme.white};
           padding: 1em;
           ul {
             li {

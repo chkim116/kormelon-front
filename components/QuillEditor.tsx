@@ -14,7 +14,7 @@ const QuillContainer = styled.div`
   .ql-toolbar {
     position: sticky;
     z-index: 180;
-    background-color: #ffffff;
+    background-color: ${({ theme }) => theme.white};
     top: 80px;
     border: none;
     border-bottom: 1px solid #dbdbdb;

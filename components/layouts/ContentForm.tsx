@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import Text from 'antd/lib/typography/Text';
 import AppTags from './AppTags';
 import Link from 'next/link';
 
@@ -30,7 +29,7 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
   return (
     <>
       <ContentLayout>
-        <Text>{date}</Text>
+        <small>{date}</small>
         <div className="content-title">{title}</div>
         <div>
           {tags.map((tag) => (

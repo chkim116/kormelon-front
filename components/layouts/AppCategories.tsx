@@ -23,9 +23,6 @@ const Sider = styled.div`
     left: 1em;
     top: 1em;
   }
-  p {
-    margin: 0;
-  }
 
   ul {
     text-align: center;
@@ -61,12 +58,10 @@ const AppCategories = () => {
       <Button type="text" onClick={handleIsShowSider}>
         X
       </Button>
-      <p>김개발 블로그</p>
-      <small>-</small>
       <ul>
         {categories.map((lst) => (
           <Link href={`/${lst}`} key={lst}>
-            <li>{lst.toUpperCase()}</li>
+            <li> {lst.toUpperCase()}</li>
           </Link>
         ))}
       </ul>

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { Button, Form, Input, Modal, notification, Select, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -14,6 +14,7 @@ const { Item } = Form;
 const Container = styled.div`
   margin: 120px auto 0 auto;
   width: 98%;
+
   @media all and (max-width: ${({ theme }) => theme.desktop}) {
     width: 95%;
   }
@@ -43,6 +44,8 @@ const Container = styled.div`
 
   textarea {
     margin-top: 1em;
+    color: ${({ theme }) => theme.black};
+    background-color: ${({ theme }) => theme.white};
     border: none;
   }
 
@@ -50,16 +53,31 @@ const Container = styled.div`
     margin-top: 1em;
     width: 300px;
   }
+
+  label {
+    color: ${({ theme }) => theme.black};
+  }
+
+  input {
+    background-color: ${({ theme }) => theme.white};
+  }
 `;
 
 const TagForm = styled.div`
   display: flex;
   align-items: center;
+  color: ${({ theme }) => theme.black};
+  background-color: ${({ theme }) => theme.white};
 
   button {
     margin-bottom: 10px;
     margin-left: 12px;
   }
+`;
+
+const LoadSavePostBtn = styled(Button)`
+  color: ${({ theme }) => theme.black};
+  background-color: ${({ theme }) => theme.white};
 `;
 
 interface FormValues {
@@ -316,7 +334,7 @@ const Upload = () => {
       </Modal>
 
       <Form size="large" form={uploadForm} name="uploadForm" layout="horizontal" onValuesChange={handleFormChange}>
-        <Button onClick={handleSaveVisible}>임시저장글 불러오기</Button>
+        <LoadSavePostBtn onClick={handleSaveVisible}>임시저장글 불러오기</LoadSavePostBtn>
         <Item label="썸네일">
           <div>
             <img src={thumbPreview} alt="이 글의 썸네일이 될 사진" />

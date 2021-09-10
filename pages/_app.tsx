@@ -1,7 +1,7 @@
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import styled from '@emotion/styled';
 import '../styles/highlight.css';
-import React, { createContext, useCallback, useEffect, useReducer, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import Layout from 'antd/lib/layout/layout';
 import AppFooter from '../components/layouts/AppFooter';
 import AppHeader from '../components/layouts/AppHeader';
@@ -11,15 +11,16 @@ import { DefaultSeo } from 'next-seo';
 import { useGlobalState, useScrollTop } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
-import { Global, ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '@emotion/react';
 import { theme } from '../styles/theme';
 import router from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
-import { global } from '../styles/global';
+import { GlobalStyles } from '../styles/global';
+import AppDarkMode from '../components/layouts/AppDarkMode';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
 `;
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.kormelon.com' : 'http://localhost:4000';
@@ -40,6 +41,14 @@ function MyApp({ Component, pageProps, user }: AppProps) {
     id: '',
     admin: false,
   });
+  const [mode] = useGlobalState('mode', 'white');
+  const modeTheme = useMemo(() => {
+    if (mode === 'dark') {
+      return { ...theme, white: '#212729', black: '#fff' };
+    } else {
+      return { ...theme, white: '#fff', black: '#212729' };
+    }
+  }, [mode]);
 
   const handleLogout = () => {
     setIsUser({
@@ -173,8 +182,8 @@ function MyApp({ Component, pageProps, user }: AppProps) {
           ></script>
         )}
       </Head>
-      <ThemeProvider theme={theme}>
-        <Global styles={global} />
+      <ThemeProvider theme={modeTheme}>
+        <GlobalStyles theme={modeTheme} />
         <AppContext.Provider value={state}>
           <AppLayouts>
             <>{isglobalLoading && <AppLoading scroll />}</>
@@ -194,6 +203,7 @@ function MyApp({ Component, pageProps, user }: AppProps) {
               </>
             </AppFooter>
           </AppLayouts>
+          <AppDarkMode />
           <AppTop></AppTop>
         </AppContext.Provider>
       </ThemeProvider>

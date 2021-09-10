@@ -89,7 +89,7 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
 
               {post.tags.map((tag) => (
                 <AppTags key={tag}>
-                  <Link href={`/search/${tag}`}>{tag}</Link>
+                  <Link href={`/search?select=tags&text=${tag}`}>{tag}</Link>
                 </AppTags>
               ))}
             </ContentLayout>

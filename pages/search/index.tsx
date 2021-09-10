@@ -7,23 +7,23 @@ import AppContents from '../../components/layouts/AppContents';
 import AppLoading from '../../components/layouts/AppLoading';
 import AppTitle from '../../components/layouts/AppTitle';
 
-const tagSearch = async (search: string) => {
-  return await axios.get(`/tag/search?select=title&text=${search}`);
+const tagSearch = async (select: string, text: string) => {
+  return await axios.get(`/tag/search?select=${select}&text=${text}`);
 };
 
 const Search = () => {
-  const router = useRouter();
+  const { query } = useRouter();
   const [postList, setPostList] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (router.query?.categories) {
+    if (query?.select && query?.text) {
       setIsLoading(() => true);
-      tagSearch(router.query.categories as string)
+      tagSearch(query.select as string, query.text as string)
         .then((res) => setPostList(res.data))
         .then(() => setIsLoading(() => false));
     }
-  }, []);
+  }, [query]);
 
   if (isLoading) {
     return <AppLoading />;
@@ -31,7 +31,7 @@ const Search = () => {
 
   return (
     <>
-      <AppTitle title={router.query?.categories as string} count={postList.length || null}></AppTitle>
+      <AppTitle title={(query?.text as string) || ''} count={postList.length || null}></AppTitle>
       <AppContents>
         <>
           <ContentList postList={postList}></ContentList>

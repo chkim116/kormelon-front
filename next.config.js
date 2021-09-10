@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer({
-  target: 'serverless',
+  target: 'experimental-serverless-trace',
   compress: true,
   webpack(config, { isServer }) {
     const prod = process.env.NODE_ENV === 'production';

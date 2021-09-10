@@ -28,7 +28,7 @@ axios.defaults.withCredentials = true;
 
 export const AppContext = createContext(initial);
 
-function MyApp({ Component, pageProps, user }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   const [isglobalLoading, setIsGlobalLoading] = useState(false);
   const [state] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
@@ -91,17 +91,14 @@ function MyApp({ Component, pageProps, user }: AppProps) {
         setAlready(true);
       });
     };
+    const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
+    user();
     if (already) {
       return;
     }
+
     getViews();
   }, []);
-
-  useEffect(() => {
-    if (user?.id) {
-      setIsUser(user);
-    }
-  }, [user]);
 
   useEffect(() => {
     if (typeof window === 'object') {
@@ -218,22 +215,3 @@ function MyApp({ Component, pageProps, user }: AppProps) {
 }
 
 export default MyApp;
-
-MyApp.getInitialProps = async (app: any) => {
-  const request = app.ctx?.req;
-
-  let cookie = '';
-  if (request) {
-    cookie = request.headers.cookie || '';
-  }
-
-  const user = await axios
-    .get('/auth', {
-      headers: {
-        cookie: cookie,
-      },
-    })
-    .then((res) => res.data);
-
-  return { user };
-};

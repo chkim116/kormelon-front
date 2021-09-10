@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Post } from '../pages';
 import styled from '@emotion/styled';
 import AppTags from './layouts/AppTags';
+import { useInfiniteScroll } from '../hooks';
+import AppLoading from './layouts/AppLoading';
+import axios from 'axios';
 
 const ContentContainer = styled.div`
   display: grid;
@@ -54,8 +57,37 @@ const ContentImage = styled.div`
   }
 `;
 
-const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; viewPort?: any; lastElement?: any }) => {
-  if (postList.length < 1) {
+const pagePost = async (page: number) => {
+  return await axios.get(`/post?page=${page}`);
+};
+
+const ContentList = ({ post, postCount, searching }: { post: Post[]; postCount: number; searching?: boolean }) => {
+  const [postList, setPostList] = useState<Post[]>(post);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const viewPort = useRef<HTMLDivElement>(null);
+  const isLimit = useMemo(() => {
+    return Math.ceil(postCount / 6);
+  }, [postCount]);
+
+  const data = useMemo(() => {
+    return { viewPort: viewPort.current, isLoading, limit: isLimit };
+  }, [viewPort, isLoading, isLimit]);
+
+  const [lastElement, page] = useInfiniteScroll(data);
+
+  useEffect(() => {
+    if (searching) return;
+    if (page <= 1) return;
+    if (page > isLimit) return;
+    setIsLoading(true);
+    pagePost(page as number).then((res) => {
+      setPostList([...postList, ...res.data.post]);
+      setIsLoading(false);
+    });
+  }, [page, searching]);
+
+  if (!post || post.length < 1) {
     return (
       <div style={{ textAlign: 'center' }}>
         <h3>아직 발행된 글이 없습니다 :)</h3>
@@ -102,6 +134,7 @@ const ContentList = ({ postList, viewPort, lastElement }: { postList: Post[]; vi
   return (
     <div ref={viewPort}>
       <PostCard />
+      {isLoading && <AppLoading scroll={true} />}
     </div>
   );
 };

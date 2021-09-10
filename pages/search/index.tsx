@@ -28,13 +28,12 @@ const Search = () => {
   if (isLoading) {
     return <AppLoading />;
   }
-
   return (
     <>
       <AppTitle title={(query?.text as string) || ''} count={postList.length || null}></AppTitle>
       <AppContents>
         <>
-          <ContentList postList={postList}></ContentList>
+          <ContentList post={postList} postCount={postList.length || 0} searching></ContentList>
           {isLoading && <AppLoading scroll={true} />}
         </>
       </AppContents>

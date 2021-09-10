@@ -57,11 +57,22 @@ const ContentImage = styled.div`
   }
 `;
 
-const pagePost = async (page: number) => {
-  return await axios.get(`/post?page=${page}`);
+const pagePost = async (page: number, filter?: string) => {
+  if (filter) {
+    return await axios.get(`/post?filter=${filter}&page=${page}`);
+  } else {
+    return await axios.get(`/post?page=${page}`);
+  }
 };
 
-const ContentList = ({ post, postCount, searching }: { post: Post[]; postCount: number; searching?: boolean }) => {
+interface Props {
+  post: Post[];
+  postCount: number;
+  searching?: boolean;
+  filter?: string;
+}
+
+const ContentList = ({ post, postCount, searching, filter }: Props) => {
   const [postList, setPostList] = useState<Post[]>(post);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,7 +92,7 @@ const ContentList = ({ post, postCount, searching }: { post: Post[]; postCount: 
     if (page <= 1) return;
     if (page > isLimit) return;
     setIsLoading(true);
-    pagePost(page as number).then((res) => {
+    pagePost(page as number, filter).then((res) => {
       setPostList([...postList, ...res.data.post]);
       setIsLoading(false);
     });

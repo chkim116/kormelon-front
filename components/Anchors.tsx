@@ -3,7 +3,7 @@ import { Anchor } from 'antd';
 import { useMemo } from 'react';
 
 const BookAnchor = styled(Anchor)`
-  max-width: 200px;
+  max-width: 300px;
   width: 100%;
   letter-spacing: -0.5px;
   padding: 0;

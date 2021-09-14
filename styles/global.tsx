@@ -124,6 +124,11 @@ export const GlobalStyles = ({ theme }: any) => {
           padding-left: 2em;
           font-size: 15px;
         }
+
+        strong,
+        b {
+          font-weight: bold;
+        }
       `}
     />
   );

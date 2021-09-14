@@ -37,11 +37,15 @@ const ContentThumb = styled.div<{ url: string }>`
   max-height: 500px;
   height: 100%;
   min-height: 250px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   img {
+    padding: 0 0.2em;
+    object-fit: contain;
+    width: 100%;
     height: 100%;
     max-height: 500px;
   }
@@ -184,7 +188,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
           <Anchors anchor={anchor} />
         </Content>
         <ContentOtherPost>
-          <div>
+          <div style={{ padding: '0 0.6em' }}>
             <NextContent>
               {next && (
                 <Link href={`/contents/${next.title}`}>

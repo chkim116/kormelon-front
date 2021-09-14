@@ -230,7 +230,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           <Link href={`/tech`}>
             <li>TECH</li>
           </Link>
-          <Link href="me">
+          <Link href="/me">
             <li>ME</li>
           </Link>
           <span onClick={handleShowingSearchbar}>

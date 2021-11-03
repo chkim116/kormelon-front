@@ -8,6 +8,8 @@ import { Categories } from './[categories]';
 import { Post } from '.';
 import axios from 'axios';
 import MarkEditor from '../components/MarkEditor';
+import { theme } from '../styles/theme';
+import { useGlobalState } from '../hooks';
 
 const { Item } = Form;
 
@@ -90,6 +92,8 @@ interface FormValues {
 
 const Upload = () => {
   const router = useRouter();
+  const [mode] = useGlobalState('mode');
+
   const [uploadForm] = Form.useForm();
   const [form, setForm] = useState<FormValues>();
   const [desc, setDesc] = useState<string>('');
@@ -317,7 +321,12 @@ const Upload = () => {
 
   return (
     <Container>
-      <Modal visible={isSaveVisible} onOk={handleSaveVisible} onCancel={handleSaveVisibleClose}>
+      <Modal
+        bodyStyle={{ background: theme.black }}
+        visible={isSaveVisible}
+        onOk={handleSaveVisible}
+        onCancel={handleSaveVisibleClose}
+      >
         {savePosts ? (
           JSON.parse(savePosts).map((lst: any, index: number) => (
             <Fragment key={index}>
@@ -343,7 +352,11 @@ const Upload = () => {
           </div>
         </Item>
         <Item name="category" className="select__container" label="카테고리" required>
-          <Select bordered={false} style={{ borderBottom: '1px solid #dbdbdb' }}>
+          <Select
+            bordered={false}
+            style={{ borderBottom: '1px solid #706767' }}
+            dropdownStyle={{ backgroundColor: mode === 'light' ? `${theme.white}` : `${theme.black}` }}
+          >
             {categories.map((list) => (
               <Select.Option key={list.category} value={list.category} children={list.category}></Select.Option>
             ))}

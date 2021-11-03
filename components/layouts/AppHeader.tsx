@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button, Input, Switch } from 'antd';
+import { Button, Input } from 'antd';
 import Link from 'next/link';
 import axios from 'axios';
 import { useGlobalState } from '../../hooks';
@@ -221,6 +221,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
               />
             </SearchingBar>
           )}
+          <Link href="/book">
+            <li>BOOK</li>
+          </Link>
           <Link href="/development">
             <li>DEVELOPMENT</li>
           </Link>

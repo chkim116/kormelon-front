@@ -88,15 +88,19 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
   const [lastElement, page] = useInfiniteScroll(data);
 
   useEffect(() => {
-    if (searching) return;
-    if (page <= 1) return;
-    if (page > isLimit) return;
+    if (searching || page <= 1 || page > isLimit) {
+      return;
+    }
     setIsLoading(true);
     pagePost(page as number, filter).then((res) => {
       setPostList([...postList, ...res.data.post]);
       setIsLoading(false);
     });
   }, [page, searching]);
+
+  useEffect(() => {
+    setPostList(post);
+  }, [post]);
 
   if (!post || post.length < 1) {
     return (
@@ -106,7 +110,7 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
     );
   }
 
-  const PostCard = () => {
+  const PostCard = ({ postList }: { postList: Post[] }) => {
     return (
       <ContentContainer>
         {postList.map((post, index) => (
@@ -144,7 +148,7 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
 
   return (
     <div ref={viewPort}>
-      <PostCard />
+      <PostCard postList={postList} />
       {isLoading && <AppLoading scroll={true} />}
     </div>
   );

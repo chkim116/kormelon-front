@@ -82,7 +82,7 @@ type Props = {
   setDesc: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MarkEditor = ({ prevDesc = '', title = '', setDesc }: Props) => {
+const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
   const [txt, setTxt] = useState<string | null>(null);
@@ -265,7 +265,6 @@ const MarkEditor = ({ prevDesc = '', title = '', setDesc }: Props) => {
         </EditorContainer>
         {isPreviewOn && (
           <Preview>
-            {/* <div className="content-title">{title ? title : '문서 제목을 입력바랍니다.'}</div> */}
             <div
               id="content"
               dangerouslySetInnerHTML={{

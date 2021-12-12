@@ -8,6 +8,8 @@ import { css } from '@emotion/react';
 
 const PostPagination = styled.div`
   padding: 1em 0;
+  display: flex;
+  justify-content: center;
 `;
 
 const PostPaginationArrowBtn = styled.button`

@@ -79,7 +79,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return () => {
       document.body.removeEventListener('click', handleShowSider);
     };
-  }, [state.showSider]);
+  }, [handleShowSider, state.showSider]);
 
   useEffect(() => {
     const getViews = async () => {
@@ -98,7 +98,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
 
     getViews();
-  }, []);
+  }, [already, setIsUser]);
 
   useEffect(() => {
     if (typeof window === 'object') {
@@ -118,7 +118,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', () => {});
       router.events.off('routeChangeError', () => {});
     };
-  }, []);
+  }, [setMode]);
 
   return (
     <>

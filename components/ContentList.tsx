@@ -96,6 +96,7 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
       setPostList([...postList, ...res.data.post]);
       setIsLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, searching]);
 
   useEffect(() => {

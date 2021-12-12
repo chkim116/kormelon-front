@@ -16,6 +16,10 @@
   color: #539bff;
 }
 
+.hljs-function {
+  color: #45bce7;
+}
+
 /*  (a : any, b: any) */
 .hljs-params {
   color: #539bff;

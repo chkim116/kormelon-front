@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { FaGithub } from 'react-icons/fa';
 
 const Container = styled.div`
   text-align: center;
@@ -31,11 +32,14 @@ const ContentMe = () => {
         <img src="https://assets-kormelon.s3.ap-northeast-2.amazonaws.com/img/123.jpeg" alt="사진" />
       </MeImg>
       <hr />
-      <h2>하고픈게 많은 별거 아닌 사람</h2>
-      <h4>1996.01.23 B형</h4>
+      <h2>
+        <a href="https://github.com/chkim116">
+          <FaGithub size={30} />
+        </a>
+      </h2>
 
       <div>
-        <h4>개발자</h4>
+        <h4>FrontEnd Developer</h4>
       </div>
     </Container>
   );

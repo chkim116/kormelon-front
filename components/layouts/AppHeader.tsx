@@ -201,9 +201,9 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
           {/* <Button type="text" size="large" onClick={handleShowSider}>
             {showSider ? <CloseOutlined /> : <MenuOutlined />}
           </Button> */}
-          <Link href="/">
-            <div>김개발 블로그</div>
-          </Link>
+          <div>
+            <Link href="/">Kormelon Devlog</Link>
+          </div>
         </NavBtn>
         <NavMenu>
           {isSearch && (

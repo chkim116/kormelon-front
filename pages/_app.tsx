@@ -123,20 +123,23 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <DefaultSeo
-        title={'김개발 블로그'}
+        title={'Kormelon Devlog'}
         description={`가끔 생각날 적, 정리하고플 적 끄적이는 창고`}
-        canonical="https://www.kormelon.com/"
+        canonical="가끔 생각날 때 정리하는 블로그"
         openGraph={{
-          title: '김개발 블로그',
-          description: '가끔 생각날 적, 정리하고플 적 끄적이는 창고',
+          article: {
+            authors: ['김창회'],
+          },
+          title: 'Kormelon Devlog',
+          description: '가끔 생각날 때 정리하는 블로그',
           type: 'blog',
           locale: 'ko_KR',
           url: 'https://www.kormelon.com/',
-          site_name: '김개발 블로그',
+          site_name: 'Kormelon Devlog',
           images: [
             {
               url: `https://images.unsplash.com/photo-1616812757130-aca5451b0243?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80`,
-              alt: `김개발 블로그`,
+              alt: `Kormelon Devlog`,
             },
           ],
         }}

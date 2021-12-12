@@ -71,6 +71,23 @@ export const GlobalStyles = ({ theme }: any) => {
         #content pre {
           font-family: 'Fira Code', monospace;
           letter-spacing: -0.06em;
+          font-size: 1.15em;
+        }
+
+        code {
+          padding: 1em;
+          &::-webkit-scrollbar {
+            height: 8px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background-color: #333333;
+          }
+          &::-webkit-scrollbar-thumb {
+            height: 17%;
+            border-radius: 10px;
+            background-color: ${theme.border};
+          }
         }
 
         #content hr {

@@ -15,7 +15,7 @@ const PostPagination = styled.div`
 const PostPaginationArrowBtn = styled.button`
   width: 32px;
   height: 32px;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.white};
   border: 1px solid #dbdbdb;
 `;
 
@@ -24,9 +24,9 @@ const PostPaginationBtn = styled.button<{ selected: boolean }>`
   height: 32px;
   border: 1px solid #dbdbdb;
   margin: 0 4px;
-  background-color: ${({ selected }) => (selected ? '#dbdbdb' : '#ffffff')};
+  background-color: ${({ selected, theme }) => (selected ? theme.border : theme.white)};
   &:disabled {
-    background-color: #fafbfc;
+    background-color: ${({ theme }) => theme.border};
   }
   ${({ selected }) =>
     selected &&

@@ -39,9 +39,10 @@ interface Props {
   post: Post[];
   postCount: number;
   filter?: string;
+  searching?: boolean;
 }
 
-const ContentList = ({ post, postCount, filter }: Props) => {
+const ContentList = ({ post, postCount, filter, searching }: Props) => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const isLimit = useMemo(() => {
@@ -59,22 +60,37 @@ const ContentList = ({ post, postCount, filter }: Props) => {
   const handlePagination = useCallback(
     (e) => {
       const pageNum = e.currentTarget.value;
+
+      if (searching) {
+        router.push(`/${filter}&page=${pageNum}`);
+        return;
+      }
+
       router.push(filter ? `/${filter}?page=${pageNum}` : `?page=${pageNum}`);
     },
-    [filter, router],
+    [filter, router, searching],
   );
 
   const handleArrowClick = useCallback(
     (e) => {
       const value = e.currentTarget.value;
       if (value === '-') {
+        if (searching) {
+          router.push(`/${filter}&page=${+page - 1}`);
+          return;
+        }
         router.push(filter ? `/${filter}?page=${+page - 1}` : `?page=${+page - 1}`);
       }
       if (value === '+') {
+        if (searching) {
+          router.push(`/${filter}&page=${+page + 1}`);
+          return;
+        }
+
         router.push(filter ? `/${filter}?page=${+page + 1}` : `?page=${+page + 1}`);
       }
     },
-    [router, filter, page],
+    [searching, router, filter, page],
   );
 
   useEffect(() => {

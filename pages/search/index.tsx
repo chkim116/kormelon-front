@@ -39,7 +39,12 @@ const Search = () => {
       <AppTitle title={(query?.text as string) || ''} count={postList.postCount || null}></AppTitle>
       <AppContents>
         <>
-          <ContentList post={postList.post} postCount={postList.postCount || 0}></ContentList>
+          <ContentList
+            post={postList.post}
+            postCount={postList.postCount || 0}
+            searching
+            filter={`search?select=${query.select}&text=${query.text}`}
+          ></ContentList>
           {isLoading && <AppLoading scroll={true} />}
         </>
       </AppContents>

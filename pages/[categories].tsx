@@ -59,10 +59,13 @@ export interface Categories {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { params } = ctx;
-  const post: Props = await axios
-    .get(`/post?filter=${encodeURI(params?.categories as string)}`)
-    .then((res) => res.data);
+  const { params, query } = ctx;
+
+  const filterUrl = `/post?filter=${encodeURI(params?.categories as string)}`;
+  const pageUrl = `/post?filter=${encodeURI(params?.categories as string)}&page=${query.page}`;
+  const isPage = query?.page;
+
+  const post: Props = await axios.get(isPage ? pageUrl : filterUrl).then((res) => res.data);
 
   return {
     props: { post: post.post, postCount: post.postCount },

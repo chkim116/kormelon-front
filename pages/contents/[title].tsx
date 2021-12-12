@@ -13,7 +13,7 @@ import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
-import { useGlobalState } from '../../hooks';
+import { useGlobalState, useScrollTop } from '../../hooks';
 import marked from 'marked';
 import '../../lib/highlight';
 import Anchors from '../../components/Anchors';
@@ -146,6 +146,8 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
     };
   }, []);
 
+  useScrollTop();
+
   if (loading) {
     return <AppLoading />;
   }
@@ -159,6 +161,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
   }
 
   const replace = (string: string) => string.replace(/<[^>]*>?/gm, '');
+
   return (
     <>
       <SEO

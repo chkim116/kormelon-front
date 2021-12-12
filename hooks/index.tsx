@@ -14,8 +14,7 @@ export const useInfiniteScroll = ({ viewPort, isLoading, limit }: Props) => {
       if (isLoading || viewPort === undefined || node === null || page >= limit) {
         return;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      viewPort = new IntersectionObserver((entries) => {
+      viewPort.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           viewPort.disconnect();
           setPage((prev) => prev + 1);

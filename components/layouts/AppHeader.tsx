@@ -155,7 +155,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
       id: '',
       admin: false,
     });
-  }, []);
+  }, [handleLogout, setIsUser]);
 
   const handleShowingSearchbar = useCallback(() => {
     setIsSearch((prev) => !prev);
@@ -171,7 +171,7 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
       setIsSearch(false);
       router.push(`/search?select=title&text=${searchText}`);
     },
-    [searchText, router],
+    [searchText],
   );
 
   useEffect(() => {

@@ -137,14 +137,14 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
     if (showSider) {
       getCate().then((res) => setCategories(res.data));
     }
-  }, [showSider]);
+  }, [categories, showSider]);
 
   useEffect(() => {
     document.addEventListener('scroll', handleOpacityAnchor);
     return () => {
       document.removeEventListener('scroll', handleOpacityAnchor);
     };
-  }, []);
+  }, [handleOpacityAnchor]);
 
   useScrollTop();
 

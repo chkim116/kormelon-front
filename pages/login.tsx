@@ -61,7 +61,7 @@ const Login = () => {
           });
         });
     }
-  }, [form]);
+  }, [form, isSetUser, router]);
 
   if (loading) {
     return <AppLoading />;

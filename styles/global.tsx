@@ -129,6 +129,15 @@ export const GlobalStyles = ({ theme }: any) => {
         b {
           font-weight: bold;
         }
+
+        a {
+          color: inherit;
+        }
+
+        button {
+          cursor: pointer;
+          border: none;
+        }
       `}
     />
   );

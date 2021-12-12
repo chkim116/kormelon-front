@@ -330,7 +330,14 @@ const Upload = () => {
         {savePosts ? (
           JSON.parse(savePosts).map((lst: any, index: number) => (
             <Fragment key={index}>
-              <div data-index={lst.id} style={{ cursor: 'pointer' }} onClick={handleSelectSavePost}>
+              <div
+                tabIndex={0}
+                role="button"
+                data-index={lst.id}
+                style={{ cursor: 'pointer' }}
+                onKeyDown={handleSelectSavePost}
+                onClick={handleSelectSavePost}
+              >
                 <h3>{lst.title}</h3>
                 <h5>{lst.category}</h5>
                 <small>{lst.description?.slice(0, 70)}</small>

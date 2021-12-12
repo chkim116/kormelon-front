@@ -8,7 +8,7 @@ import AppHeader from '../components/layouts/AppHeader';
 import axios from 'axios';
 import { initial, reducer } from '../reducer';
 import { DefaultSeo } from 'next-seo';
-import { useGlobalState, useScrollTop } from '../hooks';
+import { useGlobalState } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
 import { ThemeProvider } from '@emotion/react';
@@ -119,8 +119,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeError', () => {});
     };
   }, []);
-
-  useScrollTop();
 
   return (
     <>

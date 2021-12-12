@@ -1,9 +1,8 @@
 /* basic */
 .hljs {
   margin: 8px 0;
-  padding: 10px 8px;
   color: #45bce7;
-  background-color: #212227 !important;
+  background-color: #17181b !important;
   box-shadow: 2px 2px 4px #212227;
 }
 
@@ -32,8 +31,13 @@
   color: #e7b247;
 }
 
+.hljs-property {
+  color: #fcc14c;
+}
+
 .hljs-comment {
   color: #6d9144;
+  font-weight: bold;
 }
 
 .hljs-string {

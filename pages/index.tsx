@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React from 'react';
 import axios from 'axios';
 import ContentList from '../components/ContentList';
@@ -36,8 +36,12 @@ export default function Home({ post, postCount }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const post: Props = await axios.get('/post').then((res) => res.data);
+export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const { query } = ctx;
+  const pageUrl = `/post?page=${query.page}`;
+  const isPage = query.page;
+
+  const post: Props = await axios.get(isPage ? pageUrl : '/post').then((res) => res.data);
   return {
     props: {
       post: post.post,

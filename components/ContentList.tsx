@@ -1,107 +1,89 @@
-import Link from 'next/link';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Post } from '../pages';
-import styled from '@emotion/styled';
-import AppTags from './layouts/AppTags';
-import { useInfiniteScroll } from '../hooks';
 import AppLoading from './layouts/AppLoading';
-import axios from 'axios';
+import { useRouter } from 'next/router';
+import { ContentCard } from './ContentCard';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 
-const ContentContainer = styled.div`
-  display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(3, 300px);
-  gap: 2em;
-
-  @media all and (max-width: 1000px) {
-    grid-template-columns: repeat(2, 300px);
-  }
-
-  @media all and (max-width: 700px) {
-    grid-template-columns: repeat(1, 400px);
-  }
-
-  @media all and (max-width: 500px) {
-    grid-template-columns: repeat(1, 300px);
-    gap: 1em;
-  }
+const PostPagination = styled.div`
+  padding: 1em 0;
 `;
 
-const ContentLayout = styled.div`
-  padding-bottom: 1em;
-  border-bottom: 1px dashed #dbdbdc;
-  margin-bottom: 3em;
-  cursor: pointer;
-
-  h3 {
-    font-size: 1.1rem;
-    font-weight: 500;
-    font-family: 'Nato Sans KR';
-    opacity: 0.8;
-    margin: 0.6em 0;
-  }
-
-  p {
-    color: #959595;
-  }
+const PostPaginationArrowBtn = styled.button`
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #dbdbdb;
 `;
 
-const ContentImage = styled.div`
-  width: 100%;
-  min-width: 100%;
-  text-align: center;
-  img {
-    width: 100%;
-    min-height: 300px;
-    object-fit: cover;
+const PostPaginationBtn = styled.button<{ selected: boolean }>`
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dbdbdb;
+  margin: 0 4px;
+  background-color: ${({ selected }) => (selected ? '#dbdbdb' : '#ffffff')};
+  &:disabled {
+    background-color: #fafbfc;
   }
+  ${({ selected }) =>
+    selected &&
+    css`
+      pointer-events: none;
+    `};
 `;
-
-const pagePost = async (page: number, filter?: string) => {
-  if (filter) {
-    return await axios.get(`/post?filter=${filter}&page=${page}`);
-  } else {
-    return await axios.get(`/post?page=${page}`);
-  }
-};
 
 interface Props {
   post: Post[];
   postCount: number;
-  searching?: boolean;
   filter?: string;
 }
 
-const ContentList = ({ post, postCount, searching, filter }: Props) => {
-  const [postList, setPostList] = useState<Post[]>(post);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const viewPort = useRef<HTMLDivElement>(null);
+const ContentList = ({ post, postCount, filter }: Props) => {
+  const router = useRouter();
+  const [page, setPage] = useState(1);
   const isLimit = useMemo(() => {
     return Math.ceil(postCount / 6);
   }, [postCount]);
 
-  const data = useMemo(() => {
-    return { viewPort: viewPort.current, isLoading, limit: isLimit };
-  }, [viewPort, isLoading, isLimit]);
+  const pagination = useMemo(() => {
+    const pageNumArr = new Array(isLimit).fill(undefined).map((_, i) => i);
+    const i = Math.ceil(+page / 10);
+    const start = 10 * (i - 1);
+    const end = 10 * i;
+    return pageNumArr.slice(start, end);
+  }, [isLimit, page]);
 
-  const [lastElement, page] = useInfiniteScroll(data);
+  const handlePagination = useCallback(
+    (e) => {
+      const pageNum = e.currentTarget.value;
+      router.push(filter ? `/${filter}?page=${pageNum}` : `?page=${pageNum}`);
+    },
+    [filter, router],
+  );
+
+  const handleArrowClick = useCallback(
+    (e) => {
+      const value = e.currentTarget.value;
+      if (value === '-') {
+        router.push(filter ? `/${filter}?page=${+page - 1}` : `?page=${+page - 1}`);
+      }
+      if (value === '+') {
+        router.push(filter ? `/${filter}?page=${+page + 1}` : `?page=${+page + 1}`);
+      }
+    },
+    [router, filter, page],
+  );
 
   useEffect(() => {
-    if (searching || page <= 1 || page > isLimit) {
-      return;
+    if (!router.query.page) {
+      setPage(1);
     }
-    setIsLoading(true);
-    pagePost(page as number, filter).then((res) => {
-      setPostList([...postList, ...res.data.post]);
-      setIsLoading(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, searching]);
-
-  useEffect(() => {
-    setPostList(post);
-  }, [post]);
+    if (router.query.page) {
+      setPage(+router.query.page);
+    }
+    return () => {};
+  }, [router.query]);
 
   if (!post || post.length < 1) {
     return (
@@ -111,51 +93,24 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
     );
   }
 
-  const PostCard = ({ postList }: { postList: Post[] }) => {
-    return (
-      <ContentContainer>
-        {postList.map((post, index) => (
-          <ContentLayout key={index}>
-            <Link href={`/contents/${post.title}`}>
-              <ContentImage>
-                <img
-                  src={
-                    post.thumb ||
-                    'https://assets-kormelon.s3.ap-northeast-2.amazonaws.com/img/roonz-2xEQDxB0ss4-unsplash.jpg'
-                  }
-                  alt={`${post.title} 썸네일`}
-                />
-              </ContentImage>
-            </Link>
-
-            <div>
-              <Link href={`/${post.category}`}>{post.category}</Link>
-            </div>
-            <h3 ref={postList.length === index + 1 ? lastElement : null}>
-              <Link href={`/contents/${post.title}`}>{post.title}</Link>
-            </h3>
-            <p>
-              <Link href={`/contents/${post.title}`}>{post.preview}</Link>
-            </p>
-            <p>
-              <small>{post.createDate}</small>
-            </p>
-
-            {post.tags.map((tag) => (
-              <AppTags key={tag}>
-                <Link href={`/search?select=tags&text=${tag}`}>{tag}</Link>
-              </AppTags>
-            ))}
-          </ContentLayout>
-        ))}
-      </ContentContainer>
-    );
-  };
-
   return (
-    <div ref={viewPort}>
-      <PostCard postList={postList} />
-      {isLoading && <AppLoading scroll={true} />}
+    <div>
+      <ContentCard postList={post} />
+      {!post && <AppLoading scroll={true} />}
+
+      <PostPagination>
+        <PostPaginationArrowBtn onClick={handleArrowClick} value="-" disabled={+page === 1}>
+          <span>{'<'}</span>
+        </PostPaginationArrowBtn>
+        {pagination.map((i) => (
+          <PostPaginationBtn selected={i === +page - 1} value={i + 1} onClick={handlePagination} key={i}>
+            <span>{i + 1}</span>
+          </PostPaginationBtn>
+        ))}
+        <PostPaginationArrowBtn onClick={handleArrowClick} value="+" disabled={+page === isLimit}>
+          <span>{'>'}</span>
+        </PostPaginationArrowBtn>
+      </PostPagination>
     </div>
   );
 };

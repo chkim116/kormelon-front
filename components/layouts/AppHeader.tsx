@@ -93,8 +93,8 @@ const NavMenu = styled.ul`
       }
     }
   }
-  span {
-    cursor: pointer;
+  button {
+    background-color: transparent;
     display: flex;
     align-items: center;
     svg {
@@ -213,59 +213,48 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
                 onChange={handleSearchText}
                 ref={searchRef}
                 suffix={
-                  <div onClick={handleShowingSearchbar}>
+                  <button type="button" onClick={handleShowingSearchbar}>
                     <span>X</span>
-                  </div>
+                  </button>
                 }
                 type="search"
               />
             </SearchingBar>
           )}
-          <Link href="/book">
-            <li>BOOK</li>
-          </Link>
-          <Link href="/development">
-            <li>DEVELOPMENT</li>
-          </Link>
-          <Link href="/essay">
-            <li>ESSAY</li>
-          </Link>
-          <Link href={`/tech`}>
-            <li>TECH</li>
-          </Link>
-          <Link href="/me">
-            <li>ME</li>
-          </Link>
-          <span onClick={handleShowingSearchbar}>
+          <li>
+            <Link href="/book">BOOK</Link>
+          </li>
+          <li>
+            <Link href="/development">DEVELOPMENT</Link>
+          </li>
+          <li>
+            <Link href="/essay">ESSAY</Link>
+          </li>
+          <li>
+            <Link href={`/tech`}>TECH</Link>
+          </li>
+          <li>
+            <Link href="/me">ME</Link>
+          </li>
+          <button type="button" onClick={handleShowingSearchbar}>
             <FaSearch size={18} />
-          </span>
+          </button>
         </NavMenu>
         <MobileNav type="text" size="large" onClick={handleShowSider}>
           {isShowSider ? <CloseOutlined /> : <MenuOutlined />}
         </MobileNav>
         {isShowSider && <AppCategories />}
         <div className="header__login">
-          {
-            isUser?.id ? (
-              <>
-                <Link href="/upload">
-                  <Button type="link" size="middle">
-                    Upload
-                  </Button>
-                </Link>
-                <Button type="link" size="middle" onClick={handleLogOut}>
-                  Logout
-                </Button>
-              </>
-            ) : null
-            // (
-            //   <Link href="/login">
-            //     <Button type="link" size="middle">
-            //       Login
-            //     </Button>
-            //   </Link>
-            // )
-          }
+          {isUser?.id ? (
+            <>
+              <Button type="link" size="middle">
+                <Link href="/upload">Upload</Link>
+              </Button>
+              <Button type="link" size="middle" onClick={handleLogOut}>
+                Logout
+              </Button>
+            </>
+          ) : null}
         </div>
       </div>
     </App>

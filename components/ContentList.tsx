@@ -114,8 +114,8 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
     return (
       <ContentContainer>
         {postList.map((post, index) => (
-          <Link key={index} href={`/contents/${post.title}`}>
-            <ContentLayout>
+          <ContentLayout key={index}>
+            <Link href={`/contents/${post.title}`}>
               <ContentImage>
                 <img
                   src={
@@ -125,22 +125,27 @@ const ContentList = ({ post, postCount, searching, filter }: Props) => {
                   alt={`${post.title} 썸네일`}
                 />
               </ContentImage>
-              <div>
-                <Link href={`/${post.category}`}>{post.category}</Link>
-              </div>
-              <h3 ref={postList.length === index + 1 ? lastElement : null}>{post.title}</h3>
-              <p>{post.preview}</p>
-              <p>
-                <small>{post.createDate}</small>
-              </p>
+            </Link>
 
-              {post.tags.map((tag) => (
-                <AppTags key={tag}>
-                  <Link href={`/search?select=tags&text=${tag}`}>{tag}</Link>
-                </AppTags>
-              ))}
-            </ContentLayout>
-          </Link>
+            <div>
+              <Link href={`/${post.category}`}>{post.category}</Link>
+            </div>
+            <h3 ref={postList.length === index + 1 ? lastElement : null}>
+              <Link href={`/contents/${post.title}`}>{post.title}</Link>
+            </h3>
+            <p>
+              <Link href={`/contents/${post.title}`}>{post.preview}</Link>
+            </p>
+            <p>
+              <small>{post.createDate}</small>
+            </p>
+
+            {post.tags.map((tag) => (
+              <AppTags key={tag}>
+                <Link href={`/search?select=tags&text=${tag}`}>{tag}</Link>
+              </AppTags>
+            ))}
+          </ContentLayout>
         ))}
       </ContentContainer>
     );

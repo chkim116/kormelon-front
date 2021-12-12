@@ -36,11 +36,10 @@ const PostPaginationBtn = styled.button<{ selected: boolean }>`
 interface Props {
   post: Post[];
   postCount: number;
-  searching?: boolean;
   filter?: string;
 }
 
-const ContentList = ({ post, postCount, searching, filter }: Props) => {
+const ContentList = ({ post, postCount, filter }: Props) => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const isLimit = useMemo(() => {

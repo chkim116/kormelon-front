@@ -127,7 +127,7 @@ const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
         setRange({ selStart: endText + len + 1, selEnd: endText + len + 1 });
       }
     },
-    [txt, startText, endText, editor.current],
+    [txt, startText, endText],
   );
 
   // 툴바가 이미지일시
@@ -168,64 +168,61 @@ const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
   }, []);
 
   // 상하좌우 키보드 이벤트
-  const onKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      const edit = editor.current as HTMLTextAreaElement;
-      if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
-        setStartText(edit.selectionStart ? edit.selectionStart - 1 : 0);
-        setEndText(edit.selectionEnd);
-      }
+  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const edit = editor.current as HTMLTextAreaElement;
+    if (e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40) {
+      setStartText(edit.selectionStart ? edit.selectionStart - 1 : 0);
+      setEndText(edit.selectionEnd);
+    }
 
-      //   https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
+    //   https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
 
-      // Tab key?
-      if (e.keyCode === 9) {
-        e.preventDefault();
-        // selection?
-        if (edit.selectionStart == edit.selectionEnd) {
-          // These single character operations are undoable
-          if (!e.shiftKey) {
-            document.execCommand('insertText', false, '\t');
-          } else {
-            const text = edit.value;
-            if (edit.selectionStart > 0 && text[edit.selectionStart - 1] == '\t') {
-              document.execCommand('delete');
-            }
-          }
+    // Tab key?
+    if (e.keyCode === 9) {
+      e.preventDefault();
+      // selection?
+      if (edit.selectionStart == edit.selectionEnd) {
+        // These single character operations are undoable
+        if (!e.shiftKey) {
+          document.execCommand('insertText', false, '\t');
         } else {
-          // Block indent/unindent trashes undo stack.
-          // Select whole lines
-          let selStart = edit.selectionStart;
-          let selEnd = edit.selectionEnd;
           const text = edit.value;
-          while (selStart > 0 && text[selStart - 1] !== '\n') selStart--;
-          while (selEnd > 0 && text[selEnd - 1] !== '\n' && selEnd < text.length) selEnd++;
-
-          // Get selected text
-          let lines = text.substr(selStart, selEnd - selStart).split('\n');
-
-          // Insert tabs
-          for (let i = 0; i < lines.length; i++) {
-            // Don't indent last line if cursor at start of line
-            if (i == lines.length - 1 && lines[i].length === 0) continue;
-
-            // Tab or Shift+Tab?
-            if (e.shiftKey) {
-              if (lines[i].startsWith('\t')) lines[i] = lines[i].substr(1);
-              else if (lines[i].startsWith('    ')) lines[i] = lines[i].substr(4);
-            } else lines[i] = '\t' + lines[i];
+          if (edit.selectionStart > 0 && text[edit.selectionStart - 1] == '\t') {
+            document.execCommand('delete');
           }
-
-          const line = lines.join('\n');
-          // Update the text area
-          setTxt(text.substr(0, selStart) + line + text.substr(selEnd));
-          setRange({ selStart, selEnd: selStart + line.length });
         }
-        return false;
+      } else {
+        // Block indent/unindent trashes undo stack.
+        // Select whole lines
+        let selStart = edit.selectionStart;
+        let selEnd = edit.selectionEnd;
+        const text = edit.value;
+        while (selStart > 0 && text[selStart - 1] !== '\n') selStart--;
+        while (selEnd > 0 && text[selEnd - 1] !== '\n' && selEnd < text.length) selEnd++;
+
+        // Get selected text
+        let lines = text.substr(selStart, selEnd - selStart).split('\n');
+
+        // Insert tabs
+        for (let i = 0; i < lines.length; i++) {
+          // Don't indent last line if cursor at start of line
+          if (i == lines.length - 1 && lines[i].length === 0) continue;
+
+          // Tab or Shift+Tab?
+          if (e.shiftKey) {
+            if (lines[i].startsWith('\t')) lines[i] = lines[i].substr(1);
+            else if (lines[i].startsWith('    ')) lines[i] = lines[i].substr(4);
+          } else lines[i] = '\t' + lines[i];
+        }
+
+        const line = lines.join('\n');
+        // Update the text area
+        setTxt(text.substr(0, selStart) + line + text.substr(selEnd));
+        setRange({ selStart, selEnd: selStart + line.length });
       }
-    },
-    [txt],
-  );
+      return false;
+    }
+  }, []);
 
   const handlePreviewMode = useCallback((checked) => {
     setIsPreviewOn(checked);
@@ -243,7 +240,7 @@ const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
     if (txt) {
       setDesc(txt);
     }
-  }, [txt]);
+  }, [setDesc, txt]);
 
   return (
     <>

@@ -124,7 +124,7 @@ const Upload = () => {
       setTags(() => [...tags, tag]);
       uploadForm.setFieldsValue({ tags: '' });
     }
-  }, [form, tags]);
+  }, [form, tags, uploadForm]);
 
   const handleDeleteTags = useCallback(
     (e) => {
@@ -211,7 +211,7 @@ const Upload = () => {
           });
         });
     },
-    [desc, form, tags, router, thumbPreview],
+    [router, form, thumbPreview, desc, prevDesc, tags],
   );
 
   const handleUploadThumb = useCallback((e) => {
@@ -262,7 +262,7 @@ const Upload = () => {
     }
 
     notification.success({ message: '임시 저장 완료', placement: 'bottomLeft' });
-  }, [notification, savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
+  }, [savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
 
   const handleSaveVisible = useCallback(() => {
     setIsSaveVisible(true);

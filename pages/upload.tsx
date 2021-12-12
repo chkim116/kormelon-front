@@ -114,10 +114,6 @@ const Upload = () => {
     setForm(() => all);
   }, []);
 
-  // const handleQuillChange = useCallback((values: any) => {
-  //   setDesc(() => values);
-  // }, []);
-
   const handleTags = useCallback(() => {
     if (form?.tags) {
       const { tags: tag } = form;
@@ -390,7 +386,6 @@ const Upload = () => {
           </Tag>
         ))}
         <MarkEditor prevDesc={prevDesc} setDesc={setDesc} />
-        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
       </Form>
 
       <Button data-id={editPost?._id} onClick={handleFinish} loading={loading} type="primary" htmlType="submit">

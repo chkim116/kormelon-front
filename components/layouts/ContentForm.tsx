@@ -5,9 +5,6 @@ import Link from 'next/link';
 
 const ContentLayout = styled.div`
   margin-bottom: 3em;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 
   img {
     width: 100%;
@@ -15,7 +12,11 @@ const ContentLayout = styled.div`
 `;
 
 const ContentDescription = styled.div`
-  padding: 0.5em;
+  padding: 1em 0.5em 0.5em 0.5em;
+
+  p {
+    font-size: 1.15em;
+  }
 `;
 
 interface Props {

@@ -52,9 +52,9 @@ const ContentThumb = styled.div<{ url: string }>`
 `;
 
 const ContentOtherPost = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 1000px;
   width: 100%;
+  margin: 0 auto;
   padding: 1em 0 2em 0;
   border-top: 2px solid ${({ theme }) => theme.border};
   & > div {

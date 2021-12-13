@@ -10,7 +10,7 @@ export const GlobalStyles = ({ theme }: any) => {
           margin: 0;
           box-sizing: border-box;
           font-family: 'Noto Sans KR', Sans-serif, -apple-system;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 400;
           color: ${theme.black};
           line-height: 1.55em;

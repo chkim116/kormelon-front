@@ -71,7 +71,7 @@ export const GlobalStyles = ({ theme }: any) => {
         #content pre {
           font-family: 'Fira Code', monospace;
           letter-spacing: -0.06em;
-          font-size: 1.15em;
+          font-size: 13.5px;
         }
 
         code {

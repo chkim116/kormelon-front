@@ -50,7 +50,7 @@ const Sider = styled.div`
 
 const AppCategories = () => {
   const [, setIsShowSider] = useGlobalState('isShowSider');
-  const categories = ['book', 'tech', 'development', 'essay', 'me'];
+  const categories = ['book', 'algorithm', 'tech', 'development', 'essay', 'me'];
   const collapsed = useSpring({
     from: {
       width: 0,

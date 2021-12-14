@@ -233,6 +233,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const prev = fetch.prev;
 
   const reg =
+    // eslint-disable-next-line no-useless-escape
     /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\u00a9\u00ae\u2000-\u3300\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+<\/\h1>/g;
 
   const anchor = html.match(reg) || [];

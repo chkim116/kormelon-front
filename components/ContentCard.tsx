@@ -59,7 +59,7 @@ export const ContentCard = ({ postList }: { postList: Post[] }) => {
     <ContentContainer>
       {postList.map((post, index) => (
         <ContentLayout key={index}>
-          <Link href={`/contents/${post.title}`}>
+          <Link href={`/contents/${encodeURIComponent(post.title)}`}>
             <ContentImage>
               <img
                 src={
@@ -75,10 +75,10 @@ export const ContentCard = ({ postList }: { postList: Post[] }) => {
             <Link href={`/${post.category}`}>{post.category}</Link>
           </div>
           <h3>
-            <Link href={`/contents/${post.title}`}>{post.title}</Link>
+            <Link href={`/contents/${encodeURIComponent(post.title)}`}>{post.title}</Link>
           </h3>
           <p>
-            <Link href={`/contents/${post.title}`}>{post.preview}</Link>
+            <Link href={`/contents/${encodeURIComponent(post.title)}`}>{post.preview}</Link>
           </p>
           <p>
             <small>{post.createDate}</small>

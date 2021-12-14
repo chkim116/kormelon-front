@@ -98,7 +98,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
   const router = useRouter();
   const thumbRef = useRef<HTMLDivElement>(null);
   const handleEdit = useCallback(() => {
-    router.push(`/upload?title=${post?.title}&edit=true`);
+    router.push(`/upload?title=${encodeURIComponent(post?.title)}&edit=true`);
   }, [post, router]);
 
   const handleDelete = useCallback(() => {
@@ -194,7 +194,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
           <div style={{ padding: '0 0.6em' }}>
             <NextContent>
               {next && (
-                <Link href={`/contents/${next.title}`}>
+                <Link href={`/contents/${encodeURIComponent(next.title)}`}>
                   <div>
                     <FaArrowCircleLeft size={26} />
                     <div>{decodeURIComponent(next.title)}</div>
@@ -205,7 +205,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
 
             <PrevContent>
               {prev && (
-                <Link href={`/contents/${prev.title}`}>
+                <Link href={`/contents/${encodeURIComponent(prev.title)}`}>
                   <div>
                     <FaArrowCircleRight size={26} />
                     <div>{decodeURIComponent(prev.title)}</div>
@@ -231,8 +231,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSideP
   const post = { ...fetch.postByTitle, description: html };
   const next = fetch.next;
   const prev = fetch.prev;
-  // eslint-disable-next-line no-useless-escape
-  const reg = /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~']+<\/\1>/g;
+
+  const reg =
+    /<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\u00a9\u00ae\u2000-\u3300\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+<\/\h1>/g;
+
   const anchor = html.match(reg) || [];
+
   return { props: { post, anchor, next, prev } };
 };

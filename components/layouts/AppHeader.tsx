@@ -9,6 +9,7 @@ import { useGlobalState } from '../../hooks';
 import AppCategories from './AppCategories';
 import { FaSearch } from 'react-icons/fa';
 import router from 'next/router';
+import { categories } from '../../constants/var';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -221,21 +222,14 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
               />
             </SearchingBar>
           )}
-          <li>
-            <Link href="/book">BOOK</Link>
-          </li>
-          <li>
-            <Link href="/development">DEVELOPMENT</Link>
-          </li>
-          <li>
-            <Link href="/essay">ESSAY</Link>
-          </li>
-          <li>
-            <Link href={`/tech`}>TECH</Link>
-          </li>
-          <li>
-            <Link href="/me">ME</Link>
-          </li>
+          {categories.map((category) => (
+            <React.Fragment key={category}>
+              <li>
+                <Link href={`/${category}`}>{category.toUpperCase()}</Link>
+              </li>
+            </React.Fragment>
+          ))}
+
           <button type="button" onClick={handleShowingSearchbar}>
             <FaSearch size={18} />
           </button>

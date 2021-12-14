@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import { useGlobalState } from '../../hooks';
 import Link from 'next/link';
 import { useSpring, animated } from 'react-spring';
+import { categories } from '../../constants/var';
 
 const Sider = styled.div`
   div {
@@ -50,7 +51,6 @@ const Sider = styled.div`
 
 const AppCategories = () => {
   const [, setIsShowSider] = useGlobalState('isShowSider');
-  const categories = ['book', 'algorithm', 'tech', 'development', 'essay', 'me'];
   const collapsed = useSpring({
     from: {
       width: 0,

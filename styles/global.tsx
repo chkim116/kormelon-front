@@ -28,6 +28,7 @@ export const GlobalStyles = ({ theme }: any) => {
           width: 100%;
           min-height: 300px;
           overflow-wrap: break-word;
+          white-space: pre-line;
           font-size: 0.91rem;
           font-family: 'Noto Sans KR';
           font-weight: 300;
@@ -51,7 +52,8 @@ export const GlobalStyles = ({ theme }: any) => {
 
         #content h1 {
           position: relative;
-          font-size: 1.5rem;
+          font-size: 1.55rem;
+          font-weight: bold;
           margin: 1em 0;
           font-family: 'Nanum Myeongjo';
         }
@@ -64,14 +66,14 @@ export const GlobalStyles = ({ theme }: any) => {
           margin: 5px 0;
         }
 
-        #content a:hover {
+        #content a {
           color: #1890ff;
         }
 
         #content pre {
           font-family: 'Fira Code', monospace;
-          letter-spacing: -0.06em;
-          font-size: 13.5px;
+          font-size: 1.05em;
+          margin: 1em 0;
         }
 
         code {

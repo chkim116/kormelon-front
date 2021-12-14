@@ -16,6 +16,7 @@ const ContentDescription = styled.div`
 
   p {
     font-size: 1.15em;
+    line-height: 2em;
   }
 `;
 

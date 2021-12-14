@@ -197,7 +197,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
                 <Link href={`/contents/${next.title}`}>
                   <div>
                     <FaArrowCircleLeft size={26} />
-                    <div>{decodeURI(next.title)}</div>
+                    <div>{decodeURIComponent(next.title)}</div>
                   </div>
                 </Link>
               )}
@@ -208,7 +208,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
                 <Link href={`/contents/${prev.title}`}>
                   <div>
                     <FaArrowCircleRight size={26} />
-                    <div>{decodeURI(prev.title)}</div>
+                    <div>{decodeURIComponent(prev.title)}</div>
                   </div>
                 </Link>
               )}

@@ -6,6 +6,10 @@
   box-shadow: 2px 2px 4px #212227;
 }
 
+.language-xml {
+  color: #ffffff;
+}
+
 /* const, let, etc */
 .hljs-keyword {
   color: #a87afd;

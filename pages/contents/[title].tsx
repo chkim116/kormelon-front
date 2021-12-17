@@ -223,9 +223,17 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
 export default Contents;
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const { params } = ctx;
+  const { params, req } = ctx;
+  const cookie = req.headers.cookie || '';
 
-  const fetch = await axios.get(`/post/${encodeURIComponent(params?.title as string)}`).then((res) => res.data);
+  const fetch = await axios
+    .get(`/post/${encodeURIComponent(params?.title as string)} `, {
+      withCredentials: true,
+      headers: {
+        Cookie: cookie,
+      },
+    })
+    .then((res) => res.data);
   const html = await marked(fetch.postByTitle.description);
 
   const post = { ...fetch.postByTitle, description: html };

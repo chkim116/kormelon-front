@@ -6,6 +6,10 @@
   box-shadow: 2px 2px 4px #212227;
 }
 
+.hljs-attr {
+  color: #45bce7;
+}
+
 .language-xml {
   color: #ffffff;
 }

@@ -50,7 +50,9 @@ const ContentImage = styled.div`
   img {
     width: 100%;
     min-height: 300px;
-    object-fit: cover;
+    max-height: 300px;
+    border-radius: 8px;
+    object-fit: cotain;
   }
 `;
 

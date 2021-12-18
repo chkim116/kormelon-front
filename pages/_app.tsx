@@ -35,28 +35,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [already, setAlready] = useState(false);
   const [isShowSider, setIsShowSider] = useGlobalState('isShowSider', false);
   // eslint-disable-next-line no-unused-vars
-  const [_, setIsUser] = useGlobalState('auth', {
-    username: '',
-    token: '',
-    id: '',
-    admin: false,
-  });
+  const [_, setIsUser] = useGlobalState('auth', initial.user);
   const [mode, setMode] = useGlobalState('mode');
+
   const modeTheme = useMemo(() => {
     if (mode === 'dark') {
-      return { ...theme, white: '#212729', black: '#fff' };
+      return { ...theme, white: theme.black, black: theme.white };
     } else {
-      return { ...theme, white: '#fff', black: '#212729' };
+      return { ...theme, white: theme.white, black: theme.black };
     }
   }, [mode]);
 
   const handleLogout = () => {
-    setIsUser({
-      username: '',
-      token: '',
-      id: '',
-      admin: false,
-    });
+    setIsUser(initial.user);
   };
 
   const handleShowSider = useCallback(
@@ -66,11 +57,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     },
     [isShowSider, setIsShowSider],
   );
-
-  // const handleShowSider = useCallback((e) => {
-  //   e.stopPropagation();
-  //   dispatch({ type: 'SHOWING' });
-  // }, []);
 
   useEffect(() => {
     if (state.showSider) {
@@ -82,6 +68,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [handleShowSider, state.showSider]);
 
   useEffect(() => {
+    const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
+    user();
+  }, [setIsUser]);
+
+  useEffect(() => {
+    if (already) {
+      return;
+    }
+
     const getViews = async () => {
       await axios.post('/view').then((res) => {
         setView({
@@ -91,22 +86,21 @@ function MyApp({ Component, pageProps }: AppProps) {
         setAlready(true);
       });
     };
-    const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
-    user();
-    if (already) {
-      return;
-    }
 
     getViews();
-  }, [already, setIsUser]);
+  }, [already]);
 
   useEffect(() => {
+    // 기본 dark mode
     if (typeof window === 'object') {
-      const modeOption = JSON.parse(localStorage.getItem('mode') || JSON.stringify('light'));
+      const modeOption = JSON.parse(localStorage.getItem('mode') || JSON.stringify('dark'));
       if (modeOption) {
         setMode(modeOption);
       }
     }
+  }, [setMode]);
+
+  useEffect(() => {
     router.events.on('routeChangeStart', () => {
       setIsGlobalLoading(true);
     });
@@ -118,7 +112,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', () => {});
       router.events.off('routeChangeError', () => {});
     };
-  }, [setMode]);
+  }, []);
 
   return (
     <>

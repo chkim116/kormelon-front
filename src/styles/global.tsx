@@ -1,5 +1,5 @@
 import { css, Global } from '@emotion/react';
-import '../node_modules/antd/dist/antd.css';
+import '../../node_modules/antd/dist/antd.css';
 
 export const GlobalStyles = ({ theme }: any) => {
   return (

@@ -175,9 +175,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css"
-        />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/a11y-dark.min.css"
+        ></link>
         {process.env.NODE_ENV === 'production' && (
           <script
             async

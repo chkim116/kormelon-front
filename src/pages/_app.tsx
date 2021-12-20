@@ -17,6 +17,7 @@ import router from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
 import { GlobalStyles } from '../styles/global';
 import AppDarkMode from '../components/layouts/AppDarkMode';
+import { pageview } from '../lib/gtag';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -101,15 +102,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [setMode]);
 
   useEffect(() => {
+    const gtagRouteChange = (url: string) => {
+      pageview(url);
+    };
+
     router.events.on('routeChangeStart', () => {
       setIsGlobalLoading(true);
     });
-    router.events.on('routeChangeComplete', () => setIsGlobalLoading(false));
+    router.events.on('routeChangeComplete', (url) => {
+      gtagRouteChange(url);
+      setIsGlobalLoading(false);
+    });
     router.events.on('routeChangeError', () => setIsGlobalLoading(false));
 
     return () => {
       router.events.off('routeChangeStart', () => {});
-      router.events.off('routeChangeComplete', () => {});
+      router.events.off('routeChangeComplete', gtagRouteChange);
       router.events.off('routeChangeError', () => {});
     };
   }, []);

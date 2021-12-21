@@ -14,7 +14,7 @@ import AppLoading from '../components/layouts/AppLoading';
 import AppDarkMode from '../components/layouts/AppDarkMode';
 import { pageview } from '../lib/gtag';
 import { Provider } from 'react-redux';
-import { store } from '../store';
+import store from '../store';
 
 const AppLayouts = styled(Layout)`
   width: 100%;

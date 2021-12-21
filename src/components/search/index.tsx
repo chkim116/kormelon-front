@@ -1,11 +1,19 @@
+import styled from '@emotion/styled';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Post } from '../../interfaces/post';
-import ContentBlock from '../home/common/ContentBlock';
+import ContentList from '../home/common/ContentList';
 import ContentTitle from '../home/common/ContentTitle';
-import ContentList from '../ContentList';
 import AppLoading from '../layouts/AppLoading';
+
+const ContentBlock = styled.main`
+  width: 100%;
+  min-height: 100vh;
+  padding: 1.25em;
+  max-width: 1000px;
+  margin: 120px auto 0 auto;
+`;
 
 const tagSearch = async (select: string, text: string, page: string) => {
   return await axios.get(`/tag/search?select=${select}&text=${text}&page=${page}`);

@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DarkMode {
-  theme: 'dark' | 'white';
+  mode: 'dark' | 'white';
 }
 
 const initialState: DarkMode = {
-  theme: 'dark',
+  mode: 'dark',
 };
 
 const darkMode = createSlice({
@@ -13,7 +13,7 @@ const darkMode = createSlice({
   name: 'darkMode',
   reducers: {
     setDarkMode: (state, { payload }: PayloadAction<'dark' | 'white'>) => {
-      state.theme = payload;
+      state.mode = payload;
     },
   },
 });

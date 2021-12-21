@@ -11,11 +11,8 @@ import { DefaultSeo } from 'next-seo';
 import { useGlobalState } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
-import { ThemeProvider } from '@emotion/react';
-import { theme } from '../styles/theme';
 import router from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
-import { GlobalStyles } from '../styles/global';
 import AppDarkMode from '../components/layouts/AppDarkMode';
 import { pageview } from '../lib/gtag';
 import { Provider } from 'react-redux';
@@ -38,15 +35,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [already, setAlready] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [_, setIsUser] = useGlobalState('auth', initial.user);
-  const [mode, setMode] = useGlobalState('mode');
-
-  const modeTheme = useMemo(() => {
-    if (mode === 'dark') {
-      return { ...theme, white: theme.black, black: theme.white };
-    } else {
-      return { ...theme, white: theme.white, black: theme.black };
-    }
-  }, [mode]);
 
   const handleLogout = () => {
     setIsUser(initial.user);
@@ -74,16 +62,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     getViews();
   }, [already]);
-
-  useEffect(() => {
-    // 기본 dark mode
-    if (typeof window === 'object') {
-      const modeOption = JSON.parse(localStorage.getItem('mode') || JSON.stringify('dark'));
-      if (modeOption) {
-        setMode(modeOption);
-      }
-    }
-  }, [setMode]);
 
   useEffect(() => {
     const gtagRouteChange = (url: string) => {
@@ -172,8 +150,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         )}
       </Head>
       <Provider store={store}>
-        <ThemeProvider theme={modeTheme}>
-          <GlobalStyles theme={modeTheme} />
+        <AppDarkMode>
           <AppContext.Provider value={state}>
             <AppLayouts>
               <>{isglobalLoading && <AppLoading scroll />}</>
@@ -193,10 +170,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </>
               </AppFooter>
             </AppLayouts>
-            <AppDarkMode />
             <AppTop></AppTop>
           </AppContext.Provider>
-        </ThemeProvider>
+        </AppDarkMode>
       </Provider>
     </>
   );

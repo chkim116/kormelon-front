@@ -9,7 +9,7 @@ import { Post } from '.';
 import axios from 'axios';
 import MarkEditor from '../components/MarkEditor';
 import { theme } from '../styles/theme';
-import { useGlobalState } from '../hooks';
+import { useAppSelector } from '../store/hook';
 
 const { Item } = Form;
 
@@ -122,8 +122,8 @@ interface FormValues {
 }
 
 const Upload = () => {
+  const { mode } = useAppSelector((state) => state.darkMode);
   const router = useRouter();
-  const [mode] = useGlobalState('mode');
 
   const [uploadForm] = Form.useForm();
   const [form, setForm] = useState<FormValues>();
@@ -412,7 +412,7 @@ const Upload = () => {
           <Select
             bordered={false}
             style={{ borderBottom: '1px solid #706767' }}
-            dropdownStyle={{ backgroundColor: mode === 'light' ? `${theme.white}` : `${theme.black}` }}
+            dropdownStyle={{ backgroundColor: mode === 'white' ? `${theme.white}` : `${theme.black}` }}
           >
             {categories.map((list) => (
               <Select.Option key={list.category} value={list.category} children={list.category}></Select.Option>

@@ -8,7 +8,6 @@ import axios from 'axios';
 import { Categories } from '../[categories]';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { Post } from '..';
-import { AppContext } from '../_app';
 import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
@@ -20,6 +19,7 @@ import Anchors from '../../components/Anchors';
 import SEO from '../../seo';
 import Link from 'next/link';
 import { FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
+import { useAppSelector } from '../../store/hook';
 
 const Content = styled.section`
   width: 100%;
@@ -91,9 +91,10 @@ interface Props {
 }
 
 const Contents = ({ post, anchor, prev, next }: Props) => {
+  const { isShowAsider } = useAppSelector((state) => state.asider);
+
   const [categories, setCategories] = useState<Categories[]>();
   const [loading, setLoading] = useState(false);
-  const { showSider } = useContext(AppContext);
   const [user] = useGlobalState('auth');
   const router = useRouter();
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -134,10 +135,10 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
       return;
     }
 
-    if (showSider) {
+    if (isShowAsider) {
       getCate().then((res) => setCategories(res.data));
     }
-  }, [categories, showSider]);
+  }, [categories, isShowAsider]);
 
   useEffect(() => {
     document.addEventListener('scroll', handleOpacityAnchor);

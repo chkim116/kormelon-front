@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import Sider from 'antd/lib/layout/Sider';
@@ -7,13 +7,13 @@ import { Categories } from '../../pages/[categories]';
 import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, notification } from 'antd';
 import { delCategory, postCategory } from '../../fetch';
-import { AppContext } from '../../pages/_app';
 import { useGlobalState } from '../../hooks';
 import axios from 'axios';
+import { useAppSelector } from '../../store/hook';
 
-const App = styled(Sider)<{ show?: string }>`
+const App = styled(Sider)<{ show: boolean }>`
   ${({ show, theme }) =>
-    show === 'true'
+    show
       ? css`
           position: fixed;
           left: 0;
@@ -45,7 +45,7 @@ const App = styled(Sider)<{ show?: string }>`
 
   @media all and (max-width: 540px) {
     ${({ show }) =>
-      show === 'true'
+      show
         ? css`
             display: block;
             position: fixed;
@@ -73,8 +73,9 @@ const getAllLength = (category: Categories[]): number => {
 };
 
 const AppSider = () => {
+  const { isShowAsider } = useAppSelector((state) => state.asider);
+
   const [allPost, setAllPost] = useState(0);
-  const { showSider } = useContext(AppContext);
   const [categoryName, setCategoryName] = useState('');
   const [add, setAdd] = useState(false);
   const [categoryList, setCategoryList] = useState<Categories[]>([]);
@@ -166,7 +167,7 @@ const AppSider = () => {
 
   return (
     <>
-      <App show={showSider?.toString()}>
+      <App show={isShowAsider}>
         <ul>
           <Link href="/">
             <li>All ({allPost})</li>

@@ -1,12 +1,11 @@
 import { AppProps } from 'next/dist/shared/lib/router/router';
 import styled from '@emotion/styled';
 import '../styles/highlight.css';
-import React, { createContext, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from 'antd/lib/layout/layout';
 import AppFooter from '../components/layouts/AppFooter';
 import AppHeader from '../components/layouts/AppHeader';
 import axios from 'axios';
-import { initial, reducer } from '../reducer';
 import { DefaultSeo } from 'next-seo';
 import { useGlobalState } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
@@ -26,11 +25,8 @@ const AppLayouts = styled(Layout)`
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.kormelon.com' : 'http://localhost:4000';
 axios.defaults.withCredentials = true;
 
-export const AppContext = createContext(initial);
-
 function MyApp({ Component, pageProps }: AppProps) {
   const [isglobalLoading, setIsGlobalLoading] = useState(false);
-  const [state] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -151,27 +147,25 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Provider store={store}>
         <AppDarkMode>
-          <AppContext.Provider value={state}>
-            <AppLayouts>
-              <>{isglobalLoading && <AppLoading scroll />}</>
-              <AppHeader handleLogout={handleLogout} />
-              <Component {...pageProps} />
-              <AppFooter>
-                <>
-                  <div>Kormelon &copy; 2021</div>
-                  <div>
-                    <small>
-                      Today <span>{view.views}</span>{' '}
-                      <span>
-                        Total <span>{view.totalView}</span>
-                      </span>
-                    </small>
-                  </div>
-                </>
-              </AppFooter>
-            </AppLayouts>
-            <AppTop></AppTop>
-          </AppContext.Provider>
+          <AppLayouts>
+            <>{isglobalLoading && <AppLoading scroll />}</>
+            <AppHeader handleLogout={handleLogout} />
+            <Component {...pageProps} />
+            <AppFooter>
+              <>
+                <div>Kormelon &copy; 2021</div>
+                <div>
+                  <small>
+                    Today <span>{view.views}</span>{' '}
+                    <span>
+                      Total <span>{view.totalView}</span>
+                    </span>
+                  </small>
+                </div>
+              </>
+            </AppFooter>
+          </AppLayouts>
+          <AppTop></AppTop>
         </AppDarkMode>
       </Provider>
     </>

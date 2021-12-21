@@ -80,11 +80,18 @@ const SaveContainer = styled.div`
   display: flex;
   justify-content: space-between;
   /* 삭제 div 태그 */
-  & > div:nth-of-type(2) {
-    button {
-      border: 1px solid ${({ theme }) => theme.border};
-      &:hover {
-        opacity: 0.7;
+
+  & {
+    div:nth-of-type(1) {
+      cursor: pointer;
+    }
+
+    div:nth-of-type(2) {
+      button {
+        border: 1px solid ${({ theme }) => theme.border};
+        &:hover {
+          opacity: 0.7;
+        }
       }
     }
   }
@@ -130,17 +137,13 @@ const Upload = () => {
   const [editPost, setEditPost] = useState<Post>();
 
   // 임시저장
-  const savePosts = typeof window === 'object' && localStorage.getItem('saved');
+  const [savePosts, setSavePosts] = useState<any[] | null>(null);
   const [savedId, setSaveId] = useState(-1);
   const [isSaveVisible, setIsSaveVisible] = useState(false);
 
   const handleFormChange = useCallback((_: any, all: any) => {
     setForm(() => all);
   }, []);
-
-  // const handleQuillChange = useCallback((values: any) => {
-  //   setDesc(() => values);
-  // }, []);
 
   const handleTags = useCallback(() => {
     if (form?.tags) {
@@ -156,17 +159,6 @@ const Upload = () => {
     },
     [tags],
   );
-  // 제출 시 텍스트를 html로 파싱하여 제출합니다.
-  //   const onSubmit = useCallback(() => {
-  //     const submit = {
-  //       title,
-  //       description: desc,
-  //       content: text,
-  //       creator: user._id ? user._id : '',
-  //       stack,
-  //       secret,
-  //     };
-  //   }, [text, title]);
 
   const handleFinish = useCallback(
     (e) => {
@@ -267,21 +259,27 @@ const Upload = () => {
       description: desc || prevDesc,
     };
     if (savePosts) {
-      const s: any[] = JSON.parse(savePosts);
+      const s: any[] = savePosts;
       let id = savedId;
       let index = -1;
       if (id) {
-        index = s.findIndex((lst) => lst.id === parseInt(JSON.parse(id.toString())));
+        index = s.findIndex((lst) => lst.id === parseInt(id.toString()));
       }
       if (index >= 0) {
         s[index] = { ...save, id: index + 1 };
-        localStorage.setItem('saved', JSON.stringify([...s]));
+        const savePost = JSON.stringify([...s]);
+        localStorage.setItem('saved', savePost);
+        setSavePosts(JSON.parse(savePost));
       } else {
-        localStorage.setItem('saved', JSON.stringify([...s, { ...save, id: s.length + 1 }]));
+        const savePost = JSON.stringify([...s, { ...save, id: s.length + 1 }]);
+        localStorage.setItem('saved', savePost);
+        setSavePosts(JSON.parse(savePost));
         setSaveId(s.length + 1);
       }
     } else {
-      localStorage.setItem('saved', JSON.stringify([save]));
+      const savePost = JSON.stringify([save]);
+      localStorage.setItem('saved', savePost);
+      setSavePosts(JSON.parse(savePost));
       setSaveId(1);
     }
 
@@ -296,13 +294,31 @@ const Upload = () => {
     setIsSaveVisible(false);
   }, []);
 
+  const handleDeleteSavePost = useCallback(
+    (e) => {
+      const { value: id } = e.currentTarget;
+
+      if (!savePosts || !id) return;
+
+      const newSave = savePosts.filter((post: any) => post.id !== +id);
+
+      if (newSave.length) {
+        localStorage.setItem('saved', JSON.stringify(newSave));
+        setSavePosts(newSave);
+      } else {
+        localStorage.removeItem('saved');
+        setSavePosts(null);
+      }
+    },
+    [savePosts],
+  );
+
   const handleSelectSavePost = useCallback(
     (e) => {
       const { index } = e.currentTarget.dataset;
 
-      if (!savePosts) return;
-      const saved = JSON.parse(savePosts);
-      const post = saved.filter((lst: any) => lst.id === +index);
+      if (!savePosts || !index) return;
+      const post = savePosts.filter((lst: any) => lst.id === +index);
       const { title, category, preview, description, tags, thumb } = post[0];
 
       uploadForm.setFieldsValue({ title, category, preview });
@@ -343,27 +359,35 @@ const Upload = () => {
     }
   }, [router.query]);
 
+  useEffect(() => {
+    const savePost = typeof window === 'object' && localStorage.getItem('saved');
+    if (savePost) {
+      setSavePosts(JSON.parse(savePost));
+      return;
+    }
+    setSavePosts([]);
+  }, []);
+
   return (
     <Container>
       <SavePostModal visible={isSaveVisible} onOk={handleSaveVisible} onCancel={handleSaveVisibleClose}>
-        {savePosts ? (
-          JSON.parse(savePosts).map((lst: any, index: number) => (
-            <Fragment key={index}>
-              <SaveContainer
-                tabIndex={0}
-                role="button"
-                data-index={lst.id}
-                style={{ cursor: 'pointer' }}
-                onKeyDown={handleSelectSavePost}
-                onClick={handleSelectSavePost}
-              >
-                <div>
+        {savePosts?.length ? (
+          savePosts.map((lst: any) => (
+            <Fragment key={lst.id}>
+              <SaveContainer>
+                <div
+                  tabIndex={0}
+                  role="button"
+                  onKeyDown={handleSelectSavePost}
+                  onClick={handleSelectSavePost}
+                  data-index={lst.id}
+                >
                   <h3>{lst.title}</h3>
                   <h5>{lst.category}</h5>
                   <small>{lst.description?.slice(0, 70)}</small>
                 </div>
                 <div>
-                  <button type="button">
+                  <button type="button" onClick={handleDeleteSavePost} value={lst.id}>
                     <span>삭제</span>
                   </button>
                 </div>

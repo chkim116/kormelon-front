@@ -1,9 +1,15 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
+import React from 'react';
 import axios from 'axios';
+import ContentList from '../components/ContentList';
+import { useRouter } from 'next/router';
+import AppContents from '../components/layouts/AppContents';
+import { Post } from '.';
+import AppLoading from '../components/layouts/AppLoading';
+import AppEmpty from '../components/layouts/AppEmpty';
+import AppTitle from '../components/layouts/AppTitle';
 import SEO from '../assets/seo';
-import { Post } from '../interfaces/post';
-import CategoriesContent from '../components/home/categories';
+import ContentMe from '../components/ContentMe';
 
 interface Props {
   post: Post[];
@@ -12,15 +18,45 @@ interface Props {
 
 const Category = ({ post, postCount }: Props) => {
   const router = useRouter();
+
+  if (router.isFallback) {
+    return <AppLoading />;
+  }
+
+  if (!post) {
+    return <AppEmpty />;
+  }
   return (
     <>
       <SEO desc={`${router.query.categories}에 대한 포스트`} />
-      <CategoriesContent post={post} postCount={postCount} />
+      <AppTitle
+        title={router.query?.categories as string}
+        count={router.asPath === '/me' ? null : postCount}
+      ></AppTitle>
+      <AppContents>
+        <>
+          {router.asPath === '/me' ? (
+            <ContentMe />
+          ) : (
+            <ContentList
+              post={post}
+              postCount={postCount}
+              filter={(router.query?.categories as string) || ''}
+            ></ContentList>
+          )}
+        </>
+      </AppContents>
     </>
   );
 };
 
 export default Category;
+
+export interface Categories {
+  _id?: string;
+  category: string;
+  post: any[];
+}
 
 export const getServerSideProps: GetServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { params, query } = ctx;

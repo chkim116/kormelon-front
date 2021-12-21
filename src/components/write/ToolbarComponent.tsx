@@ -30,7 +30,7 @@ type Props = {
   onClickImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const WriteEditorToolbar = ({ onHeader, onClickImg }: Props) => {
+const ToolbarComponent = ({ onHeader, onClickImg }: Props) => {
   const imgInput = useRef<HTMLInputElement>(null!);
   const onHideInput = () => {
     imgInput.current.click();
@@ -81,4 +81,4 @@ const WriteEditorToolbar = ({ onHeader, onClickImg }: Props) => {
   );
 };
 
-export default WriteEditorToolbar;
+export default ToolbarComponent;

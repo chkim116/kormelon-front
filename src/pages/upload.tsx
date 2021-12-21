@@ -1,23 +1,21 @@
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Form, Modal, Button, Select, Input, Tag } from 'antd';
+import { Button, Form, Input, Modal, notification, Select, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useState, useCallback, useEffect, Fragment } from 'react';
-import { postFetcher } from '../../fetch';
-import { useNotification } from '../../hooks/useNotification';
-import { Categories } from '../../interfaces/categories';
-import { Post } from '../../interfaces/post';
-import { useAppSelector } from '../../store/hook';
-import { theme } from '../../styles/theme';
-import WriteMarkEditor from './WriteMarkEditor';
+import { getCate, postFetcher } from '../fetch';
+import { Categories } from './[categories]';
+import { Post } from '.';
+import axios from 'axios';
+import MarkEditor from '../components/MarkEditor';
+import { theme } from '../styles/theme';
+import { useAppSelector } from '../store/hook';
 
 const { Item } = Form;
 
 const Container = styled.div`
-  margin: 0 auto;
+  margin: 120px auto 0 auto;
   width: 98%;
-  padding-top: 120px;
 
   @media all and (max-width: ${({ theme }) => theme.desktop}) {
     width: 95%;
@@ -123,11 +121,9 @@ interface FormValues {
   preview: string;
 }
 
-const Write = () => {
-  const router = useRouter();
-
+const Upload = () => {
   const { mode } = useAppSelector((state) => state.darkMode);
-  const { showNotification } = useNotification();
+  const router = useRouter();
 
   const [uploadForm] = Form.useForm();
   const [form, setForm] = useState<FormValues>();
@@ -172,14 +168,18 @@ const Write = () => {
       const { id } = e.currentTarget.dataset;
       if (!form?.title || !form?.category || !thumbPreview) {
         setLoading(() => false);
-        showNotification({ key: 'error', message: '다 입력해 주세요.' });
-        return;
+        return notification.error({
+          message: '다 입력해 주세요',
+          placement: 'bottomLeft',
+        });
       }
 
       if (!desc && !prevDesc) {
         setLoading(() => false);
-        showNotification({ key: 'error', message: '본문을 입력해 주세요.' });
-        return;
+        return notification.error({
+          message: '본문을 입력해 주세요',
+          placement: 'bottomLeft',
+        });
       }
 
       const data = {
@@ -193,26 +193,38 @@ const Write = () => {
       if (id) {
         postFetcher({ ...data, updated: new Date().toDateString() } as Post, id)
           .then(() => {
-            showNotification({ message: '수정 완료' });
+            notification.success({
+              message: '수정 완료',
+              placement: 'bottomLeft',
+            });
             router.push(`/contents/${form?.title}`);
           })
           .catch((e) => {
             console.error(e);
             setLoading(() => false);
-            showNotification({ key: 'error', message: '다 입력해 주세요.' });
+            return notification.error({
+              message: '다 입력해 주세요',
+              placement: 'bottomLeft',
+            });
           });
         return;
       }
 
       postFetcher(data as Post)
         .then(() => {
-          showNotification({ message: '게시 완료' });
+          notification.success({
+            message: '게시 완료',
+            placement: 'bottomLeft',
+          });
           router.push(`/contents/${form?.title}`);
         })
         .catch((e) => {
           console.error(e);
           setLoading(() => false);
-          showNotification({ key: 'error', message: '다 입력해 주세요.' });
+          return notification.error({
+            message: '다 입력해 주세요',
+            placement: 'bottomLeft',
+          });
         });
     },
     [router, form, thumbPreview, desc, prevDesc, tags],
@@ -271,7 +283,7 @@ const Write = () => {
       setSaveId(1);
     }
 
-    showNotification({ message: '임시 저장 완료' });
+    notification.success({ message: '임시 저장 완료', placement: 'bottomLeft' });
   }, [savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
 
   const handleSaveVisible = useCallback(() => {
@@ -321,9 +333,6 @@ const Write = () => {
   );
 
   useEffect(() => {
-    const getCate = async () => {
-      return await axios.get('/category');
-    };
     getCate().then((res) => setCategories(res.data || []));
   }, []);
 
@@ -430,7 +439,8 @@ const Write = () => {
             {tag}
           </Tag>
         ))}
-        <WriteMarkEditor prevDesc={prevDesc} setDesc={setDesc} />
+        <MarkEditor prevDesc={prevDesc} setDesc={setDesc} />
+        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
       </Form>
 
       <Button data-id={editPost?._id} onClick={handleFinish} loading={loading} type="primary" htmlType="submit">
@@ -443,4 +453,4 @@ const Write = () => {
   );
 };
 
-export default Write;
+export default Upload;

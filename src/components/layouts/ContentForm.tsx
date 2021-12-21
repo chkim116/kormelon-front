@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import Tags from '../home/common/Tags';
+import AppTags from './AppTags';
 import Link from 'next/link';
 
 const ContentLayout = styled.div`
@@ -35,9 +35,9 @@ const ContentForm = ({ date, title, p, tags = [] }: Props) => {
         <div className="content-title">{title}</div>
         <div>
           {tags.map((tag) => (
-            <Tags key={tag}>
+            <AppTags key={tag}>
               <Link href={`/search?select=tags&text=${tag}`}>{tag}</Link>
-            </Tags>
+            </AppTags>
           ))}
         </div>
         <ContentDescription id="content" dangerouslySetInnerHTML={{ __html: p }} />

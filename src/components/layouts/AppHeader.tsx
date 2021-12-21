@@ -200,6 +200,9 @@ const AppHeader = () => {
     <App scaleheight={scaleHeight.toString()}>
       <div className="header__container">
         <NavBtn>
+          {/* <Button type="text" size="large" onClick={handleShowSider}>
+            {showSider ? <CloseOutlined /> : <MenuOutlined />}
+          </Button> */}
           <div>
             <Link href="/">Kormelon Devlog</Link>
           </div>
@@ -240,7 +243,7 @@ const AppHeader = () => {
           {user.id ? (
             <>
               <Button type="link" size="middle">
-                <Link href="/write">write</Link>
+                <Link href="/upload">Upload</Link>
               </Button>
               <Button type="link" size="middle" onClick={handleLogOut}>
                 Logout

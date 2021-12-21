@@ -8,7 +8,7 @@ import { Post } from '.';
 import AppLoading from '../components/layouts/AppLoading';
 import AppEmpty from '../components/layouts/AppEmpty';
 import AppTitle from '../components/layouts/AppTitle';
-import SEO from '../seo';
+import SEO from '../assets/seo';
 import ContentMe from '../components/ContentMe';
 
 interface Props {

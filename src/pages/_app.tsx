@@ -1,59 +1,26 @@
 import { AppProps } from 'next/dist/shared/lib/router/router';
-import styled from '@emotion/styled';
 import '../styles/highlight.css';
 import React, { useEffect, useState } from 'react';
-import Layout from 'antd/lib/layout/layout';
-import AppFooter from '../components/layouts/AppFooter';
-import AppHeader from '../components/layouts/AppHeader';
 import axios from 'axios';
 import { DefaultSeo } from 'next-seo';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
 import router from 'next/router';
-import AppLoading from '../components/layouts/AppLoading';
 import AppDarkMode from '../components/layouts/AppDarkMode';
 import { pageview } from '../lib/gtag';
 import { Provider } from 'react-redux';
 import store from '../store';
-
-const AppLayouts = styled(Layout)`
-  width: 100%;
-  background-color: ${({ theme }) => theme.white};
-`;
+import AppLayouts from '../components/layouts/AppLayouts';
+import AppLoading from '../components/layouts/AppLoading';
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.kormelon.com' : 'http://localhost:4000';
 axios.defaults.withCredentials = true;
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [isglobalLoading, setIsGlobalLoading] = useState(false);
-  const [view, setView] = useState({ views: 0, totalView: 0 });
-  const [already, setAlready] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-
-  // useEffect(() => {
-  //   const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
-  //   user();
-  // }, [setIsUser]);
 
   useEffect(() => {
-    if (already) {
-      return;
-    }
-
-    const getViews = async () => {
-      await axios.post('/view').then((res) => {
-        setView({
-          views: res.data.views,
-          totalView: res.data.totalView,
-        });
-        setAlready(true);
-      });
-    };
-
-    getViews();
-  }, [already]);
-
-  useEffect(() => {
+    // gtags
     const gtagRouteChange = (url: string) => {
       pageview(url);
     };
@@ -141,23 +108,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Provider store={store}>
         <AppDarkMode>
+          <>{isglobalLoading && <AppLoading scroll />}</>
           <AppLayouts>
-            <>{isglobalLoading && <AppLoading scroll />}</>
-            <AppHeader />
             <Component {...pageProps} />
-            <AppFooter>
-              <>
-                <div>Kormelon &copy; 2021</div>
-                <div>
-                  <small>
-                    Today <span>{view.views}</span>{' '}
-                    <span>
-                      Total <span>{view.totalView}</span>
-                    </span>
-                  </small>
-                </div>
-              </>
-            </AppFooter>
           </AppLayouts>
           <AppTop></AppTop>
         </AppDarkMode>

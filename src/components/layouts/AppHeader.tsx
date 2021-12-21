@@ -4,14 +4,13 @@ import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import Link from 'next/link';
-import axios from 'axios';
 import AppCategories from './AppCategories';
 import { FaSearch } from 'react-icons/fa';
 import router from 'next/router';
 import { categories } from '../../constants/var';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { toggleIsShowAsider } from '../../store/reducer/asider';
-import { removeAuth } from '../../store/reducer/auth';
+import { postLogoutRequest } from '../../store/reducer/auth';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -131,12 +130,11 @@ const SearchingBar = styled.form`
   }
 `;
 
-const logoutFetcher = async (url: string) => {
-  return await axios.post(url);
-};
-
 const AppHeader = () => {
-  const { asider, auth } = useAppSelector((state) => state);
+  const {
+    asider,
+    auth: { user },
+  } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   const [scaleHeight, setScaleHeight] = useState(false);
@@ -145,9 +143,8 @@ const AppHeader = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleLogOut = useCallback(() => {
-    logoutFetcher('/auth/logout');
-    dispatch(removeAuth());
-  }, [dispatch, removeAuth]);
+    dispatch(postLogoutRequest());
+  }, [dispatch, postLogoutRequest]);
 
   const handleShowingSearchbar = useCallback(() => {
     setIsSearch((prev) => !prev);
@@ -243,7 +240,7 @@ const AppHeader = () => {
         </MobileNav>
         {asider.isShowAsider && <AppCategories />}
         <div className="header__login">
-          {auth.id ? (
+          {user.id ? (
             <>
               <Button type="link" size="middle">
                 <Link href="/upload">Upload</Link>

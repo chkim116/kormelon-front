@@ -1,11 +1,11 @@
-import { Button, Form, Input, notification } from 'antd';
+import { Button, Form, Input } from 'antd';
 import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
-import { getAuth } from '../store/reducer/auth';
 import { useAppDispatch } from '../store/hook';
+import { postLoginRequest } from '../store/reducer/auth';
 
 const FormLayout = styled(Form)`
   display: flex;
@@ -44,21 +44,9 @@ const Login = () => {
     const { username, password } = form;
 
     if (username && password) {
-      setLoading(() => true);
-      loginFetcher('/auth/login', form)
-        .then((res) => {
-          dispatch(getAuth(res.data));
-          router.push('/');
-        })
-        .catch(({ response }) => {
-          setLoading(() => false);
-          notification.error({
-            message: `${response.data.message}`,
-            placement: 'bottomLeft',
-          });
-        });
+      dispatch(postLoginRequest(form));
     }
-  }, [form, dispatch, getAuth, router]);
+  }, [form, router]);
 
   if (loading) {
     return <AppLoading />;

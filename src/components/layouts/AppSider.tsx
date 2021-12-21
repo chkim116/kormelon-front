@@ -74,7 +74,7 @@ const getAllLength = (category: Categories[]): number => {
 const AppSider = () => {
   const {
     asider: { isShowAsider },
-    auth,
+    auth: { user },
   } = useAppSelector((state) => state);
 
   const [allPost, setAllPost] = useState(0);
@@ -183,7 +183,7 @@ const AppSider = () => {
             </Button>
           </div>
         )}
-        {auth.admin && (
+        {user.admin && (
           <ContentEditBtn>
             <Button type="link" size="middle" onClick={handleShowingAdd}>
               <FileAddOutlined />

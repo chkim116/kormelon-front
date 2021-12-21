@@ -93,7 +93,7 @@ interface Props {
 const Contents = ({ post, anchor, prev, next }: Props) => {
   const {
     asider: { isShowAsider },
-    auth,
+    auth: { user },
   } = useAppSelector((state) => state);
 
   const [categories, setCategories] = useState<Categories[]>();
@@ -178,7 +178,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
           <ContentThumb url={post.thumb} ref={thumbRef}>
             <img src={post.thumb} alt="썸네일 이미지" />
           </ContentThumb>
-          {auth.admin && (
+          {user.admin && (
             <ContentEditBtn>
               <Button type="link" size="large" onClick={handleEdit}>
                 <EditOutlined />

@@ -35,11 +35,14 @@ const Login = () => {
     setForm(all);
   }, []);
 
-  const handleFinish = useCallback(() => {
+  const handleFinish = useCallback(async () => {
     const { username, password } = form;
 
     if (username && password) {
-      dispatch(postLoginRequest(form));
+      setLoading(true);
+      await dispatch(postLoginRequest(form));
+      setLoading(false);
+      router.push('/');
     }
   }, [form, router]);
 

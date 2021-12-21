@@ -1,7 +1,7 @@
 import { AppProps } from 'next/dist/shared/lib/router/router';
 import styled from '@emotion/styled';
 import '../styles/highlight.css';
-import React, { createContext, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useReducer, useState } from 'react';
 import Layout from 'antd/lib/layout/layout';
 import AppFooter from '../components/layouts/AppFooter';
 import AppHeader from '../components/layouts/AppHeader';
@@ -18,6 +18,8 @@ import AppLoading from '../components/layouts/AppLoading';
 import { GlobalStyles } from '../styles/global';
 import AppDarkMode from '../components/layouts/AppDarkMode';
 import { pageview } from '../lib/gtag';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 
 const AppLayouts = styled(Layout)`
   width: 100%;
@@ -34,7 +36,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [state] = useReducer(reducer, initial);
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
-  const [isShowSider, setIsShowSider] = useGlobalState('isShowSider', false);
   // eslint-disable-next-line no-unused-vars
   const [_, setIsUser] = useGlobalState('auth', initial.user);
   const [mode, setMode] = useGlobalState('mode');
@@ -50,23 +51,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const handleLogout = () => {
     setIsUser(initial.user);
   };
-
-  const handleShowSider = useCallback(
-    (e) => {
-      e.stopPropagation();
-      setIsShowSider(!isShowSider);
-    },
-    [isShowSider, setIsShowSider],
-  );
-
-  useEffect(() => {
-    if (state.showSider) {
-      document.body.addEventListener('click', handleShowSider);
-    }
-    return () => {
-      document.body.removeEventListener('click', handleShowSider);
-    };
-  }, [handleShowSider, state.showSider]);
 
   useEffect(() => {
     const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
@@ -187,31 +171,33 @@ function MyApp({ Component, pageProps }: AppProps) {
           ></script>
         )}
       </Head>
-      <ThemeProvider theme={modeTheme}>
-        <GlobalStyles theme={modeTheme} />
-        <AppContext.Provider value={state}>
-          <AppLayouts>
-            <>{isglobalLoading && <AppLoading scroll />}</>
-            <AppHeader handleLogout={handleLogout} handleShowSider={handleShowSider} />
-            <Component {...pageProps} />
-            <AppFooter>
-              <>
-                <div>Kormelon &copy; 2021</div>
-                <div>
-                  <small>
-                    Today <span>{view.views}</span>{' '}
-                    <span>
-                      Total <span>{view.totalView}</span>
-                    </span>
-                  </small>
-                </div>
-              </>
-            </AppFooter>
-          </AppLayouts>
-          <AppDarkMode />
-          <AppTop></AppTop>
-        </AppContext.Provider>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={modeTheme}>
+          <GlobalStyles theme={modeTheme} />
+          <AppContext.Provider value={state}>
+            <AppLayouts>
+              <>{isglobalLoading && <AppLoading scroll />}</>
+              <AppHeader handleLogout={handleLogout} />
+              <Component {...pageProps} />
+              <AppFooter>
+                <>
+                  <div>Kormelon &copy; 2021</div>
+                  <div>
+                    <small>
+                      Today <span>{view.views}</span>{' '}
+                      <span>
+                        Total <span>{view.totalView}</span>
+                      </span>
+                    </small>
+                  </div>
+                </>
+              </AppFooter>
+            </AppLayouts>
+            <AppDarkMode />
+            <AppTop></AppTop>
+          </AppContext.Provider>
+        </ThemeProvider>
+      </Provider>
     </>
   );
 }

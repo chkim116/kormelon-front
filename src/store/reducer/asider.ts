@@ -1,23 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface Asider {
-  showSider: boolean;
+  isShowAsider: boolean;
 }
 
 const initialState: Asider = {
-  showSider: false,
+  isShowAsider: false,
 };
 
 const asider = createSlice({
   initialState,
   name: 'asider',
   reducers: {
-    toggleShowSider: (state) => {
-      state.showSider = !state.showSider;
+    toggleIsShowAsider: (state) => {
+      state.isShowAsider = !state.isShowAsider;
     },
   },
 });
 
-export const { toggleShowSider } = asider.actions;
+export const { toggleIsShowAsider } = asider.actions;
 
 export default asider.reducer;

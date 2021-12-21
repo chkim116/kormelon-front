@@ -10,6 +10,8 @@ import AppCategories from './AppCategories';
 import { FaSearch } from 'react-icons/fa';
 import router from 'next/router';
 import { categories } from '../../constants/var';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { toggleIsShowAsider } from '../../store/reducer/asider';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -131,18 +133,18 @@ const SearchingBar = styled.form`
 
 interface Props {
   handleLogout: () => void;
-  // eslint-disable-next-line no-unused-vars
-  handleShowSider: (e: any) => void;
 }
 
 const logoutFetcher = async (url: string) => {
   return await axios.post(url);
 };
 
-const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
+const AppHeader = ({ handleLogout }: Props) => {
+  const { asider } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+
   const [scaleHeight, setScaleHeight] = useState(false);
   const [isUser, setIsUser] = useGlobalState('auth');
-  const [isShowSider] = useGlobalState('isShowSider');
   const [isSearch, setIsSearch] = useState(false);
   const searchRef = useRef<any>(null);
   const [searchText, setSearchText] = useState('');
@@ -175,11 +177,24 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
     [searchText],
   );
 
+  const handleIsShowAsider = useCallback(() => {
+    dispatch(toggleIsShowAsider());
+  }, [dispatch, toggleIsShowAsider]);
+
   useEffect(() => {
     if (isSearch && searchRef) {
       searchRef?.current.focus();
     }
   }, [isSearch]);
+
+  useEffect(() => {
+    if (asider.isShowAsider) {
+      document.body.addEventListener('click', handleIsShowAsider);
+    }
+    return () => {
+      document.body.removeEventListener('click', handleIsShowAsider);
+    };
+  }, [handleIsShowAsider, asider.isShowAsider]);
 
   useEffect(() => {
     document.addEventListener('scroll', () => {
@@ -234,10 +249,10 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
             <FaSearch size={18} />
           </button>
         </NavMenu>
-        <MobileNav type="text" size="large" onClick={handleShowSider}>
-          {isShowSider ? <CloseOutlined /> : <MenuOutlined />}
+        <MobileNav type="text" size="large" onClick={handleIsShowAsider}>
+          {asider.isShowAsider ? <CloseOutlined /> : <MenuOutlined />}
         </MobileNav>
-        {isShowSider && <AppCategories />}
+        {asider.isShowAsider && <AppCategories />}
         <div className="header__login">
           {isUser?.id ? (
             <>

@@ -15,7 +15,6 @@ const sageMiddleware = createSagaMiddleware();
 
 const store = configureStore({
   reducer,
-  middleware: [sageMiddleware],
   enhancers: [applyMiddleware(sageMiddleware)],
 });
 

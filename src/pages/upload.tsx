@@ -66,6 +66,30 @@ const Container = styled.div`
   }
 `;
 
+const SavePostModal = styled(Modal)`
+  * {
+    color: ${({ theme }) => theme.black};
+    background-color: ${({ theme }) => theme.white} !important;
+  }
+`;
+
+const SaveContainer = styled.div`
+  padding-top: 3em;
+  color: ${({ theme }) => theme.black};
+  background-color: ${({ theme }) => theme.white};
+  display: flex;
+  justify-content: space-between;
+  /* 삭제 div 태그 */
+  & > div:nth-of-type(2) {
+    button {
+      border: 1px solid ${({ theme }) => theme.border};
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+`;
+
 const TagForm = styled.div`
   display: flex;
   align-items: center;
@@ -321,16 +345,11 @@ const Upload = () => {
 
   return (
     <Container>
-      <Modal
-        bodyStyle={{ background: theme.black }}
-        visible={isSaveVisible}
-        onOk={handleSaveVisible}
-        onCancel={handleSaveVisibleClose}
-      >
+      <SavePostModal visible={isSaveVisible} onOk={handleSaveVisible} onCancel={handleSaveVisibleClose}>
         {savePosts ? (
           JSON.parse(savePosts).map((lst: any, index: number) => (
             <Fragment key={index}>
-              <div
+              <SaveContainer
                 tabIndex={0}
                 role="button"
                 data-index={lst.id}
@@ -338,17 +357,24 @@ const Upload = () => {
                 onKeyDown={handleSelectSavePost}
                 onClick={handleSelectSavePost}
               >
-                <h3>{lst.title}</h3>
-                <h5>{lst.category}</h5>
-                <small>{lst.description?.slice(0, 70)}</small>
-              </div>
+                <div>
+                  <h3>{lst.title}</h3>
+                  <h5>{lst.category}</h5>
+                  <small>{lst.description?.slice(0, 70)}</small>
+                </div>
+                <div>
+                  <button type="button">
+                    <span>삭제</span>
+                  </button>
+                </div>
+              </SaveContainer>
               <hr style={{ border: '1px solid #dbdbdb' }} />
             </Fragment>
           ))
         ) : (
           <h2>저장된 글이 없어요 :)</h2>
         )}
-      </Modal>
+      </SavePostModal>
 
       <Form size="large" form={uploadForm} name="uploadForm" layout="horizontal" onValuesChange={handleFormChange}>
         <LoadSavePostBtn onClick={handleSaveVisible}>임시저장글 불러오기</LoadSavePostBtn>

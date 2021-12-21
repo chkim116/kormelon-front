@@ -7,7 +7,6 @@ import { Categories } from '../../pages/[categories]';
 import { DeleteOutlined, FileAddOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, notification } from 'antd';
 import { delCategory, postCategory } from '../../fetch';
-import { useGlobalState } from '../../hooks';
 import axios from 'axios';
 import { useAppSelector } from '../../store/hook';
 
@@ -73,7 +72,10 @@ const getAllLength = (category: Categories[]): number => {
 };
 
 const AppSider = () => {
-  const { isShowAsider } = useAppSelector((state) => state.asider);
+  const {
+    asider: { isShowAsider },
+    auth,
+  } = useAppSelector((state) => state);
 
   const [allPost, setAllPost] = useState(0);
   const [categoryName, setCategoryName] = useState('');
@@ -83,7 +85,6 @@ const AppSider = () => {
   const handleShowingAdd = useCallback(() => {
     setAdd((prev) => !prev);
   }, []);
-  const [user] = useGlobalState('auth');
 
   const handleAddCategory = useCallback(() => {
     if (!categoryName) {
@@ -182,7 +183,7 @@ const AppSider = () => {
             </Button>
           </div>
         )}
-        {user?.admin && (
+        {auth.admin && (
           <ContentEditBtn>
             <Button type="link" size="middle" onClick={handleShowingAdd}>
               <FileAddOutlined />

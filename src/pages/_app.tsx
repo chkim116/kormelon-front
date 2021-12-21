@@ -7,7 +7,6 @@ import AppFooter from '../components/layouts/AppFooter';
 import AppHeader from '../components/layouts/AppHeader';
 import axios from 'axios';
 import { DefaultSeo } from 'next-seo';
-import { useGlobalState } from '../hooks';
 import AppTop from '../components/layouts/AppTop';
 import Head from 'next/head';
 import router from 'next/router';
@@ -30,16 +29,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [view, setView] = useState({ views: 0, totalView: 0 });
   const [already, setAlready] = useState(false);
   // eslint-disable-next-line no-unused-vars
-  const [_, setIsUser] = useGlobalState('auth', initial.user);
 
-  const handleLogout = () => {
-    setIsUser(initial.user);
-  };
-
-  useEffect(() => {
-    const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
-    user();
-  }, [setIsUser]);
+  // useEffect(() => {
+  //   const user = async () => await axios.get('/auth').then((res) => setIsUser(res.data));
+  //   user();
+  // }, [setIsUser]);
 
   useEffect(() => {
     if (already) {
@@ -149,7 +143,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <AppDarkMode>
           <AppLayouts>
             <>{isglobalLoading && <AppLoading scroll />}</>
-            <AppHeader handleLogout={handleLogout} />
+            <AppHeader />
             <Component {...pageProps} />
             <AppFooter>
               <>

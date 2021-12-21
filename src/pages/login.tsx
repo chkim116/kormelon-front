@@ -4,7 +4,8 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import AppLoading from '../components/layouts/AppLoading';
-import { useGlobalState } from '../hooks';
+import { getAuth } from '../store/reducer/auth';
+import { useAppDispatch } from '../store/hook';
 
 const FormLayout = styled(Form)`
   display: flex;
@@ -28,16 +29,12 @@ const loginFetcher = async (url: string, data: any) => {
 };
 
 const Login = () => {
+  const dispatch = useAppDispatch();
+
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   // eslint-disable-next-line no-unused-vars
-  const [_, isSetUser] = useGlobalState('auth', {
-    username: '',
-    token: '',
-    id: '',
-    admin: false,
-  });
 
   const handleChange = useCallback((_, all: any) => {
     setForm(all);
@@ -50,7 +47,7 @@ const Login = () => {
       setLoading(() => true);
       loginFetcher('/auth/login', form)
         .then((res) => {
-          isSetUser(res.data);
+          dispatch(getAuth(res.data));
           router.push('/');
         })
         .catch(({ response }) => {
@@ -61,7 +58,7 @@ const Login = () => {
           });
         });
     }
-  }, [form, isSetUser, router]);
+  }, [form, dispatch, getAuth, router]);
 
   if (loading) {
     return <AppLoading />;

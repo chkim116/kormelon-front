@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import ContentForm from '../../components/layouts/ContentForm';
 import { Button, Modal, notification } from 'antd';
@@ -12,7 +12,7 @@ import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
 import AppEmpty from '../../components/layouts/AppEmpty';
-import { useGlobalState, useScrollTop } from '../../hooks';
+import { useScrollTop } from '../../hooks';
 import marked from 'marked';
 import '../../lib/highlight';
 import Anchors from '../../components/Anchors';
@@ -91,11 +91,13 @@ interface Props {
 }
 
 const Contents = ({ post, anchor, prev, next }: Props) => {
-  const { isShowAsider } = useAppSelector((state) => state.asider);
+  const {
+    asider: { isShowAsider },
+    auth,
+  } = useAppSelector((state) => state);
 
   const [categories, setCategories] = useState<Categories[]>();
   const [loading, setLoading] = useState(false);
-  const [user] = useGlobalState('auth');
   const router = useRouter();
   const thumbRef = useRef<HTMLDivElement>(null);
   const handleEdit = useCallback(() => {
@@ -176,7 +178,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
           <ContentThumb url={post.thumb} ref={thumbRef}>
             <img src={post.thumb} alt="썸네일 이미지" />
           </ContentThumb>
-          {user?.admin && (
+          {auth.admin && (
             <ContentEditBtn>
               <Button type="link" size="large" onClick={handleEdit}>
                 <EditOutlined />

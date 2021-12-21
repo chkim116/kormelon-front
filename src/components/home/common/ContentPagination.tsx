@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Post } from '../pages';
-import AppLoading from './layouts/AppLoading';
-import { useRouter } from 'next/router';
-import { ContentCard } from './ContentCard';
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-
+import styled from '@emotion/styled';
+import pagination from 'antd/lib/pagination';
+import router, { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 const PostPagination = styled.div`
   padding: 1em 0;
   display: flex;
@@ -36,13 +33,12 @@ const PostPaginationBtn = styled.button<{ selected: boolean }>`
 `;
 
 interface Props {
-  post: Post[];
   postCount: number;
-  filter?: string;
   searching?: boolean;
+  filter?: string;
 }
 
-const ContentList = ({ post, postCount, filter, searching }: Props) => {
+const ContentPagination = ({ postCount, searching, filter }: Props) => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const isLimit = useMemo(() => {
@@ -103,34 +99,21 @@ const ContentList = ({ post, postCount, filter, searching }: Props) => {
     return () => {};
   }, [router.query]);
 
-  if (!post || post.length < 1) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <h3>아직 발행된 글이 없습니다 :)</h3>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <ContentCard postList={post} />
-      {!post && <AppLoading scroll={true} />}
-
-      <PostPagination>
-        <PostPaginationArrowBtn onClick={handleArrowClick} value="-" disabled={+page === 1}>
-          <span>{'<'}</span>
-        </PostPaginationArrowBtn>
-        {pagination.map((i) => (
-          <PostPaginationBtn selected={i === +page - 1} value={i + 1} onClick={handlePagination} key={i}>
-            <span>{i + 1}</span>
-          </PostPaginationBtn>
-        ))}
-        <PostPaginationArrowBtn onClick={handleArrowClick} value="+" disabled={+page === isLimit}>
-          <span>{'>'}</span>
-        </PostPaginationArrowBtn>
-      </PostPagination>
-    </div>
+    <PostPagination>
+      <PostPaginationArrowBtn onClick={handleArrowClick} value="-" disabled={+page === 1}>
+        <span>{'<'}</span>
+      </PostPaginationArrowBtn>
+      {pagination.map((i) => (
+        <PostPaginationBtn selected={i === +page - 1} value={i + 1} onClick={handlePagination} key={i}>
+          <span>{i + 1}</span>
+        </PostPaginationBtn>
+      ))}
+      <PostPaginationArrowBtn onClick={handleArrowClick} value="+" disabled={+page === isLimit}>
+        <span>{'>'}</span>
+      </PostPaginationArrowBtn>
+    </PostPagination>
   );
 };
 
-export default ContentList;
+export default ContentPagination;

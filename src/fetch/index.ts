@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Post } from '../pages';
+import { Post } from '../interfaces/post';
 
 export const getCate = async () => {
   return await axios.get('/category');

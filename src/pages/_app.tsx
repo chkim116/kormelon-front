@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Provider store={store}>
         <AppDarkMode>
-          <>{isglobalLoading && <AppLoading scroll />}</>
+          {isglobalLoading && <AppLoading scroll />}
           <AppLayouts>
             <Component {...pageProps} />
           </AppLayouts>

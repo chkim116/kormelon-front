@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import React from 'react';
-import { Post } from '../pages';
-import AppTags from './layouts/AppTags';
+import { Post } from '../../../interfaces/post';
+import AppTags from './Tags';
 
 const ContentContainer = styled.div`
   display: grid;

@@ -1,21 +1,23 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Button, Form, Input, Modal, notification, Select, Tag } from 'antd';
+import { Form, Modal, Button, Select, Input, Tag } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { useRouter } from 'next/router';
-import { getCate, postFetcher } from '../fetch';
-import { Categories } from './[categories]';
-import { Post } from '.';
 import axios from 'axios';
-import MarkEditor from '../components/MarkEditor';
-import { theme } from '../styles/theme';
-import { useAppSelector } from '../store/hook';
+import { useRouter } from 'next/router';
+import { useState, useCallback, useEffect, Fragment } from 'react';
+import { postFetcher } from '../../fetch';
+import { useNotification } from '../../hooks/useNotification';
+import { Categories } from '../../interfaces/categories';
+import { Post } from '../../interfaces/post';
+import { useAppSelector } from '../../store/hook';
+import { theme } from '../../styles/theme';
+import WriteMarkEditor from './WriteMarkEditor';
 
 const { Item } = Form;
 
 const Container = styled.div`
-  margin: 120px auto 0 auto;
+  margin: 0 auto;
   width: 98%;
+  padding-top: 120px;
 
   @media all and (max-width: ${({ theme }) => theme.desktop}) {
     width: 95%;
@@ -121,9 +123,11 @@ interface FormValues {
   preview: string;
 }
 
-const Upload = () => {
-  const { mode } = useAppSelector((state) => state.darkMode);
+const Write = () => {
   const router = useRouter();
+
+  const { mode } = useAppSelector((state) => state.darkMode);
+  const { showNotification } = useNotification();
 
   const [uploadForm] = Form.useForm();
   const [form, setForm] = useState<FormValues>();
@@ -168,18 +172,14 @@ const Upload = () => {
       const { id } = e.currentTarget.dataset;
       if (!form?.title || !form?.category || !thumbPreview) {
         setLoading(() => false);
-        return notification.error({
-          message: '다 입력해 주세요',
-          placement: 'bottomLeft',
-        });
+        showNotification({ key: 'error', message: '다 입력해 주세요.' });
+        return;
       }
 
       if (!desc && !prevDesc) {
         setLoading(() => false);
-        return notification.error({
-          message: '본문을 입력해 주세요',
-          placement: 'bottomLeft',
-        });
+        showNotification({ key: 'error', message: '본문을 입력해 주세요.' });
+        return;
       }
 
       const data = {
@@ -193,38 +193,26 @@ const Upload = () => {
       if (id) {
         postFetcher({ ...data, updated: new Date().toDateString() } as Post, id)
           .then(() => {
-            notification.success({
-              message: '수정 완료',
-              placement: 'bottomLeft',
-            });
+            showNotification({ message: '수정 완료' });
             router.push(`/contents/${form?.title}`);
           })
           .catch((e) => {
             console.error(e);
             setLoading(() => false);
-            return notification.error({
-              message: '다 입력해 주세요',
-              placement: 'bottomLeft',
-            });
+            showNotification({ key: 'error', message: '다 입력해 주세요.' });
           });
         return;
       }
 
       postFetcher(data as Post)
         .then(() => {
-          notification.success({
-            message: '게시 완료',
-            placement: 'bottomLeft',
-          });
+          showNotification({ message: '게시 완료' });
           router.push(`/contents/${form?.title}`);
         })
         .catch((e) => {
           console.error(e);
           setLoading(() => false);
-          return notification.error({
-            message: '다 입력해 주세요',
-            placement: 'bottomLeft',
-          });
+          showNotification({ key: 'error', message: '다 입력해 주세요.' });
         });
     },
     [router, form, thumbPreview, desc, prevDesc, tags],
@@ -283,7 +271,7 @@ const Upload = () => {
       setSaveId(1);
     }
 
-    notification.success({ message: '임시 저장 완료', placement: 'bottomLeft' });
+    showNotification({ message: '임시 저장 완료' });
   }, [savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
 
   const handleSaveVisible = useCallback(() => {
@@ -333,6 +321,9 @@ const Upload = () => {
   );
 
   useEffect(() => {
+    const getCate = async () => {
+      return await axios.get('/category');
+    };
     getCate().then((res) => setCategories(res.data || []));
   }, []);
 
@@ -439,8 +430,7 @@ const Upload = () => {
             {tag}
           </Tag>
         ))}
-        <MarkEditor prevDesc={prevDesc} setDesc={setDesc} />
-        {/* <QuillEditor value={prevDesc} handleQuillChange={handleQuillChange} /> */}
+        <WriteMarkEditor prevDesc={prevDesc} setDesc={setDesc} />
       </Form>
 
       <Button data-id={editPost?._id} onClick={handleFinish} loading={loading} type="primary" htmlType="submit">
@@ -453,4 +443,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default Write;

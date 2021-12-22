@@ -24,7 +24,7 @@ const ContentEditable = ({ post }: Props) => {
   const { showNotification } = useNotification();
 
   const handleEdit = useCallback(() => {
-    router.push(`/upload?title=${encodeURIComponent(post?.title)}&edit=true`);
+    router.push(`/write?title=${encodeURIComponent(post?.title)}&edit=true`);
   }, [post]);
 
   const handleDelete = useCallback(() => {

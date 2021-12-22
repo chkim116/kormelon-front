@@ -15,7 +15,7 @@ async function generateSiteMap() {
     '!../pages/404/*.tsx',
     '!../pages/search/*.tsx',
     '!../pages/login.tsx',
-    '!../pages/upload.tsx',
+    '!../pages/write.tsx',
     '!../pages/**/[title].tsx',
     '!../pages/**/[categories].tsx',
   ]);

@@ -4,12 +4,13 @@ import { Header } from 'antd/lib/layout/layout';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import Link from 'next/link';
-import axios from 'axios';
-import { useGlobalState } from '../../hooks';
 import AppCategories from './AppCategories';
 import { FaSearch } from 'react-icons/fa';
 import router from 'next/router';
 import { categories } from '../../constants/var';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { toggleIsShowAsider } from '../../store/reducer/asider';
+import { postLogoutRequest } from '../../store/reducer/auth';
 
 const App = styled(Header)<{ scaleheight: string }>`
   position: fixed;
@@ -129,34 +130,21 @@ const SearchingBar = styled.form`
   }
 `;
 
-interface Props {
-  handleLogout: () => void;
-  // eslint-disable-next-line no-unused-vars
-  handleShowSider: (e: any) => void;
-}
+const AppHeader = () => {
+  const {
+    asider,
+    auth: { user },
+  } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
-const logoutFetcher = async (url: string) => {
-  return await axios.post(url);
-};
-
-const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
   const [scaleHeight, setScaleHeight] = useState(false);
-  const [isUser, setIsUser] = useGlobalState('auth');
-  const [isShowSider] = useGlobalState('isShowSider');
   const [isSearch, setIsSearch] = useState(false);
   const searchRef = useRef<any>(null);
   const [searchText, setSearchText] = useState('');
 
   const handleLogOut = useCallback(() => {
-    logoutFetcher('/auth/logout');
-    handleLogout();
-    setIsUser({
-      username: '',
-      token: '',
-      id: '',
-      admin: false,
-    });
-  }, [handleLogout, setIsUser]);
+    dispatch(postLogoutRequest());
+  }, [dispatch]);
 
   const handleShowingSearchbar = useCallback(() => {
     setIsSearch((prev) => !prev);
@@ -174,6 +162,10 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
     },
     [searchText],
   );
+
+  const handleIsShowAsider = useCallback(() => {
+    dispatch(toggleIsShowAsider());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSearch && searchRef) {
@@ -199,9 +191,6 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
     <App scaleheight={scaleHeight.toString()}>
       <div className="header__container">
         <NavBtn>
-          {/* <Button type="text" size="large" onClick={handleShowSider}>
-            {showSider ? <CloseOutlined /> : <MenuOutlined />}
-          </Button> */}
           <div>
             <Link href="/">Kormelon Devlog</Link>
           </div>
@@ -234,15 +223,15 @@ const AppHeader = ({ handleLogout, handleShowSider }: Props) => {
             <FaSearch size={18} />
           </button>
         </NavMenu>
-        <MobileNav type="text" size="large" onClick={handleShowSider}>
-          {isShowSider ? <CloseOutlined /> : <MenuOutlined />}
+        <MobileNav type="text" size="large" onClick={handleIsShowAsider}>
+          {asider.isShowAsider ? <CloseOutlined /> : <MenuOutlined />}
         </MobileNav>
-        {isShowSider && <AppCategories />}
+        {asider.isShowAsider && <AppCategories />}
         <div className="header__login">
-          {isUser?.id ? (
+          {user.id ? (
             <>
               <Button type="link" size="middle">
-                <Link href="/upload">Upload</Link>
+                <Link href="/write">write</Link>
               </Button>
               <Button type="link" size="middle" onClick={handleLogOut}>
                 Logout

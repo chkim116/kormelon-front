@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 import { Button } from 'antd';
-import { useGlobalState } from '../../hooks';
 import Link from 'next/link';
 import { useSpring, animated } from 'react-spring';
 import { categories } from '../../constants/var';
+import { useAppDispatch } from '../../store/hook';
+import { toggleIsShowAsider } from '../../store/reducer/asider';
 
 const Sider = styled.div`
   div {
@@ -50,7 +51,8 @@ const Sider = styled.div`
 `;
 
 const AppCategories = () => {
-  const [, setIsShowSider] = useGlobalState('isShowSider');
+  const dispatch = useAppDispatch();
+
   const collapsed = useSpring({
     from: {
       width: 0,
@@ -64,8 +66,8 @@ const AppCategories = () => {
   });
 
   const handleIsShowSider = useCallback(() => {
-    setIsShowSider(false);
-  }, [setIsShowSider]);
+    dispatch(toggleIsShowAsider());
+  }, [dispatch]);
 
   return (
     <Sider>

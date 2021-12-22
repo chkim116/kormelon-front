@@ -1,10 +1,10 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import ToolbarComponent from './write/ToolbarComponent';
+import WriteEditorToolbar from './WriteEditorToolbar';
 import Axios from 'axios';
 import styled from '@emotion/styled';
-import { addMark } from '../lib/toolbar';
+import { addMark } from './toolbar';
 import marked from 'marked';
-import '../lib/highlight';
+import '../../lib/highlight';
 import { Switch } from 'antd';
 
 const WriteContainer = styled.div`
@@ -82,7 +82,7 @@ type Props = {
   setDesc: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
+const WriteMarkEditor = ({ prevDesc = '', setDesc }: Props) => {
   const [startText, setStartText] = useState<number>(0);
   const [endText, setEndText] = useState<number>(0);
   const [txt, setTxt] = useState<string | null>(null);
@@ -247,9 +247,10 @@ const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
       <div style={{ margin: '0 auto', width: isPreviewOn ? '100%' : '80%' }}>
         <Switch defaultChecked={isPreviewOn} onChange={handlePreviewMode} />
       </div>
+
       <WriteContainer>
         <EditorContainer isPreviewOn={isPreviewOn}>
-          <ToolbarComponent onHeader={onHeader} onClickImg={onClickImg} />
+          <WriteEditorToolbar onHeader={onHeader} onClickImg={onClickImg} />
           <Editor
             onKeyUp={onKeyUp}
             onKeyDown={onKeyDown}
@@ -275,4 +276,4 @@ const MarkEditor = ({ prevDesc = '', setDesc }: Props) => {
   );
 };
 
-export default MarkEditor;
+export default WriteMarkEditor;

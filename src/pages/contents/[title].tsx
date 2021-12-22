@@ -1,87 +1,13 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import styled from '@emotion/styled';
-import ContentForm from '../../components/layouts/ContentForm';
-import { Button, Modal, notification } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import AppContents from '../../components/layouts/AppContents';
 import axios from 'axios';
-import { Categories } from '../[categories]';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { Post } from '..';
-import { AppContext } from '../_app';
-import { getCate, postDeleteFetcher } from '../../fetch';
 import { useRouter } from 'next/router';
 import AppLoading from '../../components/layouts/AppLoading';
-import AppEmpty from '../../components/layouts/AppEmpty';
-import { useGlobalState, useScrollTop } from '../../hooks';
+import AppEmpty from '../../components/home/common/ContentEmpty';
 import marked from 'marked';
 import '../../lib/highlight';
-import Anchors from '../../components/Anchors';
-import SEO from '../../seo';
-import Link from 'next/link';
-import { FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
-
-const Content = styled.section`
-  width: 100%;
-`;
-
-const ContentEditBtn = styled.div`
-  margin-left: auto;
-  width: 120px;
-`;
-
-const ContentThumb = styled.div<{ url: string }>`
-  background-attachment: fixed;
-  position: relative;
-  top: 75px;
-  max-height: 500px;
-  height: 100%;
-  min-height: 250px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  img {
-    padding: 0 0.2em;
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-    max-height: 500px;
-  }
-`;
-
-const ContentOtherPost = styled.div`
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1em 0 2em 0;
-  border-top: 2px solid ${({ theme }) => theme.border};
-  & > div {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-`;
-
-const PrevContent = styled.div`
-  cursor: pointer;
-  text-align: right;
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-const NextContent = styled.div`
-  cursor: pointer;
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-type PostItem = {
-  id: string;
-  title: string;
-};
+import SEO from '../../assets/seo';
+import { Post, PostItem } from '../../interfaces/post';
+import ContentByTitle from '../../components/content';
 
 interface Props {
   post: Post;
@@ -91,66 +17,7 @@ interface Props {
 }
 
 const Contents = ({ post, anchor, prev, next }: Props) => {
-  const [categories, setCategories] = useState<Categories[]>();
-  const [loading, setLoading] = useState(false);
-  const { showSider } = useContext(AppContext);
-  const [user] = useGlobalState('auth');
   const router = useRouter();
-  const thumbRef = useRef<HTMLDivElement>(null);
-  const handleEdit = useCallback(() => {
-    router.push(`/upload?title=${encodeURIComponent(post?.title)}&edit=true`);
-  }, [post, router]);
-
-  const handleDelete = useCallback(() => {
-    Modal.confirm({
-      title: '삭제여부',
-      content: '게시글을 삭제합니다?',
-      onOk: () =>
-        postDeleteFetcher(post._id, post.category).then(() => {
-          setLoading(() => true);
-          notification.success({
-            message: '삭제는 됐습니다!',
-            placement: 'bottomLeft',
-          });
-          router.push(`/${post.category}`);
-        }),
-    });
-  }, [post, router]);
-
-  const handleOpacityAnchor = useCallback(() => {
-    const thumbEl = thumbRef.current;
-    if (thumbEl) {
-      const height = thumbEl.clientHeight;
-      const opa = 1 - (height - scrollY) / height;
-      const anchor = document.querySelector('.anchor') as HTMLDivElement;
-      if (anchor) {
-        anchor.style.opacity = `${opa}`;
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (categories) {
-      return;
-    }
-
-    if (showSider) {
-      getCate().then((res) => setCategories(res.data));
-    }
-  }, [categories, showSider]);
-
-  useEffect(() => {
-    document.addEventListener('scroll', handleOpacityAnchor);
-    return () => {
-      document.removeEventListener('scroll', handleOpacityAnchor);
-    };
-  }, [handleOpacityAnchor]);
-
-  useScrollTop();
-
-  if (loading) {
-    return <AppLoading />;
-  }
 
   if (router.isFallback) {
     return <AppLoading text={true} />;
@@ -170,52 +37,7 @@ const Contents = ({ post, anchor, prev, next }: Props) => {
         image={post.thumb}
         url={`https://www.kormelon.com/contents/${post.title}`}
       />
-      <>
-        <Content>
-          <ContentThumb url={post.thumb} ref={thumbRef}>
-            <img src={post.thumb} alt="썸네일 이미지" />
-          </ContentThumb>
-          {user?.admin && (
-            <ContentEditBtn>
-              <Button type="link" size="large" onClick={handleEdit}>
-                <EditOutlined />
-              </Button>
-              <Button type="link" size="large" onClick={handleDelete}>
-                <DeleteOutlined />
-              </Button>
-            </ContentEditBtn>
-          )}
-          <AppContents>
-            <ContentForm tags={post.tags} date={post.createDate} title={post.title} p={post.description} />
-          </AppContents>
-          <Anchors anchor={anchor} />
-        </Content>
-        <ContentOtherPost>
-          <div style={{ padding: '0 0.6em' }}>
-            <NextContent>
-              {next && (
-                <Link href={`/contents/${encodeURIComponent(next.title)}`}>
-                  <div>
-                    <FaArrowCircleLeft size={26} />
-                    <div>{decodeURIComponent(next.title)}</div>
-                  </div>
-                </Link>
-              )}
-            </NextContent>
-
-            <PrevContent>
-              {prev && (
-                <Link href={`/contents/${encodeURIComponent(prev.title)}`}>
-                  <div>
-                    <FaArrowCircleRight size={26} />
-                    <div>{decodeURIComponent(prev.title)}</div>
-                  </div>
-                </Link>
-              )}
-            </PrevContent>
-          </div>
-        </ContentOtherPost>
-      </>
+      <ContentByTitle post={post} anchor={anchor} prev={prev} next={next} />
     </>
   );
 };

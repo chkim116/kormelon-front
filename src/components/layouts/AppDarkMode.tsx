@@ -1,7 +1,11 @@
 import styled from '@emotion/styled';
 import { GiNightSleep } from 'react-icons/gi';
-import React, { useCallback } from 'react';
-import { useGlobalState } from '../../hooks';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { setDarkMode } from '../../store/reducer/darkmode';
+import { theme } from '../../styles/theme';
+import { ThemeProvider } from '@emotion/react';
+import { GlobalStyles } from '../../styles/global';
 
 const DarkModeBtnContainer = styled.div`
   position: fixed;
@@ -31,25 +35,54 @@ const DarkModeBtnContainer = styled.div`
   }
 `;
 
-const AppDarkMode = () => {
-  const [mode, setMode] = useGlobalState('mode');
+interface Props {
+  children: React.ReactNode;
+}
 
-  const handleModeChange = useCallback(() => {
-    if (mode === 'light') {
-      setMode('dark');
+const AppDarkMode = ({ children }: Props) => {
+  const { mode } = useAppSelector((state) => state.darkMode);
+  const dispatch = useAppDispatch();
+
+  const modeTheme = useMemo(() => {
+    if (mode === 'dark') {
+      return { ...theme, white: theme.black, black: theme.white };
+    } else {
+      return { ...theme, white: theme.white, black: theme.black };
+    }
+  }, [mode]);
+
+  const handleToggleDarkMode = useCallback(() => {
+    if (mode === 'white') {
+      dispatch(setDarkMode('dark'));
       localStorage.setItem('mode', JSON.stringify('dark'));
     } else {
-      setMode('light');
-      localStorage.setItem('mode', JSON.stringify('light'));
+      dispatch(setDarkMode('white'));
+      localStorage.setItem('mode', JSON.stringify('white'));
     }
-  }, [mode, setMode]);
+  }, [mode, dispatch]);
+
+  // 기본 dark mode
+  useEffect(() => {
+    if (typeof window === 'object') {
+      const modeOption = JSON.parse(localStorage.getItem('mode') || JSON.stringify('dark'));
+      if (modeOption) {
+        dispatch(setDarkMode(modeOption));
+      }
+    }
+  }, [dispatch]);
 
   return (
-    <DarkModeBtnContainer onClick={handleModeChange}>
-      <div>
-        <GiNightSleep size={24} />
-      </div>
-    </DarkModeBtnContainer>
+    <>
+      <ThemeProvider theme={modeTheme}>
+        <GlobalStyles theme={modeTheme} />
+        <>{children}</>
+        <DarkModeBtnContainer onClick={handleToggleDarkMode}>
+          <div>
+            <GiNightSleep size={24} />
+          </div>
+        </DarkModeBtnContainer>
+      </ThemeProvider>
+    </>
   );
 };
 

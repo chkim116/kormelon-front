@@ -174,15 +174,6 @@ const AppHeader = () => {
   }, [isSearch]);
 
   useEffect(() => {
-    if (asider.isShowAsider) {
-      document.body.addEventListener('click', handleIsShowAsider);
-    }
-    return () => {
-      document.body.removeEventListener('click', handleIsShowAsider);
-    };
-  }, [handleIsShowAsider, asider.isShowAsider]);
-
-  useEffect(() => {
     document.addEventListener('scroll', () => {
       if (window.scrollY > 75) {
         setScaleHeight(() => true);

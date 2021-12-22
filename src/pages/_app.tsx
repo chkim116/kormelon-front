@@ -12,6 +12,8 @@ import store from '../store';
 import AppLayouts from '../components/layouts/AppLayouts';
 import AppLoading from '../components/layouts/AppLoading';
 import head from '../assets/head';
+import AppHeader from '../components/layouts/AppHeader';
+import AppFooter from '../components/layouts/AppFooter';
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.kormelon.com' : 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -51,10 +53,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <AppDarkMode>
           {isglobalLoading && <AppLoading scroll />}
+          <AppHeader />
           <AppLayouts>
             <Component {...pageProps} />
           </AppLayouts>
           <AppTop></AppTop>
+          <AppFooter />
         </AppDarkMode>
       </Provider>
     </>

@@ -2,8 +2,6 @@ import styled from '@emotion/styled';
 import React, { useEffect } from 'react';
 import { useAppDispatch } from '../../store/hook';
 import { getAuthRequest } from '../../store/reducer/auth';
-import AppFooter from './AppFooter';
-import AppHeader from './AppHeader';
 
 const Layout = styled.section`
   width: 100%;
@@ -21,13 +19,7 @@ const AppLayouts = ({ children }: Props) => {
     dispatch(getAuthRequest());
   }, [dispatch]);
 
-  return (
-    <Layout>
-      <AppHeader />
-      {children}
-      <AppFooter />
-    </Layout>
-  );
+  return <Layout>{children}</Layout>;
 };
 
 export default AppLayouts;

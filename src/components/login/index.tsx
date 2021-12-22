@@ -44,7 +44,7 @@ const Login = () => {
       setLoading(false);
       router.push('/');
     }
-  }, [form, router]);
+  }, [form, router, dispatch]);
 
   if (loading) {
     return <AppLoading />;

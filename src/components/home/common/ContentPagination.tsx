@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import pagination from 'antd/lib/pagination';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 const PostPagination = styled.div`
   padding: 1em 0;

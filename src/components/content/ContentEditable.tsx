@@ -25,7 +25,7 @@ const ContentEditable = ({ post }: Props) => {
 
   const handleEdit = useCallback(() => {
     router.push(`/upload?title=${encodeURIComponent(post?.title)}&edit=true`);
-  }, [post, router]);
+  }, [post]);
 
   const handleDelete = useCallback(() => {
     Modal.confirm({
@@ -37,7 +37,7 @@ const ContentEditable = ({ post }: Props) => {
           router.push(`/${post.category}`);
         }),
     });
-  }, [post, router]);
+  }, [post, showNotification]);
 
   return (
     <>

@@ -144,7 +144,7 @@ const AppHeader = () => {
 
   const handleLogOut = useCallback(() => {
     dispatch(postLogoutRequest());
-  }, [dispatch, postLogoutRequest]);
+  }, [dispatch]);
 
   const handleShowingSearchbar = useCallback(() => {
     setIsSearch((prev) => !prev);
@@ -165,7 +165,7 @@ const AppHeader = () => {
 
   const handleIsShowAsider = useCallback(() => {
     dispatch(toggleIsShowAsider());
-  }, [dispatch, toggleIsShowAsider]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSearch && searchRef) {

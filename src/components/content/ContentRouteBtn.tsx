@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import next from 'next';
 import Link from 'next/link';
 import { FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa';
 import { PostItem } from '../../interfaces/post';

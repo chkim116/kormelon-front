@@ -19,7 +19,7 @@ const AppLayouts = ({ children }: Props) => {
 
   useEffect(() => {
     dispatch(getAuthRequest());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Layout>

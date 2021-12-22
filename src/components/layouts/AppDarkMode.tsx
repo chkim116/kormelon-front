@@ -59,7 +59,7 @@ const AppDarkMode = ({ children }: Props) => {
       dispatch(setDarkMode('white'));
       localStorage.setItem('mode', JSON.stringify('white'));
     }
-  }, [mode, dispatch, setDarkMode]);
+  }, [mode, dispatch]);
 
   // 기본 dark mode
   useEffect(() => {
@@ -69,7 +69,7 @@ const AppDarkMode = ({ children }: Props) => {
         dispatch(setDarkMode(modeOption));
       }
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

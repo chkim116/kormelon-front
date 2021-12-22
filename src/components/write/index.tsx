@@ -215,7 +215,7 @@ const Write = () => {
           showNotification({ key: 'error', message: '다 입력해 주세요.' });
         });
     },
-    [router, form, thumbPreview, desc, prevDesc, tags],
+    [router, form, thumbPreview, desc, prevDesc, tags, showNotification],
   );
 
   const handleUploadThumb = useCallback((e) => {
@@ -272,7 +272,7 @@ const Write = () => {
     }
 
     showNotification({ message: '임시 저장 완료' });
-  }, [savePosts, form, thumbPreview, tags, desc, prevDesc, savedId]);
+  }, [savePosts, form, thumbPreview, tags, desc, prevDesc, savedId, showNotification]);
 
   const handleSaveVisible = useCallback(() => {
     setIsSaveVisible(true);

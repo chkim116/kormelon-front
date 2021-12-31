@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
-import { FaGithub } from 'react-icons/fa';
-import { random } from 'kadvice';
-import { AdviceType } from 'kadvice/dist/@types/type';
+import { FaBlogger, FaGithub } from 'react-icons/fa';
 
 const Container = styled.div`
   text-align: center;
@@ -12,10 +10,14 @@ const Container = styled.div`
     border: 1px solid ${({ theme }) => theme.border};
     margin: 3.5em auto;
   }
+`;
 
-  h2 {
-    margin-bottom: 1em;
-  }
+const MeLink = styled.div`
+  margin-bottom: 1em;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 0.5em;
 `;
 
 const MeImg = styled.div`
@@ -32,12 +34,6 @@ const MeImg = styled.div`
 `;
 
 const ContentMe = () => {
-  const [randomAdvice, setRandomAdvice] = useState<AdviceType>();
-
-  useEffect(() => {
-    setRandomAdvice(random());
-  }, []);
-
   return (
     <Container>
       <MeImg>
@@ -45,21 +41,17 @@ const ContentMe = () => {
       </MeImg>
       <hr />
 
-      <h2>
-        <a href="https://github.com/chkim116">
+      <MeLink>
+        <a target="_blank" href="https://github.com/chkim116">
           <FaGithub size={30} />
         </a>
-      </h2>
+        <a target="_blank" href="https://portfolio.kormelon.com">
+          <FaBlogger size={30} />
+        </a>
+      </MeLink>
 
       <div>
         <h4>FrontEnd Developer</h4>
-      </div>
-
-      <div>
-        <small>{randomAdvice?.message}</small>
-        <div>
-          <small>- {randomAdvice?.author} -</small>
-        </div>
       </div>
     </Container>
   );

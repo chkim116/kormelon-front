@@ -43,10 +43,10 @@ const ContentMe = () => {
 
       <MeLink>
         <a target="_blank" href="https://github.com/chkim116">
-          <FaGithub size={30} />
+          Git
         </a>
         <a target="_blank" href="https://portfolio.kormelon.com">
-          <FaBlogger size={30} />
+          Portfolio
         </a>
       </MeLink>
 

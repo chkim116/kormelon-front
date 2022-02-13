@@ -1,8 +1,4 @@
-const nextConfig = {
+module.exports = {
 	swcMinify: true,
 	reactStrictMode: true,
-	concurrentFeatures: true,
-	serverComponents: true,
 };
-
-module.exports = nextConfig;

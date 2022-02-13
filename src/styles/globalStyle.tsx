@@ -10,6 +10,10 @@ export const GlobalStyle = () => {
 				* {
 					box-sizing: border-box;
 				}
+
+				body {
+					font-size: 14px;
+				}
 			`}
 		></Global>
 	);

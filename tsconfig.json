@@ -18,8 +18,9 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "isolatedModules": true
-  },
+    "isolatedModules": true,
+		"noUnusedLocals": true
+	},
   "include": [
     "next-env.d.ts",
     "**/*.ts",

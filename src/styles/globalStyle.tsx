@@ -13,6 +13,26 @@ export const GlobalStyle = () => {
 
 				body {
 					font-size: 14px;
+					margin-top: 50px;
+				}
+
+				h1 {
+					font-size: 30px;
+					font-weight: 500;
+				}
+
+				h2 {
+					font-size: 24px;
+					font-weight: 500;
+				}
+
+				p {
+					font-size: 16px;
+				}
+
+				a {
+					color: inherit;
+					text-decoration: none;
 				}
 			`}
 		></Global>

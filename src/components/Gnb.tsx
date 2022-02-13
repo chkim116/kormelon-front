@@ -5,6 +5,9 @@ import { BsFillRssFill, BsFillTagsFill, BsGithub } from 'react-icons/bs';
 
 import { icons } from 'src/assets';
 
+/**
+ * 왼쪽에 표시될 공통 네비게이션
+ */
 export const Gnb = () => {
 	// TODO: 실데이터 연동
 	const today = 1;
@@ -124,8 +127,15 @@ export const Gnb = () => {
 	);
 };
 
-const GnbStyle = styled.div`
+const GnbStyle = styled.nav`
+	/* TODO: visible .. and unvisible */
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	background-color: #fff;
 	width: 260px;
+	height: 100%;
 	border-right: 1px solid #dbdbdb;
 	padding: 30px 26px;
 
@@ -143,7 +153,7 @@ const GnbStyle = styled.div`
 
 		.text {
 			margin-top: 12px;
-			margin-left: 10px;
+			margin-left: 4px;
 		}
 
 		img {

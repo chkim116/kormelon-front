@@ -51,7 +51,6 @@ const PostListTemplateStyle = styled.article`
 
 		.category {
 			margin-bottom: 6px;
-			font-size: ${({ theme }) => theme.fontSizes.lg};
 		}
 
 		.meta {

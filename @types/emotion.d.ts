@@ -7,19 +7,19 @@ declare module '@emotion/react' {
 			/**
 			 * 12px
 			 */
+			xs: string;
+			/**
+			 * 13px
+			 */
 			sm: string;
 			/**
-			 * 14px
+			 * 15px
 			 */
 			md: string;
 			/**
-			 * 16px
-			 */
-			lg: string;
-			/**
 			 * 18px
 			 */
-			xl: string;
+			lg: string;
 		};
 
 		colors: {

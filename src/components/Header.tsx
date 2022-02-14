@@ -37,7 +37,6 @@ const HeaderStyle = styled.header`
 		padding: 0 10px;
 
 		p {
-			font-size: ${({ theme }) => theme.fontSizes.xl};
 			font-weight: 500;
 		}
 	}

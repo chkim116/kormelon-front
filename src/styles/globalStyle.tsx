@@ -31,11 +31,18 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 				}
 
 				p {
+					line-height: 1.55em;
+				}
+
+				code {
+					color: ${theme.colors.onSecondary};
+					line-height: 1.75em;
 				}
 
 				small {
 					font-size: ${theme.fontSizes.sm};
 					font-weight: 300;
+					color: ${theme.colors.onSecondary};
 				}
 
 				a {

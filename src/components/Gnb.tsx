@@ -85,8 +85,6 @@ export const Gnb = () => {
 		setOpenCategories((prev) => ({ ...prev, [value]: !open }));
 	}, []);
 
-	console.log(openCategories);
-
 	return (
 		<GnbStyle style={styles}>
 			<button type='button' className='gnb-close-btn' onClick={onClickGnbOpen}>

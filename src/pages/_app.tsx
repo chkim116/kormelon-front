@@ -62,7 +62,7 @@ const AppStyle = styled.div`
 
 	.main {
 		width: 100%;
-		max-width: 700px;
+		max-width: 1000px;
 		margin: 0 auto;
 		padding: 38px 10px;
 	}

@@ -97,7 +97,7 @@ const HeaderStyle = styled.header`
 	background-color: ${({ theme }) => theme.colors.primary};
 
 	.header {
-		max-width: 700px;
+		max-width: 1000px;
 		width: 100%;
 		height: 100%;
 		margin: 0 auto;

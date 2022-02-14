@@ -56,7 +56,6 @@ const PostListTemplateStyle = styled.article`
 		.meta {
 			display: flex;
 			margin-top: 10px;
-			color: ${({ theme }) => theme.colors.onSecondary};
 
 			.separator {
 				margin: 0 2px;

@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdLightMode, MdModeNight } from 'react-icons/md';
+
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
 import { toggleThemeMode } from 'src/store/themeMode';
@@ -15,6 +16,10 @@ export const Header = () => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
 	const dispatch = useAppDispatch();
 
+	const mobileSearchRef = useRef<HTMLInputElement>(null);
+
+	const [isShowMobileSearchBar, setIsShowMobileSearchBar] = useState(false);
+
 	const onClickChangeTheme = useCallback(() => {
 		dispatch(toggleThemeMode());
 	}, [dispatch]);
@@ -22,6 +27,16 @@ export const Header = () => {
 	const onClickOpenGnb = useCallback(() => {
 		dispatch(toggleIsGnbOpen());
 	}, [dispatch]);
+
+	const onClickShowSearch = useCallback(() => {
+		setIsShowMobileSearchBar((prev) => !prev);
+	}, []);
+
+	useEffect(() => {
+		if (isShowMobileSearchBar) {
+			mobileSearchRef.current!.focus();
+		}
+	}, [isShowMobileSearchBar]);
 
 	return (
 		<HeaderStyle>
@@ -40,7 +55,25 @@ export const Header = () => {
 						<button type='submit'>
 							<AiOutlineSearch />
 						</button>
+
+						{/* only min 500px */}
+						{isShowMobileSearchBar && (
+							<input
+								ref={mobileSearchRef}
+								type='text'
+								placeholder='검색..'
+								className='search-mobile-input'
+							/>
+						)}
+						<button
+							type='button'
+							className='search-mobile'
+							onClick={onClickShowSearch}
+						>
+							{isShowMobileSearchBar ? <AiOutlineClose /> : <AiOutlineSearch />}
+						</button>
 					</form>
+
 					{/* TODO: dark mode on off */}
 
 					<button
@@ -111,6 +144,34 @@ const HeaderStyle = styled.header`
 				position: relative;
 				max-width: 250px;
 				width: 100%;
+
+				.search-mobile {
+					display: none;
+				}
+
+				@media all and (max-width: 500px) {
+					.search-mobile {
+						display: flex;
+						align-items: center;
+						margin-top: 1px;
+						justify-content: flex-end;
+					}
+
+					.search-mobile-input {
+						position: fixed;
+						display: flex;
+						border: none;
+						width: calc(100% - 60px);
+						border-radius: 0;
+						border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+						height: 50px;
+						top: 0;
+						left: 0;
+						padding: 4px 10px;
+						padding-right: 35px;
+					}
+				}
+
 				input {
 					width: 100%;
 					font-size: ${({ theme }) => theme.fontSizes.sm};
@@ -122,6 +183,10 @@ const HeaderStyle = styled.header`
 					outline: none;
 					border: none;
 					border: 1px solid ${({ theme }) => theme.colors.border};
+
+					@media all and (max-width: 500px) {
+						display: none;
+					}
 				}
 
 				button {
@@ -134,6 +199,10 @@ const HeaderStyle = styled.header`
 					right: 5px;
 					transform: translateY(-50%);
 					color: ${({ theme }) => theme.colors.onPrimary};
+
+					@media all and (max-width: 500px) {
+						display: none;
+					}
 
 					svg {
 						width: 18px;

@@ -22,7 +22,7 @@ export const Gnb = () => {
 	const dispatch = useAppDispatch();
 
 	const styles = useSpring({
-		translateX: isGnbOpen ? -260 : 0,
+		translateX: isGnbOpen ? 0 : -260,
 		config: {
 			duration: 200,
 		},

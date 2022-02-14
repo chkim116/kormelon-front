@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
@@ -10,36 +10,43 @@ import { GlobalStyle } from 'src/styles/globalStyle';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
-
-import store from 'src/store/config';
+import store, { useAppSelector } from 'src/store/config';
 
 // korean 시간
 dayJs.locale('ko');
 
-function MyApp({ Component, pageProps }: AppProps) {
-	// ! 임시
-	const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+// theme, global style 적용
+const AppTheme: FC = ({ children }) => {
+	const { themeMode } = useAppSelector((state) => state.themeMode);
+
+	useEffect(() => {
+		document.body.style.transition = 'all 300ms';
+
+		return () => {
+			document.body.style.transition = '';
+		};
+	}, [themeMode]);
 
 	return (
+		<ThemeProvider theme={theme(themeMode)}>
+			<GlobalStyle theme={theme(themeMode)} />
+			{children}
+		</ThemeProvider>
+	);
+};
+
+function MyApp({ Component, pageProps }: AppProps) {
+	return (
 		<Provider store={store}>
-			<ThemeProvider theme={theme(themeMode)}>
-				<GlobalStyle theme={theme(themeMode)} />
+			<AppTheme>
 				<AppStyle>
 					<Gnb />
 					<Header />
-
 					<div className='main'>
-						<button
-							onClick={() =>
-								setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
-							}
-						>
-							mode
-						</button>
 						<Component {...pageProps} />
 					</div>
 				</AppStyle>
-			</ThemeProvider>
+			</AppTheme>
 		</Provider>
 	);
 }

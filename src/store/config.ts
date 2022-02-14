@@ -7,9 +7,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import logger from 'redux-logger';
 
 import gnb from './gnb';
+import themeMode from './themeMode';
 
 const reducer = combineReducers({
 	gnb,
+	themeMode,
 });
 
 const store = configureStore({

@@ -1,19 +1,23 @@
 import styled from '@emotion/styled';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import { AiOutlineSearch } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdLightMode, MdModeNight } from 'react-icons/md';
-import { useAppDispatch } from 'src/store/config';
+import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
+import { toggleThemeMode } from 'src/store/themeMode';
 
 /**
  * 홈페이지 헤더
  */
 export const Header = () => {
+	const { themeMode } = useAppSelector((state) => state.themeMode);
 	const dispatch = useAppDispatch();
 
-	const [themeMode, setThemeMode] = useState('light');
+	const onClickChangeTheme = useCallback(() => {
+		dispatch(toggleThemeMode());
+	}, [dispatch]);
 
 	const onClickOpenGnb = useCallback(() => {
 		dispatch(toggleIsGnbOpen());
@@ -46,9 +50,7 @@ export const Header = () => {
 					<button
 						type='button'
 						className='mode-btn'
-						onClick={() =>
-							setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
-						}
+						onClick={onClickChangeTheme}
 					>
 						{themeMode === 'dark' && <MdLightMode className='light' />}
 						{themeMode === 'light' && <MdModeNight className='dark' />}

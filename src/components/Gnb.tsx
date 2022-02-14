@@ -207,11 +207,12 @@ const GnbStyle = styled.nav`
 			flex-direction: column;
 			justify-content: center;
 			gap: 15px;
+			font-size: ${({ theme }) => theme.fontSizes.xs};
 
 			svg {
-				width: 12px;
-				height: 12px;
-				margin-right: 10px;
+				width: 10px;
+				height: 10px;
+				margin-right: 8px;
 			}
 		}
 
@@ -221,6 +222,8 @@ const GnbStyle = styled.nav`
 			display: flex;
 			flex-direction: column;
 			gap: 10px;
+			font-size: ${({ theme }) => theme.fontSizes.xs};
+			font-weight: 300;
 
 			div {
 				&:nth-of-type(1),

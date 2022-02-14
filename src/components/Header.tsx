@@ -28,11 +28,7 @@ export const Header = () => {
 			<div className='header'>
 				{/* 1000px 이상 버튼 */}
 				<span>
-					<button
-						type='button'
-						className='gnb-open desktop mobile'
-						onClick={onClickOpenGnb}
-					>
+					<button type='button' className='gnb-open' onClick={onClickOpenGnb}>
 						<GiHamburgerMenu />
 					</button>
 
@@ -93,7 +89,6 @@ const HeaderStyle = styled.header`
 			padding: 0 3px;
 			color: ${({ theme }) => theme.colors.onPrimary};
 
-			// 1000px이하면 none
 			@media all and (max-width: 1000px) {
 				position: relative;
 				font-size: 20px;
@@ -122,6 +117,7 @@ const HeaderStyle = styled.header`
 					background-color: ${({ theme }) => theme.colors.primary};
 					color: ${({ theme }) => theme.colors.onPrimary};
 					padding: 4px 10px;
+					padding-right: 35px;
 					border-radius: 8px;
 					outline: none;
 					border: none;
@@ -129,7 +125,9 @@ const HeaderStyle = styled.header`
 				}
 
 				button {
+					width: 30px;
 					position: absolute;
+					background-color: ${({ theme }) => theme.colors.primary};
 					display: flex;
 					align-items: center;
 					top: 50%;

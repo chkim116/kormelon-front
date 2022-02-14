@@ -42,6 +42,12 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 					color: inherit;
 					text-decoration: none;
 				}
+
+				button {
+					background-color: transparent;
+					cursor: pointer;
+					border: none;
+				}
 			`}
 		></Global>
 	);

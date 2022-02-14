@@ -15,7 +15,7 @@ const darkOrLightColors = {
 
 		primary: '#ffffff',
 
-		border: '#f8f8f8',
+		border: '#e2e2e2',
 	},
 	dark: {
 		onPrimary: '#d7d7d7',

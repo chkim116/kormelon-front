@@ -1,20 +1,39 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { AiOutlineSearch } from 'react-icons/ai';
+import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdLightMode, MdModeNight } from 'react-icons/md';
+import { useAppDispatch } from 'src/store/config';
+import { toggleIsGnbOpen } from 'src/store/gnb';
 
 /**
  * 홈페이지 헤더
  */
 export const Header = () => {
+	const dispatch = useAppDispatch();
+
 	const [themeMode, setThemeMode] = useState('light');
+
+	const onClickOpenGnb = useCallback(() => {
+		dispatch(toggleIsGnbOpen());
+	}, [dispatch]);
 
 	return (
 		<HeaderStyle>
 			<div className='header'>
-				<p>My Blog Name</p>
+				{/* 1000px 이상 버튼 */}
+				<span>
+					<button
+						type='button'
+						className='gnb-open desktop mobile'
+						onClick={onClickOpenGnb}
+					>
+						<GiHamburgerMenu />
+					</button>
 
+					<p>My Blog Name</p>
+				</span>
 				<span className='status'>
 					<form className='search-form'>
 						<input type='text' placeholder='검색..' />
@@ -57,6 +76,31 @@ const HeaderStyle = styled.header`
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 10px;
+
+		span {
+			display: flex;
+			align-items: center;
+		}
+
+		.gnb-open {
+			font-size: 26px;
+			position: absolute;
+			left: 15px;
+			display: flex;
+			align-items: center;
+			padding: 0 3px;
+			color: ${({ theme }) => theme.colors.onPrimary};
+
+			// 1000px이하면 none
+			@media all and (max-width: 1000px) {
+				position: relative;
+				font-size: 20px;
+				left: 0;
+				display: flex;
+				align-items: center;
+				margin-right: 8px;
+			}
+		}
 
 		p {
 			font-weight: 500;

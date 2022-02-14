@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
 import dayJs from 'dayJs';
@@ -10,6 +11,8 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
 
+import store from 'src/store/config';
+
 // korean 시간
 dayJs.locale('ko');
 
@@ -18,24 +21,26 @@ function MyApp({ Component, pageProps }: AppProps) {
 	const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
 
 	return (
-		<ThemeProvider theme={theme(themeMode)}>
-			<GlobalStyle theme={theme(themeMode)} />
-			<AppStyle>
-				<Gnb />
-				<Header />
+		<Provider store={store}>
+			<ThemeProvider theme={theme(themeMode)}>
+				<GlobalStyle theme={theme(themeMode)} />
+				<AppStyle>
+					<Gnb />
+					<Header />
 
-				<div className='main'>
-					<button
-						onClick={() =>
-							setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
-						}
-					>
-						mode
-					</button>
-					<Component {...pageProps} />
-				</div>
-			</AppStyle>
-		</ThemeProvider>
+					<div className='main'>
+						<button
+							onClick={() =>
+								setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
+							}
+						>
+							mode
+						</button>
+						<Component {...pageProps} />
+					</div>
+				</AppStyle>
+			</ThemeProvider>
+		</Provider>
 	);
 }
 

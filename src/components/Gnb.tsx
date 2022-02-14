@@ -1,13 +1,33 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BsFillRssFill, BsFillTagsFill, BsGithub } from 'react-icons/bs';
+import { useCallback } from 'react';
+import { animated, useSpring } from 'react-spring';
+import {
+	BsArrowLeft,
+	BsFillRssFill,
+	BsFillTagsFill,
+	BsGithub,
+} from 'react-icons/bs';
 import { AiOutlineFolderOpen } from 'react-icons/ai';
+
+import { useAppDispatch, useAppSelector } from 'src/store/config';
+import { toggleIsGnbOpen } from 'src/store/gnb';
 
 /**
  * 왼쪽에 표시될 공통 네비게이션
  */
 export const Gnb = () => {
+	const { isGnbOpen } = useAppSelector((state) => state.gnb);
+	const dispatch = useAppDispatch();
+
+	const styles = useSpring({
+		translateX: isGnbOpen ? -260 : 0,
+		config: {
+			duration: 200,
+		},
+	});
+
 	// TODO: 실데이터 연동
 	const today = 1;
 	const total = 0;
@@ -41,8 +61,16 @@ export const Gnb = () => {
 		},
 	];
 
+	const onClickGnbOpen = useCallback(() => {
+		dispatch(toggleIsGnbOpen());
+	}, [dispatch]);
+
 	return (
-		<GnbStyle>
+		<GnbStyle style={styles}>
+			<button type='button' className='gnb-close-btn' onClick={onClickGnbOpen}>
+				<BsArrowLeft />
+			</button>
+
 			<div className='user'>
 				<div className='profile'>
 					<Image
@@ -122,8 +150,7 @@ export const Gnb = () => {
 	);
 };
 
-const GnbStyle = styled.nav`
-	/* TODO: visible .. and unvisible */
+const GnbStyle = styled(animated.nav)`
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -134,7 +161,16 @@ const GnbStyle = styled.nav`
 	background-color: ${({ theme }) => theme.colors.primary};
 	padding: 30px 26px;
 
+	.gnb-close-btn {
+		position: absolute;
+		top: 10px;
+		right: 25px;
+		font-size: 20px;
+		color: ${({ theme }) => theme.colors.onPrimary};
+	}
+
 	.user {
+		padding-top: 20px;
 		width: 100%;
 		display: flex;
 		flex-direction: column;

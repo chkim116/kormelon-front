@@ -41,7 +41,6 @@ export const Header = () => {
 	return (
 		<HeaderStyle>
 			<div className='header'>
-				{/* 1000px 이상 버튼 */}
 				<span>
 					<button type='button' className='gnb-open' onClick={onClickOpenGnb}>
 						<GiHamburgerMenu />
@@ -72,9 +71,8 @@ export const Header = () => {
 						>
 							{isShowMobileSearchBar ? <AiOutlineClose /> : <AiOutlineSearch />}
 						</button>
+						{/* only min 500px 끝 */}
 					</form>
-
-					{/* TODO: dark mode on off */}
 
 					<button
 						type='button'

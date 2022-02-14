@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import {
 	BsArrowLeft,
@@ -9,7 +9,7 @@ import {
 	BsFillTagsFill,
 	BsGithub,
 } from 'react-icons/bs';
-import { AiOutlineFolderOpen } from 'react-icons/ai';
+import { AiOutlineFolderOpen, AiOutlineFolder } from 'react-icons/ai';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
@@ -61,9 +61,31 @@ export const Gnb = () => {
 		},
 	];
 
+	const temp = useMemo(() => {
+		const res: { [x: string]: boolean } = {};
+		for (const category of categories) {
+			res[category.value] = false;
+		}
+		return res;
+	}, [categories]);
+
+	const [openCategories, setOpenCategories] = useState(temp);
+
 	const onClickGnbOpen = useCallback(() => {
 		dispatch(toggleIsGnbOpen());
 	}, [dispatch]);
+
+	const onClickCategoryOpen = useCallback((e) => {
+		const {
+			open,
+			dataset: { value },
+		} = e.currentTarget;
+
+		// open이 아니라 !open인 이유는 한박자 늦게 반영되기 때문.
+		setOpenCategories((prev) => ({ ...prev, [value]: !open }));
+	}, []);
+
+	console.log(openCategories);
 
 	return (
 		<GnbStyle style={styles}>
@@ -89,14 +111,18 @@ export const Gnb = () => {
 					return (
 						<details
 							key={category.id}
-							open={false}
-							onClick={(e) => console.log(e.currentTarget)}
+							data-value={category.value}
+							onClick={onClickCategoryOpen}
 						>
 							<summary>
 								{category.value}
 								<span>
+									{openCategories[category.value] ? (
+										<AiOutlineFolderOpen />
+									) : (
+										<AiOutlineFolder />
+									)}
 									{/* TODO: close */}
-									<AiOutlineFolderOpen />
 								</span>
 							</summary>
 							<ul>

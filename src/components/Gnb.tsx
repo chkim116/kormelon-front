@@ -2,8 +2,7 @@ import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsFillRssFill, BsFillTagsFill, BsGithub } from 'react-icons/bs';
-
-import { icons } from 'src/assets';
+import { AiOutlineFolderOpen } from 'react-icons/ai';
 
 /**
  * 왼쪽에 표시될 공통 네비게이션
@@ -68,12 +67,8 @@ export const Gnb = () => {
 							<summary>
 								{category.value}
 								<span>
-									<Image
-										src={icons.folderOpen}
-										width={12}
-										height={12}
-										alt='폴더 오픈'
-									/>
+									{/* TODO: close */}
+									<AiOutlineFolderOpen />
 								</span>
 							</summary>
 							<ul>
@@ -133,10 +128,10 @@ const GnbStyle = styled.nav`
 	top: 0;
 	left: 0;
 	z-index: 10;
-	background-color: #fff;
 	width: 260px;
 	height: 100%;
-	border-right: 1px solid #dbdbdb;
+	border-right: 1px solid ${({ theme }) => theme.colors.border};
+	background-color: ${({ theme }) => theme.colors.primary};
 	padding: 30px 26px;
 
 	.user {
@@ -174,6 +169,12 @@ const GnbStyle = styled.nav`
 				height: 100%;
 			}
 
+			svg {
+				width: 12px;
+				height: 12px;
+				color: ${({ theme }) => theme.colors.onPrimary};
+			}
+
 			ul {
 				cursor: pointer;
 
@@ -192,7 +193,7 @@ const GnbStyle = styled.nav`
 		width: 100%;
 		height: 1px;
 		margin: 20px 0;
-		background-color: #dbdbdb;
+		background-color: ${({ theme }) => theme.colors.border};
 	}
 
 	.footer {

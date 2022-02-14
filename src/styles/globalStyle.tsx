@@ -1,7 +1,7 @@
 import emotionReset from 'emotion-reset';
-import { css, Global } from '@emotion/react';
+import { css, Global, Theme } from '@emotion/react';
 
-export const GlobalStyle = () => {
+export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 	return (
 		<Global
 			styles={css`
@@ -14,6 +14,7 @@ export const GlobalStyle = () => {
 				body {
 					font-size: 14px;
 					margin-top: 50px;
+					color: ${theme.colors.onPrimary};
 				}
 
 				h1 {

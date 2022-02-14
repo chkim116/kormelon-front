@@ -23,7 +23,8 @@ const HeaderStyle = styled.header`
 	height: 50px;
 	top: 0;
 	left: 0;
-	border-bottom: 1px solid #dbdbdb;
+	background-color: ${({ theme }) => theme.colors.primary};
+	border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
 	.header {
 		max-width: 700px;

@@ -21,16 +21,16 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 		<PostListTemplateStyle>
 			{posts.map((post) => (
 				<div className='container' key={post.id}>
-					<h1 className='title'>
+					<div className='category'>{post.category}</div>
+					<h2 className='title'>
 						<Link href={`/post/${encodeURIComponent(post.title)}`}>
 							{post.title}
 						</Link>
-					</h1>
+					</h2>
 					<div className='meta'>
-						<div className='category'>{post.category}</div>
-						<span>
-							<small className='created'>{post.createdAt}</small>
-						</span>
+						<small>{post.createdAt}</small>
+						<span className='separator'>·</span>
+						<small>3 min to read</small>
 					</div>
 				</div>
 			))}
@@ -41,23 +41,26 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 const PostListTemplateStyle = styled.article`
 	.container {
 		padding: 30px 0;
+		margin-bottom: 10px;
 		display: flex;
 		flex-direction: column;
+		gap: 8px;
 
 		.title {
-			margin-bottom: 10px;
+		}
+
+		.category {
+			margin-bottom: 6px;
+			font-size: ${({ theme }) => theme.fontSizes.lg};
 		}
 
 		.meta {
 			display: flex;
-			font-size: ${({ theme }) => theme.fontSizes.lg};
+			margin-top: 10px;
+			color: ${({ theme }) => theme.colors.onSecondary};
 
-			.category {
-				margin-right: 6px;
-			}
-
-			.created {
-				margin-bottom: 12px;
+			.separator {
+				margin: 0 2px;
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 import { BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
+import Button from 'src/components/Button';
 
 import { PostCommentStyle } from './PostStyle';
 
@@ -34,7 +35,9 @@ const PostComment = ({ comments }: PostCommentProps) => {
 						<input type='text' placeholder='이름' />
 						<input type='password' placeholder='비밀번호' />
 					</div>
-					<button type='submit'>댓글 작성</button>
+					<Button type='submit' color='primary'>
+						댓글 작성
+					</Button>
 				</form>
 
 				{comments.map((comment) => (
@@ -64,7 +67,9 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										<input type='text' placeholder='이름' />
 										<input type='password' placeholder='비밀번호' />
 									</div>
-									<button type='submit'>답변 작성</button>
+									<Button color='primary' type='submit'>
+										답변 작성
+									</Button>
 								</form>
 								{comment.commentReplies.map((reply) => (
 									<div className='comment-box' key={reply.id}>

@@ -59,12 +59,6 @@ const PostStyle = styled.div`
 			display: flex;
 			gap: 8px;
 			padding: 12px 0;
-			a {
-				background-color: #d7d7d71a;
-				color: ${({ theme }) => theme.colors.onSecondary};
-				padding: 6px 12px;
-				font-size: ${({ theme }) => theme.fontSizes.sm};
-			}
 		}
 
 		.content {
@@ -141,11 +135,6 @@ const PostCommentStyle = styled.div`
 				width: fit-content;
 				margin-top: 8px;
 				margin-left: auto;
-				padding: 8px 12px;
-				border-radius: 4px;
-				background-color: ${({ theme }) => theme.colors.blue};
-				color: ${({ theme }) => theme.colors.primary};
-				font-size: ${({ theme }) => theme.fontSizes.sm};
 			}
 		}
 	}

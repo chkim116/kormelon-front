@@ -3,9 +3,10 @@ import DOMPurify from 'isomorphic-dompurify';
 import Link from 'next/link';
 
 import 'src/lib/highlight';
-import PostStyle from './PostStyle';
 import PostAnchors from './PostAnchors';
 import PostComment from './PostComment';
+
+import { PostStyle } from './PostStyle';
 
 const Post = () => {
 	const post = {
@@ -77,7 +78,6 @@ const Post = () => {
 						__html: DOMPurify.sanitize(post.content),
 					}}
 				/>
-
 				<PostComment comments={comments} />
 			</div>
 

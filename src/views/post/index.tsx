@@ -32,18 +32,18 @@ const Post = () => {
 
 	const comments = [
 		{
-			id: '',
-			text: '',
-			createdAt: '',
-			username: '',
-			password: '',
+			id: '1',
+			text: '댓글인데요',
+			createdAt: dayjs().format('YYYY-MM-DD'),
+			username: 'ckim',
+			password: '123',
 			commentReplies: [
 				{
-					id: '',
-					text: '',
-					username: '',
-					password: '',
-					createdAt: '',
+					id: '2',
+					text: '대댓글인데요',
+					username: 'userna',
+					password: 'pas',
+					createdAt: dayjs().format('YYYY-MM-DD'),
 				},
 			],
 		},
@@ -76,7 +76,7 @@ const Post = () => {
 					}}
 				/>
 
-				<div className='comment'>
+				<div className='comment-container'>
 					<div>{post.comments.length}개의 댓글</div>
 					<form>
 						<textarea placeholder='댓글을 작성하세요.' />

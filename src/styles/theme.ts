@@ -15,6 +15,7 @@ const darkOrLightColors = {
 		onBlue: '#1E90FF',
 
 		primary: '#ffffff',
+		blue: '#1E90FF',
 
 		border: '#e2e2e2',
 	},
@@ -24,6 +25,7 @@ const darkOrLightColors = {
 		onBlue: '#6495ED',
 
 		primary: '#282a36',
+		blue: '#b0c4de',
 
 		border: '#414141',
 	},

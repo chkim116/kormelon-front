@@ -12,6 +12,7 @@ const darkOrLightColors = {
 	light: {
 		onPrimary: '#2e2e2e',
 		onSecondary: '#2e2e2ef2',
+		onBlue: '#1E90FF',
 
 		primary: '#ffffff',
 
@@ -20,6 +21,7 @@ const darkOrLightColors = {
 	dark: {
 		onPrimary: '#d7d7d7',
 		onSecondary: '#d7d7d7e6',
+		onBlue: '#6495ED',
 
 		primary: '#282a36',
 

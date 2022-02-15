@@ -1,5 +1,5 @@
+import { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
-
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -7,23 +7,26 @@ import Tag from 'src/components/Tag';
 
 import 'src/lib/highlight';
 import Button from 'src/components/Button';
+import { MdArrowRight } from 'react-icons/md';
 
-const options = [
-	{
-		value: 'chocolate',
-		label: 'Chocolate',
-		children: [
-			{
-				label: '1',
-				value: '1',
-			},
-		],
-	},
-	{ value: 'strawberry', label: 'Strawberry' },
-	{ value: 'vanilla', label: 'Vanilla' },
-];
+const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
+	id: i.toString(),
+	value: i.toString(),
+	categories: Array.from({ length: Math.round(Math.random() * 3) }).map(
+		(_, i) => ({
+			id: (i + i).toString(),
+			value: (i + i).toString(),
+		})
+	),
+}));
 
 const PostWrite = () => {
+	const [categoryName, setCategoryName] = useState('');
+
+	const onClickCategory = useCallback((e) => {
+		setCategoryName(e.currentTarget.dataset.value);
+	}, []);
+
 	return (
 		<PostWriteStyle>
 			<form>
@@ -31,11 +34,39 @@ const PostWrite = () => {
 				<input className='title' type='text' placeholder='제목을 입력하세요.' />
 
 				{/* category */}
-				{/* <div
-					className='category'
-					options={options}
-					placeholder='카테고리를 선택하세요.'
-				/> */}
+				<div className='cascader'>
+					<button type='button'>카테고리를 설정해 주세요.</button>
+
+					<ul className='category'>
+						{categoryOptions.map((category) => (
+							<li
+								key={category.id}
+								className='category-list'
+								data-value={category.value}
+								onClick={onClickCategory}
+							>
+								<div>
+									{category.value}
+									{category.categories.length && (
+										<span>
+											<MdArrowRight />
+										</span>
+									)}
+								</div>
+
+								{/* 선택한 카테고리만 노출 */}
+								{categoryName === category.value &&
+								category.categories.length ? (
+									<ul className='sub-category'>
+										{category.categories.map((sub) => (
+											<li key={sub.id}>{sub.value}</li>
+										))}
+									</ul>
+								) : null}
+							</li>
+						))}
+					</ul>
+				</div>
 
 				{/* Tag */}
 				<input className='tag' type='text' placeholder='태그를 입력하세요.' />
@@ -110,7 +141,62 @@ const PostWriteStyle = styled.div`
 			margin-bottom: 12px;
 		}
 
-		.category {
+		.cascader {
+			position: relative;
+			button {
+				width: 100%;
+				text-align: left;
+				padding: 8px 0;
+				color: ${({ theme }) => theme.colors.onPrimary};
+			}
+			.category {
+				position: absolute;
+
+				.category-list {
+					display: flex;
+					position: relative;
+					font-size: ${({ theme }) => theme.fontSizes.md};
+					width: fit-content;
+
+					& > div {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						background-color: ${({ theme }) => theme.colors.primary};
+						color: ${({ theme }) => theme.colors.onPrimary};
+						width: 200px;
+						padding: 8px 6px;
+						cursor: pointer;
+						border: 1px solid ${({ theme }) => theme.colors.border};
+						&:hover {
+							border-left: 1px solid ${({ theme }) => theme.colors.blue};
+						}
+					}
+
+					.sub-category {
+						position: absolute;
+						left: 200px;
+						background-color: ${({ theme }) => theme.colors.primary};
+						color: ${({ theme }) => theme.colors.onPrimary};
+						max-width: 200px;
+						width: 100%;
+						border: 1px solid ${({ theme }) => theme.colors.border};
+
+						li {
+							cursor: pointer;
+							padding: 10px 6px;
+
+							&:hover {
+								background: ${({ theme }) => theme.colors.onBlue};
+							}
+						}
+
+						li ~ li {
+							border-top: 1px solid ${({ theme }) => theme.colors.border};
+						}
+					}
+				}
+			}
 		}
 
 		.tag {

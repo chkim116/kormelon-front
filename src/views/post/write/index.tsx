@@ -104,10 +104,21 @@ const PostWrite = () => {
 				</div>
 
 				{/* Tag */}
-				<input className='tag' type='text' placeholder='태그를 입력하세요.' />
-				<div className='tags-container'>
-					<Tag href='/1'>태그1</Tag>
-					<Tag href='/2'>태그2</Tag>
+				<div className='tag-container'>
+					<input type='text' placeholder='태그를 입력하세요.' />
+					<div className='tags-list'>
+						<Tag href='/1'>태그1</Tag>
+						<Tag href='/2'>태그2</Tag>
+					</div>
+					{/* TODO: 태그 서칭 */}
+					<ul className='tag-search'>
+						<li>
+							태그<small>(1)</small>
+						</li>
+						<li>
+							자바스크립트<small>(1)</small>
+						</li>
+					</ul>
 				</div>
 
 				{/* content */}
@@ -241,16 +252,41 @@ const PostWriteStyle = styled.div`
 			}
 		}
 
-		.tag {
-			padding: 8px 0;
-			border: none;
-			border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-			margin-bottom: 24px;
-		}
+		.tag-container {
+			position: relative;
+			input {
+				padding: 8px 0;
+				border: none;
+				border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+				margin-bottom: 24px;
+				width: 150px;
+			}
 
-		.tags-container {
-			display: flex;
-			gap: 8px;
+			.tags-list {
+				display: flex;
+				gap: 8px;
+				width: 120px;
+			}
+
+			.tag-search {
+				position: absolute;
+				top: 40px;
+				min-width: 150px;
+				background-color: ${({ theme }) => theme.colors.primary};
+				color: ${({ theme }) => theme.colors.onPrimary};
+				border: 1px solid ${({ theme }) => theme.colors.border};
+
+				li {
+					display: flex;
+					justify-content: space-between;
+					gap: 12px;
+					padding: 12px;
+				}
+
+				li ~ li {
+					border-top: 1px solid ${({ theme }) => theme.colors.border};
+				}
+			}
 		}
 
 		.content-container {

@@ -56,6 +56,15 @@ const PostComment = ({ comments }: PostCommentProps) => {
 						{/* TODO: 여부에 따른 hide */}
 						{true && (
 							<div className='reply-box'>
+								<form>
+									<textarea placeholder='답변을 작성하세요.' />
+									{/* TODO: 로그인 안했을시만 오픈, 익명을 위함 */}
+									<div className='anonymous'>
+										<input type='text' placeholder='이름' />
+										<input type='password' placeholder='비밀번호' />
+									</div>
+									<button type='submit'>답변 작성</button>
+								</form>
 								{comment.commentReplies.map((reply) => (
 									<div className='comment-box' key={reply.id}>
 										<div className='user'>

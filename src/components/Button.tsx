@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+export type ButtonColor = 'primary' | 'default';
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: React.ReactChild;
-	color?: 'primary' | 'default';
+	color?: ButtonColor;
 }
 
 const Button = ({
@@ -20,7 +22,7 @@ const Button = ({
 };
 
 export default Button;
-const ButtonStyle = styled.button<{ color: 'primary' | 'default' }>`
+const ButtonStyle = styled.button<{ color: ButtonColor }>`
 	padding: 8px 12px;
 	border-radius: 4px;
 	font-size: ${({ theme }) => theme.fontSizes.sm};
@@ -35,8 +37,9 @@ const ButtonStyle = styled.button<{ color: 'primary' | 'default' }>`
 
 		if (color === 'default') {
 			return css`
-				background-color: ${theme.colors.onSecondary};
-				color: ${theme.colors.primary};
+				border: 1px solid ${theme.colors.border};
+				background-color: ${theme.colors.primary};
+				color: ${theme.colors.onPrimary};
 			`;
 		}
 	}}

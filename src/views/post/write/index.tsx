@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
@@ -9,6 +9,7 @@ import Tag from 'src/components/Tag';
 import 'src/lib/highlight';
 import Button from 'src/components/Button';
 import { MdArrowRight } from 'react-icons/md';
+import Modal from 'src/components/Modal';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -42,6 +43,16 @@ const PostWrite = () => {
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
 	const [isPreviewOpen, onClickTogglePreview] = useToggle(true);
+	const [isSaveList, openSaveList] = useToggle(false);
+
+	const onClickOpenSaveList = useCallback(() => {
+		openSaveList(true);
+	}, [openSaveList]);
+
+	const onClickSaveList = useCallback((e) => {
+		const { value } = e.target.dataset;
+		console.log(value);
+	}, []);
 
 	const onClickCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
@@ -72,11 +83,33 @@ const PostWrite = () => {
 	useClickAway(cascaderRef, () => toggleCascader(false));
 	useClickAway(searchListRef, () => toggleSearchList(false));
 
+	// 임시 저장 목록을 끄기 위함
+	useEffect(() => {
+		if (isSaveList) {
+			document.body.addEventListener('click', openSaveList);
+		}
+
+		return () => {
+			if (isSaveList) {
+				document.body.removeEventListener('click', openSaveList);
+			}
+		};
+	}, [isSaveList, openSaveList]);
+
 	return (
 		<PostWriteStyle>
 			<div className='save-loader'>
-				<Button>저장 목록 불러오기</Button>
+				<Button onClick={onClickOpenSaveList}>저장 목록 불러오기</Button>
 			</div>
+
+			<Modal isOpen={isSaveList}>
+				{/* TODO: 로컬 스토리지로 연동 */}
+				<ul className='load-list' onClick={onClickSaveList}>
+					<li data-value={'1'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
+					<li data-value={'2'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
+					<li data-value={'3'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
+				</ul>
+			</Modal>
 
 			<form>
 				{/* title */}
@@ -205,11 +238,35 @@ const PostWriteStyle = styled.div`
 	max-width: 1000px;
 	width: 100%;
 
+	/* 임시 저장 목록 */
 	.save-loader {
 		width: 100%;
 		display: flex;
 		justify-content: flex-end;
 		margin-bottom: 20px;
+	}
+
+	.modal-body {
+		max-width: 500px;
+		width: 100%;
+	}
+
+	.load-list {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 14px;
+
+		li {
+			text-align: left;
+			padding: 12px 0;
+			cursor: pointer;
+			border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+			&:hover {
+				opacity: 0.7;
+			}
+		}
 	}
 
 	form {

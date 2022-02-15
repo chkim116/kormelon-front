@@ -5,6 +5,7 @@ import Link from 'next/link';
 import 'src/lib/highlight';
 import PostStyle from './PostStyle';
 import PostAnchors from './PostAnchors';
+import PostComment from './PostComment';
 
 const Post = () => {
 	const post = {
@@ -17,6 +18,7 @@ const Post = () => {
 		tags: ['태그1', '태그2'],
 		createdAt: dayjs().format('YYYY-MM-DD'),
 		readTime: '3 min to read',
+		comments: [],
 	};
 
 	// h1 뽑는 정규
@@ -27,6 +29,25 @@ const Post = () => {
 	const anchors = post.content
 		.match(anchorRegExp)
 		?.map((anchor) => anchor.replace(/<[^>]*>?/g, '').replace(/ /g, '-'));
+
+	const comments = [
+		{
+			id: '',
+			text: '',
+			createdAt: '',
+			username: '',
+			password: '',
+			commentReplies: [
+				{
+					id: '',
+					text: '',
+					username: '',
+					password: '',
+					createdAt: '',
+				},
+			],
+		},
+	];
 
 	return (
 		<PostStyle>
@@ -54,6 +75,18 @@ const Post = () => {
 						__html: DOMPurify.sanitize(post.content),
 					}}
 				/>
+
+				<div className='comment'>
+					<div>{post.comments.length}개의 댓글</div>
+					<form>
+						<textarea placeholder='댓글을 작성하세요.' />
+						<button type='submit'>댓글 작성</button>
+					</form>
+
+					<div className='comment-list'>
+						<PostComment comments={comments} />
+					</div>
+				</div>
 			</div>
 
 			<div className='anchors'>

@@ -36,8 +36,12 @@ const tags = [
 
 const PostWrite = () => {
 	const cascaderRef = useRef(null);
+	const searchListRef = useRef(null);
+
 	const [categoryName, setCategoryName] = useState('');
-	const [isCascaderOpen, openCascader] = useToggle(false);
+	const [isCascaderOpen, toggleCascader] = useToggle(false);
+	const [isSearchListOpen, toggleSearchList] = useToggle(false);
+	const [isPreviewOpen, onClickTogglePreview] = useToggle(true);
 
 	const onClickCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
@@ -51,17 +55,22 @@ const PostWrite = () => {
 			const { value } = e.currentTarget.dataset;
 
 			console.log(value);
-			openCascader(false);
+			toggleCascader(false);
 		},
-		[openCascader]
+		[toggleCascader]
 	);
 
-	const onClickOpenCascader = useCallback(() => {
-		openCascader();
-	}, [openCascader]);
+	const onClicktoggleCascader = useCallback(() => {
+		toggleCascader();
+	}, [toggleCascader]);
+
+	const onClickTag = useCallback(() => {
+		toggleSearchList(false);
+	}, [toggleSearchList]);
 
 	// 카테고리 캐스케이더를 끄기 위함.
-	useClickAway(cascaderRef, () => openCascader(false));
+	useClickAway(cascaderRef, () => toggleCascader(false));
+	useClickAway(searchListRef, () => toggleSearchList(false));
 
 	return (
 		<PostWriteStyle>
@@ -71,7 +80,7 @@ const PostWrite = () => {
 
 				{/* category */}
 				<div className='cascader' ref={cascaderRef}>
-					<button type='button' onClick={onClickOpenCascader}>
+					<button type='button' onClick={onClicktoggleCascader}>
 						카테고리를 설정해 주세요.
 					</button>
 
@@ -123,21 +132,34 @@ const PostWrite = () => {
 						<Tag href='/1'>태그1</Tag>
 						<Tag href='/2'>태그2</Tag>
 					</div>
+
 					{/* TODO: 태그 서칭 */}
-					<ul className='tag-search'>
-						{tags.map((tag) => (
-							<li key={tag.id} tabIndex={0}>
-								{tag.value}
-								<small>({tag.posts.length})</small>
-							</li>
-						))}
-					</ul>
+					{isSearchListOpen && (
+						<ul className='tag-search' ref={searchListRef}>
+							{tags.length ? (
+								tags.map((tag) => (
+									<li key={tag.id} tabIndex={0} onClick={onClickTag}>
+										{tag.value}
+										<small>({tag.posts.length})</small>
+									</li>
+								))
+							) : (
+								<li>
+									<small>검색된 태그가 없습니다.</small>
+								</li>
+							)}
+						</ul>
+					)}
 				</div>
 
 				{/* content */}
 				<div className='content-container'>
-					<button className='preview-btn' type='button'>
-						미리볼래?
+					<button
+						className='preview-btn'
+						type='button'
+						onClick={onClickTogglePreview}
+					>
+						{isPreviewOpen ? '미리보기 제거' : '미리보기'}
 					</button>
 					<div>
 						<textarea
@@ -145,14 +167,16 @@ const PostWrite = () => {
 							spellCheck='false'
 							placeholder='본문을 입력하세요.'
 						/>
-						<div
-							className='preview'
-							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(
-									marked.parse('```js\nconst a = 3;\n```')
-								),
-							}}
-						/>
+						{isPreviewOpen && (
+							<div
+								className='preview'
+								dangerouslySetInnerHTML={{
+									__html: DOMPurify.sanitize(
+										marked.parse('```js\nconst a = 3;\n```')
+									),
+								}}
+							/>
+						)}
 					</div>
 				</div>
 

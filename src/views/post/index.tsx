@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import DOMPurify from 'isomorphic-dompurify';
-import Link from 'next/link';
+import Tag from 'src/components/Tag';
 
 import 'src/lib/highlight';
 import PostAnchors from './PostAnchors';
@@ -66,9 +66,9 @@ const Post = () => {
 				<div className='tags'>
 					{post.tags.map((tag) => (
 						// TODO: tag link..
-						<Link href='/tag' key={tag}>
+						<Tag key={tag} href={`/${tag}`}>
 							{tag}
-						</Link>
+						</Tag>
 					))}
 				</div>
 

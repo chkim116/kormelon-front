@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
@@ -10,6 +10,7 @@ import 'src/lib/highlight';
 import Button from 'src/components/Button';
 import { MdArrowRight } from 'react-icons/md';
 import Modal from 'src/components/Modal';
+import { useRouter } from 'next/router';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -36,9 +37,15 @@ const tags = [
 ];
 
 const PostWrite = () => {
+	const router = useRouter();
+
+	// query에 'edit={title}'이 존재하면 수정모드
+	const isEditMode = useMemo(() => {
+		return Boolean(router.query['edit']);
+	}, [router]);
+
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
-
 	const [categoryName, setCategoryName] = useState('');
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
@@ -224,7 +231,7 @@ const PostWrite = () => {
 						<Button type='button'>임시저장</Button>
 					</div>
 					<Button color='primary' type='submit'>
-						작성완료
+						{isEditMode ? '수정완료' : '작성완료'}
 					</Button>
 				</div>
 			</form>

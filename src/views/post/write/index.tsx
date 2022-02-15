@@ -50,7 +50,11 @@ const PostWrite = () => {
 						미리볼래?
 					</button>
 					<div>
-						<textarea className='content' placeholder='본문을 입력하세요.' />
+						<textarea
+							className='content'
+							spellCheck='false'
+							placeholder='본문을 입력하세요.'
+						/>
 						<div
 							className='preview'
 							dangerouslySetInnerHTML={{

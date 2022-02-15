@@ -35,6 +35,7 @@ const PostStyle = styled.div`
 
 	.post {
 		width: 800px;
+		white-space: pre-line;
 
 		h1,
 		h2,
@@ -60,6 +61,7 @@ const PostStyle = styled.div`
 			padding: 12px 0;
 			a {
 				background-color: #d7d7d71a;
+				color: ${({ theme }) => theme.colors.onSecondary};
 				padding: 6px 12px;
 				font-size: ${({ theme }) => theme.fontSizes.sm};
 			}
@@ -77,6 +79,8 @@ const PostStyle = styled.div`
 
 		/* code.. */
 		pre {
+			white-space: pre-line;
+			line-height: 1.45rem;
 			margin: 12px 0;
 			padding: 12px;
 			background-color: #17181b;

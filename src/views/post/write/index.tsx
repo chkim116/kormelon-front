@@ -21,6 +21,19 @@ const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	),
 }));
 
+const tags = [
+	{
+		id: 1,
+		value: '자바스크립트',
+		posts: [1, 2],
+	},
+	{
+		id: 2,
+		value: '리액트',
+		posts: [1],
+	},
+];
+
 const PostWrite = () => {
 	const cascaderRef = useRef(null);
 	const [categoryName, setCategoryName] = useState('');
@@ -112,12 +125,12 @@ const PostWrite = () => {
 					</div>
 					{/* TODO: 태그 서칭 */}
 					<ul className='tag-search'>
-						<li>
-							태그<small>(1)</small>
-						</li>
-						<li>
-							자바스크립트<small>(1)</small>
-						</li>
+						{tags.map((tag) => (
+							<li key={tag.id} tabIndex={0}>
+								{tag.value}
+								<small>({tag.posts.length})</small>
+							</li>
+						))}
 					</ul>
 				</div>
 
@@ -190,6 +203,7 @@ const PostWriteStyle = styled.div`
 		.cascader {
 			position: relative;
 			margin-bottom: 12px;
+			z-index: 10;
 
 			button {
 				width: 100%;
@@ -277,10 +291,15 @@ const PostWriteStyle = styled.div`
 				border: 1px solid ${({ theme }) => theme.colors.border};
 
 				li {
+					cursor: pointer;
 					display: flex;
 					justify-content: space-between;
 					gap: 12px;
 					padding: 12px;
+
+					&:hover {
+						opacity: 0.56;
+					}
 				}
 
 				li ~ li {

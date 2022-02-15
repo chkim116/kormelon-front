@@ -74,6 +74,10 @@ const PostWrite = () => {
 
 	return (
 		<PostWriteStyle>
+			<div className='save-loader'>
+				<Button>저장 목록 불러오기</Button>
+			</div>
+
 			<form>
 				{/* title */}
 				<input className='title' type='text' placeholder='제목을 입력하세요.' />
@@ -129,8 +133,8 @@ const PostWrite = () => {
 				<div className='tag-container'>
 					<input type='text' placeholder='태그를 입력하세요.' />
 					<div className='tags-list'>
-						<Tag href='/1'>태그1</Tag>
-						<Tag href='/2'>태그2</Tag>
+						<Tag>태그1</Tag>
+						<Tag>태그2</Tag>
 					</div>
 
 					{/* TODO: 태그 서칭 */}
@@ -200,6 +204,13 @@ export default PostWrite;
 const PostWriteStyle = styled.div`
 	max-width: 1000px;
 	width: 100%;
+
+	.save-loader {
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 20px;
+	}
 
 	form {
 		padding-bottom: 100px;

@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 interface TagProps {
 	children: React.ReactChild;
-	href: string;
+	href?: string;
 }
 
 const Tag = ({ children, href }: TagProps) => {
 	return (
 		<TagStyle>
-			<Link href={href}>{children}</Link>
+			{href ? <Link href={href}>{children}</Link> : <span>{children}</span>}
 		</TagStyle>
 	);
 };
@@ -17,7 +17,8 @@ const Tag = ({ children, href }: TagProps) => {
 export default Tag;
 
 const TagStyle = styled.span`
-	a {
+	a,
+	span {
 		font-size: ${({ theme }) => theme.fontSizes.sm};
 		color: ${({ theme }) => theme.colors.onSecondary};
 		background-color: #d7d7d71a;

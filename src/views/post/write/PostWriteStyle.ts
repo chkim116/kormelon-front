@@ -1,3 +1,5 @@
+import styled from '@emotion/styled';
+
 const PostWriteStyle = styled.div`
 	max-width: 1000px;
 	width: 100%;

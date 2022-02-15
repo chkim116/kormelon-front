@@ -25,7 +25,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	return (
 		<PostCommentStyle>
 			<div className='comment-container'>
-				<div>{comments.length}개의 댓글</div>
+				<div className='count'>{comments.length}개의 댓글</div>
 				<form>
 					<textarea placeholder='댓글을 작성하세요.' />
 					{/* TODO: 로그인 안했을시만 오픈, 익명을 위함 */}
@@ -79,8 +79,13 @@ export default PostComment;
 const PostCommentStyle = styled.div`
 	.comment-container {
 		width: 100%;
+		padding: 24px 0;
 		display: flex;
 		flex-direction: column;
+
+		.count {
+			margin: 8px 0;
+		}
 
 		form {
 			display: flex;

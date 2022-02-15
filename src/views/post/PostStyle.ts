@@ -68,7 +68,7 @@ const PostStyle = styled.div`
 		}
 
 		.content {
-			padding: 24px 0;
+			padding: 24px 0 100px 0;
 		}
 
 		code {

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
@@ -46,7 +47,9 @@ export const Header = () => {
 						<GiHamburgerMenu />
 					</button>
 
-					<p>My Blog Name</p>
+					<p>
+						<Link href='/'>My Blog Name</Link>
+					</p>
 				</span>
 				<span className='status'>
 					<form className='search-form'>
@@ -71,9 +74,9 @@ export const Header = () => {
 						>
 							{isShowMobileSearchBar ? <AiOutlineClose /> : <AiOutlineSearch />}
 						</button>
+
 						{/* only min 500px 끝 */}
 					</form>
-
 					<button
 						type='button'
 						className='mode-btn'

@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
+import { useClickAway, useToggle } from 'react-use';
 
 import Tag from 'src/components/Tag';
 
@@ -21,11 +22,33 @@ const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 }));
 
 const PostWrite = () => {
+	const cascaderRef = useRef(null);
 	const [categoryName, setCategoryName] = useState('');
+	const [isCascaderOpen, openCascader] = useToggle(false);
 
 	const onClickCategory = useCallback((e) => {
-		setCategoryName(e.currentTarget.dataset.value);
+		const { value } = e.currentTarget.dataset;
+
+		setCategoryName(value);
+		console.log(value);
 	}, []);
+
+	const onClickSubCategory = useCallback(
+		(e) => {
+			const { value } = e.currentTarget.dataset;
+
+			console.log(value);
+			openCascader(false);
+		},
+		[openCascader]
+	);
+
+	const onClickOpenCascader = useCallback(() => {
+		openCascader();
+	}, [openCascader]);
+
+	// 카테고리 캐스케이더를 끄기 위함.
+	useClickAway(cascaderRef, () => openCascader(false));
 
 	return (
 		<PostWriteStyle>
@@ -34,38 +57,50 @@ const PostWrite = () => {
 				<input className='title' type='text' placeholder='제목을 입력하세요.' />
 
 				{/* category */}
-				<div className='cascader'>
-					<button type='button'>카테고리를 설정해 주세요.</button>
+				<div className='cascader' ref={cascaderRef}>
+					<button type='button' onClick={onClickOpenCascader}>
+						카테고리를 설정해 주세요.
+					</button>
 
-					<ul className='category'>
-						{categoryOptions.map((category) => (
-							<li
-								key={category.id}
-								className='category-list'
-								data-value={category.value}
-								onClick={onClickCategory}
-							>
-								<div>
-									{category.value}
-									{category.categories.length && (
-										<span>
-											<MdArrowRight />
-										</span>
-									)}
-								</div>
+					{isCascaderOpen && (
+						<ul className='category'>
+							{categoryOptions.map((category) => (
+								<li
+									key={category.id}
+									className={`category-list ${
+										categoryName === category.value ? 'active' : ''
+									}`}
+									data-value={category.value}
+									onClick={onClickCategory}
+								>
+									<div>
+										{category.value}
+										{category.categories.length && (
+											<span>
+												<MdArrowRight />
+											</span>
+										)}
+									</div>
 
-								{/* 선택한 카테고리만 노출 */}
-								{categoryName === category.value &&
-								category.categories.length ? (
-									<ul className='sub-category'>
-										{category.categories.map((sub) => (
-											<li key={sub.id}>{sub.value}</li>
-										))}
-									</ul>
-								) : null}
-							</li>
-						))}
-					</ul>
+									{/* 선택한 카테고리만 노출 */}
+									{categoryName === category.value &&
+									category.categories.length ? (
+										<ul className='sub-category'>
+											{category.categories.map((sub) => (
+												<li
+													key={sub.id}
+													onClick={onClickSubCategory}
+													data-value={sub.value}
+												>
+													{sub.value}
+												</li>
+											))}
+										</ul>
+									) : null}
+								</li>
+							))}
+						</ul>
+					)}
 				</div>
 
 				{/* Tag */}
@@ -143,11 +178,14 @@ const PostWriteStyle = styled.div`
 
 		.cascader {
 			position: relative;
+			margin-bottom: 12px;
+
 			button {
 				width: 100%;
 				text-align: left;
 				padding: 8px 0;
 				color: ${({ theme }) => theme.colors.onPrimary};
+				border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 			}
 			.category {
 				position: absolute;
@@ -157,6 +195,10 @@ const PostWriteStyle = styled.div`
 					position: relative;
 					font-size: ${({ theme }) => theme.fontSizes.md};
 					width: fit-content;
+
+					&.active {
+						border-left: 1px solid ${({ theme }) => theme.colors.blue};
+					}
 
 					& > div {
 						display: flex;
@@ -169,7 +211,7 @@ const PostWriteStyle = styled.div`
 						cursor: pointer;
 						border: 1px solid ${({ theme }) => theme.colors.border};
 						&:hover {
-							border-left: 1px solid ${({ theme }) => theme.colors.blue};
+							background-color: ${({ theme }) => theme.colors.onBlue};
 						}
 					}
 

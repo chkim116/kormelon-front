@@ -30,24 +30,26 @@ const Post = () => {
 		.match(anchorRegExp)
 		?.map((anchor) => anchor.replace(/<[^>]*>?/g, '').replace(/ /g, '-'));
 
-	const comments = [
-		{
-			id: '1',
-			text: '댓글인데요',
+	const comments = Array.from({ length: 10 }).map((_, i) => {
+		return {
+			id: i.toString(),
+			text: '댓글인데요' + i,
 			createdAt: dayjs().format('YYYY-MM-DD'),
 			username: 'ckim',
 			password: '123',
-			commentReplies: [
-				{
-					id: '2',
-					text: '대댓글인데요',
-					username: 'userna',
-					password: 'pas',
-					createdAt: dayjs().format('YYYY-MM-DD'),
-				},
-			],
-		},
-	];
+			commentReplies: Math.round(Math.random() * 1)
+				? [
+						{
+							id: '2',
+							text: '대댓글인데요',
+							username: 'userna',
+							password: 'pas',
+							createdAt: dayjs().format('YYYY-MM-DD'),
+						},
+				  ]
+				: [],
+		};
+	});
 
 	return (
 		<PostStyle>

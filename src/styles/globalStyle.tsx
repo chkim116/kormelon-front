@@ -55,6 +55,16 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 					cursor: pointer;
 					border: none;
 				}
+
+				input {
+					outline: none;
+					border: 1px solid ${theme.colors.border};
+				}
+
+				textarea {
+					outline: none;
+					border: 1px solid ${theme.colors.border};
+				}
 			`}
 		></Global>
 	);

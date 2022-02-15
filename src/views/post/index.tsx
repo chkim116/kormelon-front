@@ -78,17 +78,7 @@ const Post = () => {
 					}}
 				/>
 
-				<div className='comment-container'>
-					<div>{post.comments.length}개의 댓글</div>
-					<form>
-						<textarea placeholder='댓글을 작성하세요.' />
-						<button type='submit'>댓글 작성</button>
-					</form>
-
-					<div className='comment-list'>
-						<PostComment comments={comments} />
-					</div>
-				</div>
+				<PostComment comments={comments} />
 			</div>
 
 			<div className='anchors'>

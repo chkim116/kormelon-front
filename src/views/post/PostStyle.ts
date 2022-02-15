@@ -91,46 +91,6 @@ const PostStyle = styled.div`
 			}
 		}
 	}
-
-	.comment-container {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-
-		form {
-			display: flex;
-			flex-direction: column;
-			margin: 8px 0;
-
-			textarea {
-				width: 100%;
-				resize: none;
-				padding: 8px;
-				height: 100px;
-				border-radius: 4px;
-				outline: none;
-				font-size: ${({ theme }) => theme.fontSizes.md};
-				color: ${({ theme }) => theme.colors.onPrimary};
-				background-color: ${({ theme }) => theme.colors.primary};
-				border: 1px solid ${({ theme }) => theme.colors.border};
-			}
-
-			button {
-				width: fit-content;
-				margin-top: 8px;
-				margin-left: auto;
-				padding: 8px 12px;
-				border-radius: 4px;
-				background-color: ${({ theme }) => theme.colors.blue};
-				color: ${({ theme }) => theme.colors.primary};
-				font-size: ${({ theme }) => theme.fontSizes.sm};
-			}
-		}
-
-		.comment-list {
-			width: 100%;
-		}
-	}
 `;
 
 export default PostStyle;

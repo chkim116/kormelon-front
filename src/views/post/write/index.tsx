@@ -2,8 +2,9 @@ import DOMPurify from 'isomorphic-dompurify';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { useClickAway, useToggle } from 'react-use';
-import { MdArrowRight } from 'react-icons/md';
+import { MdArrowRight, MdDeleteForever, MdDeleteOutline } from 'react-icons/md';
 import { useRouter } from 'next/router';
+import { AiOutlineClose } from 'react-icons/ai';
 
 import Tag from 'src/components/Tag';
 import Button from 'src/components/Button';
@@ -37,12 +38,17 @@ const tags = [
 ];
 
 interface Post {
+	id: string;
 	parentCategory: string;
 	category: string;
 	title: string;
 	content: string;
 	tags: string[];
 	isPrivate: boolean;
+}
+
+interface SavePost extends Post {
+	saveId: number;
 }
 
 const PostWrite = () => {
@@ -57,6 +63,7 @@ const PostWrite = () => {
 	const searchListRef = useRef(null);
 
 	const [post, setPost] = useState<Post>({
+		id: '',
 		parentCategory: '',
 		category: '',
 		tags: [],
@@ -69,6 +76,8 @@ const PostWrite = () => {
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
 	const [isPreviewOpen, onClickTogglePreview] = useToggle(true);
 	const [isSaveList, openSaveList] = useToggle(false);
+	const [saveList, setSaveList] = useState<SavePost[]>([]);
+	const [saveId, setSaveId] = useState<number>(1);
 
 	const onClickOpenSaveList = useCallback(() => {
 		openSaveList(true);
@@ -139,7 +148,71 @@ const PostWrite = () => {
 		}));
 	}, []);
 
-	const onClickSavePost = useCallback(() => {}, []);
+	const onClickDeleteSavePost = useCallback(
+		(e) => {
+			e.stopPropagation();
+			const { saveid: saveId } = e.currentTarget.dataset;
+
+			savePosts(saveList.filter((post) => post.saveId !== Number(saveId)));
+
+			function savePosts(item: SavePost[]) {
+				localStorage.setItem('save_posts', JSON.stringify([...item]));
+				setSaveList([...item]);
+			}
+		},
+		[saveList]
+	);
+
+	const onClickLoadPost = useCallback(
+		(e) => {
+			const { saveid: saveId } = e.target.dataset;
+
+			// 무조건 있다고 친다.
+			const savePost = saveList.find((post) => post.saveId === Number(saveId))!;
+			const { saveId: postSaveId, ...withoutSaveId } = savePost;
+
+			// saveId를 저장한다. 덮어쓸지, 추가할지, 처음 게시글인지 구분한다.
+			setSaveId(Number(saveId));
+			setPost((prev) => ({ ...prev, ...withoutSaveId }));
+		},
+		[saveList]
+	);
+
+	const onClickSavePost = useCallback(() => {
+		// 불러온 글을 다시 저장한다면 덮어쓰기
+		if (saveList.find((post) => post.saveId === saveId)) {
+			return savePosts(
+				saveList.map((savePost) => {
+					if (savePost.saveId === saveId) {
+						return {
+							...post,
+							saveId,
+						};
+					}
+					return {
+						...savePost,
+					};
+				})
+			);
+		}
+
+		// 새로운 글을 저장하면 saveId 1씩 증가.
+		if (saveList.length) {
+			return savePosts(
+				[...saveList, { ...post, saveId: saveId + 1 }],
+				saveId + 1
+			);
+		}
+
+		// 없으면 처음 saveId 1
+		return savePosts([{ ...post, saveId: 1 }], 1);
+
+		function savePosts(item: SavePost[], saveId?: number) {
+			localStorage.setItem('save_posts', JSON.stringify([...item]));
+			saveId && localStorage.setItem('save_id', JSON.stringify(saveId));
+			setSaveList([...item]);
+		}
+	}, [post, saveId, saveList]);
 
 	// 카테고리 캐스케이더를 끄기 위함.
 	useClickAway(cascaderRef, () => toggleCascader(false));
@@ -158,6 +231,13 @@ const PostWrite = () => {
 		};
 	}, [isSaveList, openSaveList]);
 
+	useEffect(() => {
+		if (typeof window === 'object') {
+			setSaveList(JSON.parse(localStorage.getItem('save_posts') || '[]'));
+			setSaveId(Number(JSON.parse(localStorage.getItem('save_id') || '1')));
+		}
+	}, []);
+
 	return (
 		<PostWriteStyle>
 			<div className='save-loader'>
@@ -165,11 +245,23 @@ const PostWrite = () => {
 			</div>
 
 			<Modal isOpen={isSaveList}>
-				{/* TODO: 로컬 스토리지로 연동 */}
 				<ul className='load-list' onClick={onClickSaveList}>
-					<li data-value={'1'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
-					<li data-value={'2'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
-					<li data-value={'3'}>제목ㅇㅂㅈㅇㅂㅈㅇㅈㅂ</li>
+					{saveList.map((saved) => (
+						<li
+							key={saved.saveId}
+							data-saveid={saved.saveId}
+							onClick={onClickLoadPost}
+						>
+							{saved.title}
+							<span
+								className='load-delete'
+								data-saveid={saved.saveId}
+								onClick={onClickDeleteSavePost}
+							>
+								<MdDeleteForever />
+							</span>
+						</li>
+					))}
 				</ul>
 			</Modal>
 

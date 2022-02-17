@@ -24,13 +24,25 @@ const PostWriteStyle = styled.div`
 		gap: 14px;
 
 		li {
+			position: relative;
 			text-align: left;
 			padding: 12px 0;
 			cursor: pointer;
 			border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+			width: 100%;
 
 			&:hover {
 				opacity: 0.7;
+			}
+
+			.load-delete {
+				position: absolute;
+				top: 50%;
+				right: 0;
+
+				&:hover {
+					transform: scale(1.1);
+				}
 			}
 		}
 	}

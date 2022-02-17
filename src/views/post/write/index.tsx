@@ -47,6 +47,8 @@ const PostWrite = () => {
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
 	const [categoryName, setCategoryName] = useState('');
+	const [searchTagText, setSearchTagText] = useState('');
+	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
 	const [isPreviewOpen, onClickTogglePreview] = useToggle(true);
@@ -78,13 +80,33 @@ const PostWrite = () => {
 		[toggleCascader]
 	);
 
-	const onClicktoggleCascader = useCallback(() => {
+	const onClickToggleCascader = useCallback(() => {
 		toggleCascader();
 	}, [toggleCascader]);
 
-	const onClickTag = useCallback(() => {
-		toggleSearchList(false);
-	}, [toggleSearchList]);
+	const onChangeSearchTag = useCallback(
+		(e) => {
+			const { value } = e.target;
+			setSearchTagText(value);
+			toggleSearchList(!!value);
+		},
+		[toggleSearchList]
+	);
+
+	const onClickAddTag = useCallback(
+		(e) => {
+			const { value } = e.target.dataset;
+			toggleSearchList(false);
+			setSearchTagText('');
+			setSelectedTags((prev) => [...prev, value]);
+		},
+		[toggleSearchList]
+	);
+
+	const onClickDeleteTag = useCallback((e) => {
+		const { value } = e.target.dataset;
+		setSelectedTags((prev) => prev.filter((tag) => tag !== value));
+	}, []);
 
 	// 카테고리 캐스케이더를 끄기 위함.
 	useClickAway(cascaderRef, () => toggleCascader(false));
@@ -124,7 +146,7 @@ const PostWrite = () => {
 
 				{/* category */}
 				<div className='cascader' ref={cascaderRef}>
-					<button type='button' onClick={onClicktoggleCascader}>
+					<button type='button' onClick={onClickToggleCascader}>
 						카테고리를 설정해 주세요.
 					</button>
 
@@ -171,18 +193,32 @@ const PostWrite = () => {
 
 				{/* Tag */}
 				<div className='tag-container'>
-					<input type='text' placeholder='태그를 입력하세요.' />
+					<input
+						type='text'
+						placeholder='태그를 입력하세요.'
+						value={searchTagText}
+						onChange={onChangeSearchTag}
+					/>
 					<div className='tags-list'>
-						<Tag>태그1</Tag>
-						<Tag>태그2</Tag>
+						{selectedTags.map((tag) => (
+							<Tag key={tag} data-value={tag} onClick={onClickDeleteTag}>
+								{tag}
+							</Tag>
+						))}
 					</div>
 
 					{/* TODO: 태그 서칭 */}
 					{isSearchListOpen && (
 						<ul className='tag-search' ref={searchListRef}>
-							{tags.length ? (
+							{tags.filter((tag) => !selectedTags.includes(tag.value))
+								.length ? (
 								tags.map((tag) => (
-									<li key={tag.id} tabIndex={0} onClick={onClickTag}>
+									<li
+										key={tag.id}
+										tabIndex={0}
+										data-value={tag.value}
+										onClick={onClickAddTag}
+									>
 										{tag.value}
 										<small>({tag.posts.length})</small>
 									</li>

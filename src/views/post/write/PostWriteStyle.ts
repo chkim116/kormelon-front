@@ -126,6 +126,7 @@ const PostWriteStyle = styled.div`
 
 		.tag-container {
 			position: relative;
+
 			input {
 				padding: 8px 0;
 				border: none;
@@ -137,7 +138,7 @@ const PostWriteStyle = styled.div`
 			.tags-list {
 				display: flex;
 				gap: 8px;
-				width: 120px;
+				cursor: pointer;
 			}
 
 			.tag-search {

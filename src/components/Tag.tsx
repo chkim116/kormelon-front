@@ -1,15 +1,22 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 
-interface TagProps {
+interface TagProps
+	extends React.HTMLAttributes<HTMLLinkElement | HTMLSpanElement> {
 	children: React.ReactChild;
 	href?: string;
 }
 
-const Tag = ({ children, href }: TagProps) => {
+const Tag = ({ children, href, ...rest }: TagProps) => {
 	return (
 		<TagStyle>
-			{href ? <Link href={href}>{children}</Link> : <span>{children}</span>}
+			{href ? (
+				<Link href={href} {...rest}>
+					{children}
+				</Link>
+			) : (
+				<span {...rest}>{children}</span>
+			)}
 		</TagStyle>
 	);
 };

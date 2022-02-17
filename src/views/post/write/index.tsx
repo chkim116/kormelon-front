@@ -46,7 +46,10 @@ const PostWrite = () => {
 
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
-	const [categoryName, setCategoryName] = useState('');
+	const [selectedCategory, setSelectedCategory] = useState({
+		first: '',
+		second: '',
+	});
 	const [searchTagText, setSearchTagText] = useState('');
 	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
@@ -66,15 +69,15 @@ const PostWrite = () => {
 	const onClickCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
 
-		setCategoryName(value);
-		console.log(value);
+		setSelectedCategory((prev) => ({ ...prev, first: value, second: '' }));
 	}, []);
 
 	const onClickSubCategory = useCallback(
 		(e) => {
+			e.stopPropagation();
 			const { value } = e.currentTarget.dataset;
 
-			console.log(value);
+			setSelectedCategory((prev) => ({ ...prev, second: value }));
 			toggleCascader(false);
 		},
 		[toggleCascader]
@@ -125,6 +128,8 @@ const PostWrite = () => {
 		};
 	}, [isSaveList, openSaveList]);
 
+	console.log(selectedCategory);
+
 	return (
 		<PostWriteStyle>
 			<div className='save-loader'>
@@ -147,23 +152,25 @@ const PostWrite = () => {
 				{/* category */}
 				<div className='cascader' ref={cascaderRef}>
 					<button type='button' onClick={onClickToggleCascader}>
-						카테고리를 설정해 주세요.
+						{selectedCategory.first && selectedCategory.second
+							? `${selectedCategory.first} > ${selectedCategory.second}`
+							: '카테고리를 설정해 주세요.'}
 					</button>
 
 					{isCascaderOpen && (
 						<ul className='category'>
-							{categoryOptions.map((category) => (
+							{categoryOptions.map((option) => (
 								<li
-									key={category.id}
+									key={option.id}
 									className={`category-list ${
-										categoryName === category.value ? 'active' : ''
+										selectedCategory.first === option.value ? 'active' : ''
 									}`}
-									data-value={category.value}
+									data-value={option.value}
 									onClick={onClickCategory}
 								>
 									<div>
-										{category.value}
-										{category.categories.length && (
+										{option.value}
+										{option.categories.length && (
 											<span>
 												<MdArrowRight />
 											</span>
@@ -171,10 +178,10 @@ const PostWrite = () => {
 									</div>
 
 									{/* 선택한 카테고리만 노출 */}
-									{categoryName === category.value &&
-									category.categories.length ? (
+									{selectedCategory.first === option.value &&
+									option.categories.length ? (
 										<ul className='sub-category'>
-											{category.categories.map((sub) => (
+											{option.categories.map((sub) => (
 												<li
 													key={sub.id}
 													onClick={onClickSubCategory}

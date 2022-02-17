@@ -79,15 +79,6 @@ const PostWrite = () => {
 	const [saveList, setSaveList] = useState<SavePost[]>([]);
 	const [saveId, setSaveId] = useState<number>(1);
 
-	const onClickOpenSaveList = useCallback(() => {
-		openSaveList(true);
-	}, [openSaveList]);
-
-	const onClickSaveList = useCallback((e) => {
-		const { value } = e.target.dataset;
-		console.log(value);
-	}, []);
-
 	const onChangeTitle = useCallback((e) => {
 		const { value } = e.target;
 		setPost((prev) => ({ ...prev, title: value }));
@@ -97,6 +88,11 @@ const PostWrite = () => {
 		const { value } = e.target;
 		setPost((prev) => ({ ...prev, content: value }));
 	}, []);
+
+	// * 카테고리 관련 로직
+	const onClickToggleCategoryCascader = useCallback(() => {
+		toggleCascader();
+	}, [toggleCascader]);
 
 	const onClickParentCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
@@ -115,10 +111,7 @@ const PostWrite = () => {
 		[toggleCascader]
 	);
 
-	const onClickToggleCascader = useCallback(() => {
-		toggleCascader();
-	}, [toggleCascader]);
-
+	// * 태그 관련 로직
 	const onChangeSearchTag = useCallback(
 		(e) => {
 			const { value } = e.target;
@@ -148,6 +141,7 @@ const PostWrite = () => {
 		}));
 	}, []);
 
+	// 비밀 on or off
 	const onClickPrivate = useCallback(() => {
 		setPost((prev) => ({
 			...prev,
@@ -155,20 +149,10 @@ const PostWrite = () => {
 		}));
 	}, []);
 
-	const onClickDeleteSavePost = useCallback(
-		(e) => {
-			e.stopPropagation();
-			const { saveid: saveId } = e.currentTarget.dataset;
-
-			savePosts(saveList.filter((post) => post.saveId !== Number(saveId)));
-
-			function savePosts(item: SavePost[]) {
-				localStorage.setItem('save_posts', JSON.stringify([...item]));
-				setSaveList([...item]);
-			}
-		},
-		[saveList]
-	);
+	// * 임시 저장 관련 로직
+	const onClickOpenSaveList = useCallback(() => {
+		openSaveList(true);
+	}, [openSaveList]);
 
 	const onClickLoadPost = useCallback(
 		(e) => {
@@ -221,6 +205,21 @@ const PostWrite = () => {
 		}
 	}, [post, saveId, saveList]);
 
+	const onClickDeleteSavePost = useCallback(
+		(e) => {
+			e.stopPropagation();
+			const { saveid: saveId } = e.currentTarget.dataset;
+
+			savePosts(saveList.filter((post) => post.saveId !== Number(saveId)));
+
+			function savePosts(item: SavePost[]) {
+				localStorage.setItem('save_posts', JSON.stringify([...item]));
+				setSaveList([...item]);
+			}
+		},
+		[saveList]
+	);
+
 	// 카테고리 캐스케이더를 끄기 위함.
 	useClickAway(cascaderRef, () => toggleCascader(false));
 	useClickAway(searchListRef, () => toggleSearchList(false));
@@ -252,7 +251,7 @@ const PostWrite = () => {
 			</div>
 
 			<Modal isOpen={isSaveList}>
-				<ul className='load-list' onClick={onClickSaveList}>
+				<ul className='load-list'>
 					{saveList.map((saved) => (
 						<li
 							key={saved.saveId}
@@ -284,7 +283,7 @@ const PostWrite = () => {
 
 				{/* category */}
 				<div className='cascader' ref={cascaderRef}>
-					<button type='button' onClick={onClickToggleCascader}>
+					<button type='button' onClick={onClickToggleCategoryCascader}>
 						{post.parentCategory && post.category
 							? `${post.parentCategory} > ${post.category}`
 							: '카테고리를 설정해 주세요.'}

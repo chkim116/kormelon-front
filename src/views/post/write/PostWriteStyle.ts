@@ -214,6 +214,7 @@ const PostWriteStyle = styled.div`
 						height: 80vh;
 						padding: 8px;
 						font-size: ${({ theme }) => theme.fontSizes.md};
+						white-space: pre-line;
 
 						&.drag {
 							border: 1px solid ${({ theme }) => theme.colors.blue};
@@ -227,9 +228,11 @@ const PostWriteStyle = styled.div`
 					}
 					width: 100%;
 					height: 80vh;
+					overflow: auto;
 					padding: 8px;
 					border: 1px solid ${({ theme }) => theme.colors.border};
 					font-size: ${({ theme }) => theme.fontSizes.md};
+					white-space: pre-line;
 				}
 			}
 		}

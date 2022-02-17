@@ -420,9 +420,9 @@ const PostWrite = () => {
 							<div
 								className='preview'
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(
-										marked.parse('```js\nconst a = 3;\n```')
-									),
+									__html: DOMPurify.sanitize(marked.parse(`${post.content}`), {
+										ALLOWED_TAGS: ['iframe'],
+									}),
 								}}
 							/>
 						)}

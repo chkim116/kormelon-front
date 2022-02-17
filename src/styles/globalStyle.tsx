@@ -12,6 +12,8 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 				* {
 					box-sizing: border-box;
 					font-family: 'IBM Plex Sans', sans-serif !important;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
 				}
 
 				body {

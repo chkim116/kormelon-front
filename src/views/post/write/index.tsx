@@ -2,9 +2,8 @@ import DOMPurify from 'isomorphic-dompurify';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { useClickAway, useToggle } from 'react-use';
-import { MdArrowRight, MdDeleteForever, MdDeleteOutline } from 'react-icons/md';
+import { MdArrowRight, MdDeleteForever } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import { AiOutlineClose } from 'react-icons/ai';
 
 import Tag from 'src/components/Tag';
 import Button from 'src/components/Button';
@@ -61,7 +60,7 @@ const PostWrite = () => {
 
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
-
+	const editorRef = useRef<HTMLTextAreaElement>(null);
 	const [post, setPost] = useState<Post>({
 		id: '',
 		parentCategory: '',
@@ -78,6 +77,30 @@ const PostWrite = () => {
 	const [isSaveList, openSaveList] = useToggle(false);
 	const [saveList, setSaveList] = useState<SavePost[]>([]);
 	const [saveId, setSaveId] = useState<number>(1);
+	const [isDragActive, toggleDragActive] = useToggle(false);
+
+	const onDrop = useCallback((e) => {
+		// TODO: 드래그하는 위치에 이미지 넣기
+		// @see https://stackoverflow.com/questions/3972014/get-contenteditable-caret-position
+		if (!editorRef.current) return;
+		const editor = editorRef.current;
+		const file = e.dataTransfer.files[0];
+
+		const formData = new FormData();
+		formData.append('image', file);
+
+		// TODO: 이미지로
+		editor.setRangeText(
+			'\n![alt](http://placehold.it/200x200)',
+			editor.selectionStart,
+			editor.selectionEnd,
+			'end'
+		);
+		setPost((prev) => ({ ...prev, content: editor.value }));
+		editor.focus();
+
+		// TODO: 서버로 보냄.
+	}, []);
 
 	const onChangeTitle = useCallback((e) => {
 		const { value } = e.target;
@@ -380,13 +403,19 @@ const PostWrite = () => {
 						{isPreviewOpen ? '미리보기 제거' : '미리보기'}
 					</button>
 					<div>
-						<textarea
-							onChange={onChangeContent}
-							value={post.content}
-							className='content'
-							spellCheck='false'
-							placeholder='본문을 입력하세요.'
-						/>
+						<div className='editor'>
+							<textarea
+								ref={editorRef}
+								onDragLeave={toggleDragActive}
+								onDragEnter={toggleDragActive}
+								onDrop={onDrop}
+								onChange={onChangeContent}
+								value={post.content}
+								className={`content ${isDragActive ? 'drag' : ''}`}
+								spellCheck='false'
+								placeholder='본문을 입력하세요.'
+							/>
+						</div>
 						{isPreviewOpen && (
 							<div
 								className='preview'

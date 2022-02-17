@@ -204,11 +204,21 @@ const PostWriteStyle = styled.div`
 				display: flex;
 				gap: 8px;
 
-				.content {
+				.editor {
+					display: flex;
+					flex-direction: column;
 					width: 100%;
-					height: 80vh;
-					padding: 8px;
-					font-size: ${({ theme }) => theme.fontSizes.md};
+
+					.content {
+						width: 100%;
+						height: 80vh;
+						padding: 8px;
+						font-size: ${({ theme }) => theme.fontSizes.md};
+
+						&.drag {
+							border: 1px solid ${({ theme }) => theme.colors.blue};
+						}
+					}
 				}
 
 				.preview {

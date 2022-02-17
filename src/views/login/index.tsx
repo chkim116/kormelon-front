@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useToggle } from 'react-use';
 
 import Button from 'src/components/Button';
@@ -40,10 +40,27 @@ const RegisterInput = () => {
 
 const Login = () => {
 	const [isLogin, onClickToggle] = useToggle(true);
+	const [form, setForm] = useState({
+		email: '',
+		username: '',
+		password: '',
+	});
+
+	const onChangeForm = useCallback((e) => {
+		const { name, value } = e.target;
+
+		setForm((prev) => ({ ...prev, [name]: value }));
+	}, []);
+
+	const onSubmitForm = useCallback((e) => {
+		e.preventDefault();
+	}, []);
+
+	console.log(form);
 
 	return (
 		<SignForm>
-			<form>
+			<form onChange={onChangeForm} onSubmit={onSubmitForm}>
 				{isLogin ? <LoginInput /> : <RegisterInput />}
 				<div className='footer'>
 					<Button type='submit' color='primary'>

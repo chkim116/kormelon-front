@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 export type ButtonColor = 'primary' | 'default';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children: React.ReactChild;
+	children: React.ReactChild | React.ReactNode;
 	color?: ButtonColor;
 }
 

@@ -148,6 +148,13 @@ const PostWrite = () => {
 		}));
 	}, []);
 
+	const onClickPrivate = useCallback(() => {
+		setPost((prev) => ({
+			...prev,
+			isPrivate: !prev.isPrivate,
+		}));
+	}, []);
+
 	const onClickDeleteSavePost = useCallback(
 		(e) => {
 			e.stopPropagation();
@@ -397,7 +404,13 @@ const PostWrite = () => {
 				{/* 제출 */}
 				<div className='footer'>
 					<div>
-						<Button type='button'>비밀</Button>
+						<Button
+							type='button'
+							color={post.isPrivate ? 'primary' : 'default'}
+							onClick={onClickPrivate}
+						>
+							비밀 {post.isPrivate ? 'on' : 'off'}
+						</Button>
 						<Button type='button' onClick={onClickSavePost}>
 							임시저장
 						</Button>

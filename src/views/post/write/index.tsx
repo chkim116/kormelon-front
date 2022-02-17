@@ -36,6 +36,15 @@ const tags = [
 	},
 ];
 
+interface Post {
+	parentCategory: string;
+	category: string;
+	title: string;
+	content: string;
+	tags: string[];
+	isPrivate: boolean;
+}
+
 const PostWrite = () => {
 	const router = useRouter();
 
@@ -46,12 +55,16 @@ const PostWrite = () => {
 
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
-	const [selectedCategory, setSelectedCategory] = useState({
-		first: '',
-		second: '',
+
+	const [post, setPost] = useState<Post>({
+		parentCategory: '',
+		category: '',
+		tags: [],
+		title: '',
+		content: '',
+		isPrivate: false,
 	});
 	const [searchTagText, setSearchTagText] = useState('');
-	const [selectedTags, setSelectedTags] = useState<string[]>([]);
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
 	const [isPreviewOpen, onClickTogglePreview] = useToggle(true);
@@ -66,10 +79,20 @@ const PostWrite = () => {
 		console.log(value);
 	}, []);
 
-	const onClickCategory = useCallback((e) => {
+	const onChangeTitle = useCallback((e) => {
+		const { value } = e.target;
+		setPost((prev) => ({ ...prev, title: value }));
+	}, []);
+
+	const onChangeContent = useCallback((e) => {
+		const { value } = e.target;
+		setPost((prev) => ({ ...prev, content: value }));
+	}, []);
+
+	const onClickParentCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
 
-		setSelectedCategory((prev) => ({ ...prev, first: value, second: '' }));
+		setPost((prev) => ({ ...prev, parentCategory: value }));
 	}, []);
 
 	const onClickSubCategory = useCallback(
@@ -77,7 +100,7 @@ const PostWrite = () => {
 			e.stopPropagation();
 			const { value } = e.currentTarget.dataset;
 
-			setSelectedCategory((prev) => ({ ...prev, second: value }));
+			setPost((prev) => ({ ...prev, category: value }));
 			toggleCascader(false);
 		},
 		[toggleCascader]
@@ -100,16 +123,23 @@ const PostWrite = () => {
 		(e) => {
 			const { value } = e.target.dataset;
 			toggleSearchList(false);
+
 			setSearchTagText('');
-			setSelectedTags((prev) => [...prev, value]);
+			setPost((prev) => ({ ...prev, tags: [...prev.tags, value] }));
 		},
 		[toggleSearchList]
 	);
 
 	const onClickDeleteTag = useCallback((e) => {
 		const { value } = e.target.dataset;
-		setSelectedTags((prev) => prev.filter((tag) => tag !== value));
+
+		setPost((prev) => ({
+			...prev,
+			tags: prev.tags.filter((tag) => tag !== value),
+		}));
 	}, []);
+
+	const onClickSavePost = useCallback(() => {}, []);
 
 	// 카테고리 캐스케이더를 끄기 위함.
 	useClickAway(cascaderRef, () => toggleCascader(false));
@@ -128,8 +158,6 @@ const PostWrite = () => {
 		};
 	}, [isSaveList, openSaveList]);
 
-	console.log(selectedCategory);
-
 	return (
 		<PostWriteStyle>
 			<div className='save-loader'>
@@ -147,13 +175,19 @@ const PostWrite = () => {
 
 			<form>
 				{/* title */}
-				<input className='title' type='text' placeholder='제목을 입력하세요.' />
+				<input
+					onChange={onChangeTitle}
+					value={post.title}
+					className='title'
+					type='text'
+					placeholder='제목을 입력하세요.'
+				/>
 
 				{/* category */}
 				<div className='cascader' ref={cascaderRef}>
 					<button type='button' onClick={onClickToggleCascader}>
-						{selectedCategory.first && selectedCategory.second
-							? `${selectedCategory.first} > ${selectedCategory.second}`
+						{post.parentCategory && post.category
+							? `${post.parentCategory} > ${post.category}`
 							: '카테고리를 설정해 주세요.'}
 					</button>
 
@@ -163,10 +197,10 @@ const PostWrite = () => {
 								<li
 									key={option.id}
 									className={`category-list ${
-										selectedCategory.first === option.value ? 'active' : ''
+										post.parentCategory === option.value ? 'active' : ''
 									}`}
 									data-value={option.value}
-									onClick={onClickCategory}
+									onClick={onClickParentCategory}
 								>
 									<div>
 										{option.value}
@@ -178,7 +212,7 @@ const PostWrite = () => {
 									</div>
 
 									{/* 선택한 카테고리만 노출 */}
-									{selectedCategory.first === option.value &&
+									{post.parentCategory === option.value &&
 									option.categories.length ? (
 										<ul className='sub-category'>
 											{option.categories.map((sub) => (
@@ -207,7 +241,7 @@ const PostWrite = () => {
 						onChange={onChangeSearchTag}
 					/>
 					<div className='tags-list'>
-						{selectedTags.map((tag) => (
+						{post.tags.map((tag) => (
 							<Tag key={tag} data-value={tag} onClick={onClickDeleteTag}>
 								{tag}
 							</Tag>
@@ -217,8 +251,7 @@ const PostWrite = () => {
 					{/* TODO: 태그 서칭 */}
 					{isSearchListOpen && (
 						<ul className='tag-search' ref={searchListRef}>
-							{tags.filter((tag) => !selectedTags.includes(tag.value))
-								.length ? (
+							{tags.filter((tag) => !post.tags.includes(tag.value)).length ? (
 								tags.map((tag) => (
 									<li
 										key={tag.id}
@@ -250,6 +283,8 @@ const PostWrite = () => {
 					</button>
 					<div>
 						<textarea
+							onChange={onChangeContent}
+							value={post.content}
 							className='content'
 							spellCheck='false'
 							placeholder='본문을 입력하세요.'
@@ -271,7 +306,9 @@ const PostWrite = () => {
 				<div className='footer'>
 					<div>
 						<Button type='button'>비밀</Button>
-						<Button type='button'>임시저장</Button>
+						<Button type='button' onClick={onClickSavePost}>
+							임시저장
+						</Button>
 					</div>
 					<Button color='primary' type='submit'>
 						{isEditMode ? '수정완료' : '작성완료'}

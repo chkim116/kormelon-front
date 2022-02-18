@@ -1,7 +1,5 @@
-import DOMPurify from 'dompurify';
-
-const ALLOWED_URI_REGEXP = /codesandbox/i;
-const ALLOWED_TAGS = [
+export const ALLOWED_URI_REGEXP = /codesandbox/i;
+export const ALLOWED_TAGS = [
 	'html',
 	'body',
 	'div',
@@ -15,6 +13,8 @@ const ALLOWED_TAGS = [
 	'h4',
 	'h5',
 	'h6',
+	'br',
+	'hr',
 	'p',
 	'blockquote',
 	'pre',
@@ -84,8 +84,3 @@ const ALLOWED_TAGS = [
 	'audio',
 	'video',
 ];
-
-DOMPurify.setConfig({
-	ALLOWED_TAGS,
-	ALLOWED_URI_REGEXP,
-});

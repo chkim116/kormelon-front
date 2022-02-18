@@ -10,8 +10,8 @@ import Button from 'src/components/Button';
 import Modal from 'src/components/Modal';
 import PostWriteStyle from './PostWriteStyle';
 
-import 'src/lib/highlight';
-import 'src/lib/domPurifyConfig';
+import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
+import 'src/lib/markedConfig';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -50,6 +50,11 @@ interface Post {
 interface SavePost extends Post {
 	saveId: number;
 }
+
+DOMPurify.setConfig({
+	ALLOWED_TAGS,
+	ALLOWED_URI_REGEXP,
+});
 
 const PostWrite = () => {
 	const router = useRouter();

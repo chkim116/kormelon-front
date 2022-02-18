@@ -6,6 +6,7 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 		<Global
 			styles={css`
 				@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+				@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
 
 				${emotionReset}
 
@@ -20,6 +21,8 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 					font-size: ${theme.fontSizes.md};
 					color: ${theme.colors.onPrimary};
 					margin-top: 50px;
+					letter-spacing: 0.02em;
+					line-height: 1.55em;
 				}
 
 				h1 {
@@ -32,14 +35,40 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 					font-weight: 600;
 				}
 
-				p {
+				/* 코드 작성 부분 전체 세팅 */
+				pre {
 					line-height: 1.55em;
+					letter-spacing: -0.04em;
+
+					* {
+						font-family: 'Fira Code' !important;
+					}
+
+					code {
+						// scroll bar
+						&::-webkit-scrollbar {
+							height: 8px;
+						}
+						&::-webkit-scrollbar-track {
+							background-color: #333333;
+						}
+						&::-webkit-scrollbar-thumb {
+							height: 17%;
+							border-radius: 10px;
+							background-color: #666565;
+						}
+					}
 				}
 
+				/* 인라인 코드  */
 				code {
 					color: ${theme.colors.onSecondary};
-					line-height: 1.75em;
+					background-color: ${theme.colors.bgCode};
+					padding: 1px 4px;
+					margin: 0 1px;
+					border-radius: 4px;
 				}
+				/* 코드 작성 부분 전체 세팅 끝 */
 
 				small {
 					font-size: ${theme.fontSizes.sm};

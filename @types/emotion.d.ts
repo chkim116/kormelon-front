@@ -29,7 +29,7 @@ declare module '@emotion/react' {
 
 			primary: string;
 			blue: string;
-
+			bgCode: string;
 			border: string;
 		};
 	}

@@ -1,3 +1,6 @@
+/**
+ * when marked parse, apply hljs
+ */
 import { marked } from 'marked';
 
 marked.setOptions({

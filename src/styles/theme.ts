@@ -16,7 +16,7 @@ const darkOrLightColors = {
 
 		primary: '#ffffff',
 		blue: '#1E90FF',
-
+		bgCode: '#dddddd',
 		border: '#e2e2e2',
 	},
 	dark: {
@@ -26,7 +26,7 @@ const darkOrLightColors = {
 
 		primary: '#282a36',
 		blue: '#b0c4de',
-
+		bgCode: '#343644',
 		border: '#414141',
 	},
 };

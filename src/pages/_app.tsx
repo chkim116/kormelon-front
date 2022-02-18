@@ -12,6 +12,12 @@ import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
 import store, { useAppSelector } from 'src/store/config';
 
+/**
+ * atom-one-dark theme
+ * @see https://github.com/highlightjs/highlight.js/blob/main/src/styles/atom-one-dark.css
+ */
+import 'src/styles/hljs.atom.css';
+
 // korean 시간
 dayJs.locale('ko');
 

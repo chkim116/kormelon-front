@@ -79,9 +79,11 @@ const PostWrite = () => {
 	const [saveId, setSaveId] = useState<number>(1);
 	const [isDragActive, toggleDragActive] = useToggle(false);
 
+	const onDragOver = useCallback((e) => {
+		e.preventDefault();
+	}, []);
+
 	const onDrop = useCallback((e) => {
-		// TODO: 드래그하는 위치에 이미지 넣기
-		// @see https://stackoverflow.com/questions/3972014/get-contenteditable-caret-position
 		if (!editorRef.current) return;
 		const editor = editorRef.current;
 		const file = e.dataTransfer.files[0];
@@ -406,6 +408,7 @@ const PostWrite = () => {
 						<div className='editor'>
 							<textarea
 								ref={editorRef}
+								onDragOver={onDragOver}
 								onDragLeave={toggleDragActive}
 								onDragEnter={toggleDragActive}
 								onDrop={onDrop}

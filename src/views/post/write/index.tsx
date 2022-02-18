@@ -11,6 +11,7 @@ import Modal from 'src/components/Modal';
 import PostWriteStyle from './PostWriteStyle';
 
 import 'src/lib/highlight';
+import 'src/lib/domPurifyConfig';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -500,9 +501,7 @@ const PostWrite = () => {
 							<div
 								className='preview'
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(marked.parse(`${post.content}`), {
-										USE_PROFILES: { html: true },
-									}),
+									__html: DOMPurify.sanitize(marked.parse(`${post.content}`)),
 								}}
 							/>
 						)}

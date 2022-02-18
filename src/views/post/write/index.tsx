@@ -79,6 +79,82 @@ const PostWrite = () => {
 	const [saveId, setSaveId] = useState<number>(1);
 	const [isDragActive, toggleDragActive] = useToggle(false);
 
+	const onKeyDown = useCallback(
+		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+			const editor = editorRef.current!;
+			const { selectionStart, selectionEnd, value } = editor;
+
+			if (e.key === 'Tab') {
+				e.preventDefault();
+
+				if (selectionStart === selectionEnd) {
+					// These single character operations are undoable
+					// tab키를 누르면 \t을 추가합니다.
+					if (!e.shiftKey) {
+						document.execCommand('insertText', false, '\t');
+					}
+					// shift + tab을 누르면 \t를 삭제합니다.
+					if (
+						e.shiftKey &&
+						selectionStart > 0 &&
+						value[selectionStart - 1] === '\t'
+					) {
+						document.execCommand('delete');
+					}
+				}
+
+				// 글자 Range 선택 후 Tab
+				if (selectionStart !== selectionEnd) {
+					// Block indent/unindent trashes undo stack.
+					// Select whole lines
+					let selStart = selectionStart;
+					let selEnd = selectionEnd;
+					while (selStart > 0 && value[selStart - 1] !== '\n') {
+						selStart--;
+					}
+					while (
+						selEnd > 0 &&
+						value[selEnd - 1] !== '\n' &&
+						selEnd < value.length
+					) {
+						selEnd++;
+					}
+
+					let lines = value
+						.substring(selStart, selEnd - selStart + 1)
+						.split('\n');
+
+					// Insert tabs
+					for (let i = 0; i < lines.length; i++) {
+						// Don't indent last line if cursor at start of line
+						if (i === lines.length - 1 && lines[i].length === 0) continue;
+
+						// Tab
+						if (!e.shiftKey) {
+							lines[i] = '\t' + lines[i];
+						}
+
+						// Shift+Tab
+						if (e.shiftKey) {
+							if (lines[i].startsWith('\t')) lines[i] = lines[i].substring(1);
+							else if (lines[i].startsWith('    '))
+								lines[i] = lines[i].substring(4);
+						}
+					}
+
+					// Update textarea
+					const line = lines.join('\n');
+					const content =
+						value.substring(0, selStart) + line + value.substring(selEnd);
+					setPost((prev) => ({ ...prev, content }));
+					editor.setSelectionRange(selStart, selStart + line.length);
+				}
+				return false;
+			}
+		},
+		[]
+	);
+
 	const onDragOver = useCallback((e) => {
 		e.preventDefault();
 	}, []);
@@ -412,6 +488,7 @@ const PostWrite = () => {
 								onDragLeave={toggleDragActive}
 								onDragEnter={toggleDragActive}
 								onDrop={onDrop}
+								onKeyDown={onKeyDown}
 								onChange={onChangeContent}
 								value={post.content}
 								className={`content ${isDragActive ? 'drag' : ''}`}
@@ -424,7 +501,7 @@ const PostWrite = () => {
 								className='preview'
 								dangerouslySetInnerHTML={{
 									__html: DOMPurify.sanitize(marked.parse(`${post.content}`), {
-										ALLOWED_TAGS: ['iframe'],
+										USE_PROFILES: { html: true },
 									}),
 								}}
 							/>

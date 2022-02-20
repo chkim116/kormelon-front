@@ -85,6 +85,10 @@ const PostWrite = () => {
 	const [saveId, setSaveId] = useState<number>(1);
 	const [isDragActive, toggleDragActive] = useToggle(false);
 
+	const parsedContent = useMemo(() => {
+		return DOMPurify.sanitize(marked.parse(post.content));
+	}, [post.content]);
+
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 			const editor = editorRef.current!;
@@ -204,7 +208,7 @@ const PostWrite = () => {
 	const onClickParentCategory = useCallback((e) => {
 		const { value } = e.currentTarget.dataset;
 
-		setPost((prev) => ({ ...prev, parentCategory: value }));
+		setPost((prev) => ({ ...prev, parentCategory: value, category: '' }));
 	}, []);
 
 	const onClickSubCategory = useCallback(
@@ -506,7 +510,7 @@ const PostWrite = () => {
 							<div
 								className='preview'
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(marked.parse(`${post.content}`)),
+									__html: parsedContent,
 								}}
 							/>
 						)}

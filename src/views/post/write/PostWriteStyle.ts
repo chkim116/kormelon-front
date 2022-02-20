@@ -92,7 +92,14 @@ const PostWriteStyle = styled.div`
 					width: fit-content;
 
 					&.active {
-						border-left: 1px solid ${({ theme }) => theme.colors.blue};
+						&::before {
+							position: absolute;
+							left: 0;
+							content: '';
+							width: 1px;
+							height: 100%;
+							background-color: ${({ theme }) => theme.colors.blue};
+						}
 					}
 
 					& > div {
@@ -122,6 +129,7 @@ const PostWriteStyle = styled.div`
 						li {
 							cursor: pointer;
 							padding: 10px 6px;
+							list-style: none;
 
 							&:hover {
 								background: ${({ theme }) => theme.colors.onBlue};

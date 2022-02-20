@@ -12,6 +12,7 @@ import PostWriteStyle from './PostWriteStyle';
 
 import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import 'src/lib/markedConfig';
+import { useNotification } from 'src/hooks/useNotification';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -58,6 +59,7 @@ DOMPurify.setConfig({
 
 const PostWrite = () => {
 	const router = useRouter();
+	const { callNotification } = useNotification();
 
 	// query에 'edit={title}'이 존재하면 수정모드
 	const isEditMode = useMemo(() => {
@@ -192,6 +194,7 @@ const PostWrite = () => {
 
 	const onChangeTitle = useCallback((e) => {
 		const { value } = e.target;
+
 		setPost((prev) => ({ ...prev, title: value }));
 	}, []);
 
@@ -234,7 +237,7 @@ const PostWrite = () => {
 
 	const onClickAddTag = useCallback(
 		(e) => {
-			const { value } = e.target.dataset;
+			const { value } = e.currentTarget.dataset;
 			toggleSearchList(false);
 
 			setSearchTagText('');
@@ -258,7 +261,14 @@ const PostWrite = () => {
 			...prev,
 			isPrivate: !prev.isPrivate,
 		}));
-	}, []);
+
+		callNotification({
+			type: 'success',
+			message: post.isPrivate
+				? '비밀 설정이 해제되었습니다.'
+				: '비밀 설정이 되었습니다.',
+		});
+	}, [callNotification, post.isPrivate]);
 
 	// * 임시 저장 관련 로직
 	const onClickOpenSaveList = useCallback(() => {
@@ -281,6 +291,11 @@ const PostWrite = () => {
 	);
 
 	const onClickSavePost = useCallback(() => {
+		callNotification({
+			type: 'success',
+			message: '임시 저장되었습니다.',
+		});
+
 		// 불러온 글을 다시 저장한다면 덮어쓰기
 		if (saveList.find((post) => post.saveId === saveId)) {
 			return savePosts(
@@ -314,7 +329,7 @@ const PostWrite = () => {
 			saveId && localStorage.setItem('save_id', JSON.stringify(saveId));
 			setSaveList([...item]);
 		}
-	}, [post, saveId, saveList]);
+	}, [callNotification, post, saveId, saveList]);
 
 	const onClickDeleteSavePost = useCallback(
 		(e) => {

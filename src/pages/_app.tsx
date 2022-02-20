@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
 import dayJs from 'dayJs';
 import 'dayJs/locale/ko';
+import { ReactNotifications } from 'react-notifications-component';
 
 import { Gnb } from 'src/components/Gnb';
 import { GlobalStyle } from 'src/styles/globalStyle';
@@ -12,6 +13,7 @@ import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
 import store, { useAppSelector } from 'src/store/config';
 
+import 'react-notifications-component/dist/theme.css';
 /**
  * atom-one-dark theme
  * @see https://github.com/highlightjs/highlight.js/blob/main/src/styles/atom-one-dark.css
@@ -46,6 +48,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<Provider store={store}>
 			<AppTheme>
 				<AppStyle>
+					<ReactNotifications />
 					<Gnb />
 					<Header />
 					<div className='main'>

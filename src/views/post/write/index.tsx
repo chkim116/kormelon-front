@@ -13,6 +13,7 @@ import PostWriteStyle from './PostWriteStyle';
 import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import 'src/lib/markedConfig';
 import { useNotification } from 'src/hooks/useNotification';
+import { api } from 'src/lib/api';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -171,26 +172,42 @@ const PostWrite = () => {
 		e.preventDefault();
 	}, []);
 
-	const onDrop = useCallback((e) => {
-		if (!editorRef.current) return;
-		const editor = editorRef.current;
-		const file = e.dataTransfer.files[0];
+	const onDrop = useCallback(
+		async (e) => {
+			e.preventDefault();
 
-		const formData = new FormData();
-		formData.append('image', file);
+			if (!editorRef.current) return;
+			const editor = editorRef.current;
+			const file = e.dataTransfer.files[0];
 
-		// TODO: 이미지로
-		editor.setRangeText(
-			'\n![alt](http://placehold.it/200x200)',
-			editor.selectionStart,
-			editor.selectionEnd,
-			'end'
-		);
-		setPost((prev) => ({ ...prev, content: editor.value }));
-		editor.focus();
+			const formData = new FormData();
+			formData.append('image', file);
 
-		// TODO: 서버로 보냄.
-	}, []);
+			try {
+				const url = await getImg();
+
+				editor.setRangeText(
+					`\n![alt](${url})`,
+					editor.selectionStart,
+					editor.selectionEnd,
+					'end'
+				);
+
+				setPost((prev) => ({ ...prev, content: editor.value }));
+				editor.focus();
+			} catch (err: any) {
+				callNotification({
+					type: 'danger',
+					message: err.response.data.message,
+				});
+			}
+
+			function getImg() {
+				return api.post('/post/img', formData).then((res) => res.data);
+			}
+		},
+		[callNotification]
+	);
 
 	const onChangeTitle = useCallback((e) => {
 		const { value } = e.target;

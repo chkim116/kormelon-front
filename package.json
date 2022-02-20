@@ -12,7 +12,7 @@
 		"@emotion/react": "11.7.1",
 		"@emotion/styled": "11.6.0",
 		"@reduxjs/toolkit": "1.7.2",
-		"axios": "0.25.0",
+		"axios": "0.26.0",
 		"dayjs": "1.10.7",
 		"emotion-reset": "3.0.1",
 		"highlight.js": "11.4.0",

@@ -243,6 +243,10 @@ const PostWriteStyle = styled.div`
 					white-space: pre;
 					tab-size: 2;
 
+					img {
+						margin: 4px 0;
+					}
+
 					a {
 						color: ${({ theme }) => theme.colors.onBlue};
 						cursor: pointer;

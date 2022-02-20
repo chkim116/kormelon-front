@@ -1,4 +1,5 @@
-export const ALLOWED_URI_REGEXP = /codesandbox/i;
+export const ALLOWED_URI_REGEXP = /https/i;
+export const ALLOWED_ATTR = ['src'];
 export const ALLOWED_TAGS = [
 	'html',
 	'body',

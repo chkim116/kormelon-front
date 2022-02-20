@@ -63,6 +63,10 @@ const PostStyle = styled.div`
 		.content {
 			padding: 24px 0 100px 0;
 
+			img {
+				margin: 4px 0;
+			}
+
 			a {
 				color: ${({ theme }) => theme.colors.onBlue};
 				cursor: pointer;

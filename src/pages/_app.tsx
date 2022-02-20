@@ -11,7 +11,7 @@ import { GlobalStyle } from 'src/styles/globalStyle';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
-import store, { useAppSelector } from 'src/store/config';
+import store, { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import 'react-notifications-component/dist/theme.css';
 /**
@@ -19,6 +19,7 @@ import 'react-notifications-component/dist/theme.css';
  * @see https://github.com/highlightjs/highlight.js/blob/main/src/styles/atom-one-dark.css
  */
 import 'src/styles/hljs.atom.css';
+import { getUser } from 'src/store/user';
 
 // korean 시간
 dayJs.locale('ko');
@@ -43,9 +44,23 @@ const AppTheme: FC = ({ children }) => {
 	);
 };
 
+const Auth = () => {
+	const dispatch = useAppDispatch();
+	const { userData } = useAppSelector((state) => state.user);
+	useEffect(() => {
+		if (userData) {
+			return;
+		}
+		dispatch(getUser());
+	}, [dispatch, userData]);
+
+	return null;
+};
+
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<Provider store={store}>
+			<Auth />
 			<AppTheme>
 				<AppStyle>
 					<ReactNotifications />

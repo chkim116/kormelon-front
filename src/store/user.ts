@@ -100,3 +100,14 @@ export const postRegister = createAsyncThunk(
 		}
 	}
 );
+
+export const getUser = createAsyncThunk(
+	'user/getUser',
+	async (_, { rejectWithValue }) => {
+		try {
+			return await api.get('/user/auth');
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);

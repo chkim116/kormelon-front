@@ -62,6 +62,16 @@ const PostStyle = styled.div`
 
 		.content {
 			padding: 24px 0 100px 0;
+
+			a {
+				color: ${({ theme }) => theme.colors.onBlue};
+				cursor: pointer;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
 		}
 	}
 `;

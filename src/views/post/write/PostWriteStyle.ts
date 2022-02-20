@@ -234,6 +234,16 @@ const PostWriteStyle = styled.div`
 					font-size: ${({ theme }) => theme.fontSizes.md};
 					white-space: pre;
 					tab-size: 2;
+
+					a {
+						color: ${({ theme }) => theme.colors.onBlue};
+						cursor: pointer;
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 		}

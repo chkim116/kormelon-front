@@ -21,7 +21,7 @@ const Post = () => {
 		id: '1',
 		title:
 			'제목입니다다다다다다다ㅏ따ㅏㄷ?목입니다다다다다다다ㅏ따ㅏㄷ목입니다다다다다다다ㅏ따ㅏㄷ목입니다다다다다다다ㅏ따ㅏㄷ',
-		content: `<div class="preview"><pre><code class="hljs language-js"><span class="hljs-comment">/**
+		content: `<div><pre><code class="hljs language-js"><span class="hljs-comment">/**
  * when marked parse, apply hljs
  */</span>
 <span class="hljs-keyword">import</span> { marked } <span class="hljs-keyword">from</span> <span class="hljs-string">'marked'</span>;
@@ -36,7 +36,24 @@ marked.<span class="hljs-title function_">setOptions</span>({
 });
 </code></pre>
 <p>Ggg</p>
-</div>`,
+</div>
+<div><ul>
+<li>123</li>
+<li>3</li>
+</ul>
+<hr>
+<p>뭐지</p>
+<p>뭐 아무튼.. ㅋ</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">1</span>
+</code></pre>
+<p>뭐지 ㅋㅋㅋ</p>
+<ol>
+<li>a</li>
+<li>b</li>
+<li></li>
+</ol>
+</div>
+`,
 		category: '공지사항',
 		tags: ['태그1', '태그2'],
 		createdAt: dayjs().format('YYYY-MM-DD'),

@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useToggle } from 'react-use';
 
 import Button from 'src/components/Button';
+import { useNotification } from 'src/hooks/useNotification';
+import { useAppDispatch, useAppSelector } from 'src/store/config';
+import { postLogin, postRegister } from 'src/store/user';
 
 const LoginInput = () => {
 	return (
@@ -39,6 +43,13 @@ const RegisterInput = () => {
 };
 
 const Login = () => {
+	const router = useRouter();
+
+	const dispatch = useAppDispatch();
+	const { isLoginDone, isLoginErr, isRegisterDone, isRegisterErr } =
+		useAppSelector((state) => state.user);
+
+	const { callNotification } = useNotification();
 	const [isLogin, onClickToggle] = useToggle(true);
 	const [form, setForm] = useState({
 		email: '',
@@ -52,11 +63,48 @@ const Login = () => {
 		setForm((prev) => ({ ...prev, [name]: value }));
 	}, []);
 
-	const onSubmitForm = useCallback((e) => {
-		e.preventDefault();
-	}, []);
+	const onSubmitForm = useCallback(
+		(e) => {
+			e.preventDefault();
+			const { username, ...withoutUsername } = form;
 
-	console.log(form);
+			// isLogin 상태면 로그인
+			if (isLogin) {
+				dispatch(postLogin(withoutUsername));
+			}
+
+			if (!isLogin) {
+				dispatch(postRegister({ ...withoutUsername, username }));
+			}
+		},
+		[dispatch, form, isLogin]
+	);
+
+	useEffect(() => {
+		if (isLoginDone) {
+			router.push('/');
+		}
+	}, [isLoginDone, router]);
+
+	useEffect(() => {
+		if (isRegisterDone) {
+			onClickToggle(true);
+		}
+	}, [isRegisterDone, onClickToggle]);
+
+	// 가입 에러
+	useEffect(() => {
+		if (isRegisterErr) {
+			callNotification({ type: 'danger', message: isRegisterErr });
+		}
+	}, [callNotification, isRegisterErr]);
+
+	// 로그인 에러
+	useEffect(() => {
+		if (isLoginErr) {
+			callNotification({ type: 'danger', message: isLoginErr });
+		}
+	}, [callNotification, isLoginErr]);
 
 	return (
 		<SignForm>
@@ -64,7 +112,7 @@ const Login = () => {
 				{isLogin ? <LoginInput /> : <RegisterInput />}
 				<div className='footer'>
 					<Button type='submit' color='primary'>
-						로그인
+						{isLogin ? '로그인' : '가입완료'}
 					</Button>
 					<Button type='button' onClick={onClickToggle}>
 						{isLogin ? '가입하기' : '로그인하기'}

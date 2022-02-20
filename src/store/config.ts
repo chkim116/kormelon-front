@@ -8,10 +8,12 @@ import logger from 'redux-logger';
 
 import gnb from './gnb';
 import themeMode from './themeMode';
+import user from './user';
 
 const reducer = combineReducers({
 	gnb,
 	themeMode,
+	user,
 });
 
 const store = configureStore({

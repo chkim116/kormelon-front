@@ -59,23 +59,21 @@ const Auth = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
-		<Provider store={store}>
+		<AppTheme>
 			<Auth />
-			<AppTheme>
-				<AppStyle>
-					<ReactNotifications />
-					<Gnb />
-					<Header />
-					<div className='main'>
-						<Component {...pageProps} />
-					</div>
-				</AppStyle>
-			</AppTheme>
-		</Provider>
+			<AppStyle>
+				<ReactNotifications />
+				<Gnb />
+				<Header />
+				<div className='main'>
+					<Component {...pageProps} />
+				</div>
+			</AppStyle>
+		</AppTheme>
 	);
 }
 
-export default MyApp;
+export default store.withRedux(MyApp);
 
 const AppStyle = styled.div`
 	width: 100%;

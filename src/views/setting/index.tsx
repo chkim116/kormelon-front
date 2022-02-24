@@ -16,6 +16,8 @@ const Setting = () => {
 	const dispatch = useAppDispatch();
 	const {
 		categories,
+		isDeleteDone,
+		isSubDeleteDone,
 		isCreateDone,
 		isSubCreateDone,
 		isCreateErr,
@@ -60,6 +62,7 @@ const Setting = () => {
 			}
 
 			dispatch(postCategory(newCategoryValue));
+			setNewCategoryValue('');
 			setNewSubCategory({ parentId: '', value: '' });
 		},
 		[callNotification, dispatch, newCategoryValue]
@@ -110,6 +113,24 @@ const Setting = () => {
 
 	// TODO: 리팩터링
 	// success
+	useEffect(() => {
+		if (isSubDeleteDone) {
+			callNotification({
+				type: 'success',
+				message: '하위 카테고리가 삭제되었습니다.',
+			});
+		}
+	}, [callNotification, isSubDeleteDone]);
+
+	useEffect(() => {
+		if (isDeleteDone) {
+			callNotification({
+				type: 'success',
+				message: '카테고리가 삭제되었습니다.',
+			});
+		}
+	}, [callNotification, isDeleteDone]);
+
 	useEffect(() => {
 		if (isSubCreateDone) {
 			callNotification({
@@ -171,6 +192,7 @@ const Setting = () => {
 				{/* 새로 생성하는 카테고리 */}
 				<input
 					onChange={onChangeCategoryValue}
+					value={newCategoryValue}
 					type='text'
 					placeholder='원하는 카테고리를..'
 				/>

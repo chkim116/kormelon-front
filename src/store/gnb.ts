@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Gnb {
 	isGnbOpen: boolean;
@@ -12,8 +12,11 @@ const gnb = createSlice({
 	initialState,
 	name: 'gnb',
 	reducers: {
-		toggleIsGnbOpen: (state) => {
-			state.isGnbOpen = !state.isGnbOpen;
+		toggleIsGnbOpen: (
+			state,
+			{ payload }: PayloadAction<boolean | undefined>
+		) => {
+			state.isGnbOpen = payload !== undefined ? payload : !state.isGnbOpen;
 		},
 	},
 });

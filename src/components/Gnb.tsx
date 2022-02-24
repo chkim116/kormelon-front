@@ -1,16 +1,19 @@
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import {
 	BsArrowLeft,
 	BsFillRssFill,
 	BsFillTagsFill,
 	BsGithub,
+	BsPencil,
 } from 'react-icons/bs';
 import { AiOutlineFolderOpen, AiOutlineFolder } from 'react-icons/ai';
 import { MdSettings } from 'react-icons/md';
+import { useClickAway } from 'react-use';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
@@ -20,9 +23,12 @@ import { getCategory } from 'src/store/category';
  * 왼쪽에 표시될 공통 네비게이션
  */
 export const Gnb = () => {
+	const router = useRouter();
+
+	const dispatch = useAppDispatch();
 	const { isGnbOpen } = useAppSelector((state) => state.gnb);
 	const { categories } = useAppSelector((state) => state.category);
-	const dispatch = useAppDispatch();
+	const { userData } = useAppSelector((state) => state.user);
 
 	const styles = useSpring({
 		translateX: isGnbOpen ? 0 : -260,
@@ -30,6 +36,7 @@ export const Gnb = () => {
 			duration: 200,
 		},
 	});
+	const gnbRef = useRef(null);
 
 	// TODO: 실데이터 연동
 	const today = 1;
@@ -63,8 +70,17 @@ export const Gnb = () => {
 		dispatch(getCategory());
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (isGnbOpen) {
+			dispatch(toggleIsGnbOpen());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router]);
+
+	useClickAway(gnbRef, () => isGnbOpen && dispatch(toggleIsGnbOpen(false)));
+
 	return (
-		<GnbStyle style={styles}>
+		<GnbStyle style={styles} ref={gnbRef}>
 			<button type='button' className='gnb-close-btn' onClick={onClickGnbOpen}>
 				<BsArrowLeft />
 			</button>
@@ -149,12 +165,22 @@ export const Gnb = () => {
 				</div>
 			</div>
 
-			{/* category 생성 */}
-			<Link href='/setting' passHref>
-				<a className='setting'>
-					<MdSettings />
-				</a>
-			</Link>
+			{userData?.isAdmin && (
+				<div className='link-icons'>
+					<Link href='/post/write' passHref>
+						<a className='write'>
+							<BsPencil />
+						</a>
+					</Link>
+
+					{/* category 생성 */}
+					<Link href='/setting' passHref>
+						<a className='setting'>
+							<MdSettings />
+						</a>
+					</Link>
+				</div>
+			)}
 		</GnbStyle>
 	);
 };
@@ -285,10 +311,21 @@ const GnbStyle = styled(animated.nav)`
 		}
 	}
 
-	.setting {
-		color: ${({ theme }) => theme.colors.blue};
-		font-size: 20px;
-		padding: 0;
-		margin-top: 4px;
+	.link-icons {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		.setting,
+		.write {
+			color: ${({ theme }) => theme.colors.blue};
+			font-size: 20px;
+			padding: 0;
+			margin-top: 4px;
+		}
+
+		.write {
+			font-size: 16px;
+		}
 	}
 `;

@@ -21,6 +21,7 @@ import { getCategory } from 'src/store/category';
  */
 export const Gnb = () => {
 	const { isGnbOpen } = useAppSelector((state) => state.gnb);
+	const { categories } = useAppSelector((state) => state.category);
 	const dispatch = useAppDispatch();
 
 	const styles = useSpring({
@@ -33,35 +34,6 @@ export const Gnb = () => {
 	// TODO: 실데이터 연동
 	const today = 1;
 	const total = 0;
-	const categories = [
-		{
-			id: 1,
-			value: '개발 노트',
-			categories: [
-				{
-					id: 'a',
-					value: 'node',
-					posts: [],
-				},
-				{
-					id: 'b',
-					value: 'react',
-					posts: [],
-				},
-			],
-		},
-		{
-			id: 2,
-			value: 'IT News',
-			categories: [
-				{
-					id: 'c',
-					value: 'default',
-					posts: [],
-				},
-			],
-		},
-	];
 
 	const temp = useMemo(() => {
 		const res: { [x: string]: boolean } = {};
@@ -133,7 +105,7 @@ export const Gnb = () => {
 								{category.categories.map((sub) => (
 									<li key={sub.id}>
 										{sub.value}
-										<span className='count'>({sub.posts.length})</span>
+										<span className='count'>({sub?.posts?.length || 0})</span>
 									</li>
 								))}
 							</ul>

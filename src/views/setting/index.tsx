@@ -16,6 +16,8 @@ const Setting = () => {
 	const dispatch = useAppDispatch();
 	const {
 		categories,
+		isCreateDone,
+		isSubCreateDone,
 		isCreateErr,
 		isSubCreateErr,
 		isDeleteErr,
@@ -106,8 +108,27 @@ const Setting = () => {
 		[dispatch]
 	);
 
-	// error
 	// TODO: 리팩터링
+	// success
+	useEffect(() => {
+		if (isSubCreateDone) {
+			callNotification({
+				type: 'success',
+				message: '하위 카테고리가 생성되었습니다.',
+			});
+		}
+	}, [callNotification, isSubCreateDone]);
+
+	useEffect(() => {
+		if (isCreateDone) {
+			callNotification({
+				type: 'success',
+				message: '카테고리가 생성되었습니다.',
+			});
+		}
+	}, [callNotification, isCreateDone]);
+
+	// error
 	useEffect(() => {
 		if (isSubDeleteErr) {
 			callNotification({

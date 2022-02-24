@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
 import dayJs from 'dayJs';

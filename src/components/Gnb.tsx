@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { animated, useSpring } from 'react-spring';
 import {
 	BsArrowLeft,
@@ -10,9 +10,11 @@ import {
 	BsGithub,
 } from 'react-icons/bs';
 import { AiOutlineFolderOpen, AiOutlineFolder } from 'react-icons/ai';
+import { MdSettings } from 'react-icons/md';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
+import { getCategory } from 'src/store/category';
 
 /**
  * 왼쪽에 표시될 공통 네비게이션
@@ -84,6 +86,10 @@ export const Gnb = () => {
 		// open이 아니라 !open인 이유는 한박자 늦게 반영되기 때문.
 		setOpenCategories((prev) => ({ ...prev, [value]: !open }));
 	}, []);
+
+	useEffect(() => {
+		dispatch(getCategory());
+	}, [dispatch]);
 
 	return (
 		<GnbStyle style={styles}>
@@ -170,6 +176,13 @@ export const Gnb = () => {
 					</div>
 				</div>
 			</div>
+
+			{/* category 생성 */}
+			<Link href='/setting' passHref>
+				<a className='setting'>
+					<MdSettings />
+				</a>
+			</Link>
 		</GnbStyle>
 	);
 };
@@ -298,5 +311,12 @@ const GnbStyle = styled(animated.nav)`
 				}
 			}
 		}
+	}
+
+	.setting {
+		color: ${({ theme }) => theme.colors.blue};
+		font-size: 20px;
+		padding: 0;
+		margin-top: 4px;
 	}
 `;

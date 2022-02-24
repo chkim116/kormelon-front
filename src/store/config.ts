@@ -10,11 +10,13 @@ import { createWrapper } from 'next-redux-wrapper';
 import gnb from './gnb';
 import themeMode from './themeMode';
 import user from './user';
+import category from './category';
 
 const reducer = combineReducers({
 	gnb,
 	themeMode,
 	user,
+	category,
 });
 
 const makeStore = () =>

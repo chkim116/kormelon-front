@@ -67,6 +67,10 @@ const user = createSlice({
 			.addCase(postRegister.rejected, (state, { payload }) => {
 				state.isRegisterLoad = false;
 				state.isRegisterErr = payload;
+			})
+
+			.addCase(getUser.fulfilled, (state, { payload }) => {
+				state.userData = payload;
 			}),
 });
 
@@ -105,7 +109,7 @@ export const getUser = createAsyncThunk(
 	'user/getUser',
 	async (_, { rejectWithValue }) => {
 		try {
-			return await api.get('/user/auth');
+			return await api.get('/user/auth').then((res) => res.data);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

@@ -14,7 +14,6 @@ import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import 'src/lib/markedConfig';
 import { useNotification } from 'src/hooks/useNotification';
 import { api } from 'src/lib/api';
-import { useAppSelector } from 'src/store/config';
 
 const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
 	id: i.toString(),
@@ -62,7 +61,6 @@ DOMPurify.setConfig({
 const PostWrite = () => {
 	const router = useRouter();
 	const { callNotification } = useNotification();
-	const { userData } = useAppSelector((state) => state.user);
 
 	// query에 'edit={title}'이 존재하면 수정모드
 	const isEditMode = useMemo(() => {
@@ -381,13 +379,6 @@ const PostWrite = () => {
 			}
 		};
 	}, [isSaveList, openSaveList]);
-
-	useEffect(() => {
-		if (!userData?.isAdmin) {
-			alert('관리자만 가능합니다.')
-			router.push('/')
-		}
-	}, [router, userData])
 
 	useEffect(() => {
 		if (typeof window === 'object') {

@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
+import Button from 'src/components/Button';
 import { useNotification } from 'src/hooks/useNotification';
 
 import {
@@ -27,6 +28,10 @@ const Setting = () => {
 		parentId: '',
 		value: '',
 	});
+
+	const onClickSubInputHide = useCallback(() => {
+		setNewSubCategory({ parentId: '', value: '' });
+	}, []);
 
 	const onClickCreateSubCategory = useCallback((e) => {
 		const { id } = e.target;
@@ -141,59 +146,71 @@ const Setting = () => {
 
 	return (
 		<SettingStyle>
-			<h2>카테고리 추가</h2>
-			<form onSubmit={onSubmitCategory}>
+			<form onSubmit={onSubmitCategory} className='parent-form'>
 				{/* 새로 생성하는 카테고리 */}
 				<input
 					onChange={onChangeCategoryValue}
 					type='text'
-					placeholder='상위 카테고리'
+					placeholder='원하는 카테고리를..'
 				/>
-				<button type='submit'>저장</button>
+				<Button color='primary' type='submit'>
+					저장
+				</Button>
 			</form>
 
-			<h2>현재 카테고리</h2>
-			<ul>
+			<ul className='category-list'>
 				{categories.map((category) => (
 					<Fragment key={category.id}>
-						<span>
-							{category.value}
-							<button
-								id={category.id}
-								type='button'
-								onClick={onClickCreateSubCategory}
-							>
-								+
-							</button>
-							<button
-								type='button'
-								id={category.id}
-								onClick={onClickDeleteCategory}
-							>
-								X
-							</button>
+						<span className='parent-category'>
+							<h4>- {category.value}</h4>
+							<span>
+								<Button
+									color='primary'
+									id={category.id}
+									type='button'
+									onClick={onClickCreateSubCategory}
+								>
+									+
+								</Button>
+								<Button
+									type='button'
+									id={category.id}
+									onClick={onClickDeleteCategory}
+								>
+									X
+								</Button>
+							</span>
 						</span>
-						<ul>
+						<ul className='category-sub-list'>
 							{category.categories.map((sub) => (
 								<li key={sub.id}>
-									{sub.value} <span>({sub?.posts?.length || 0})</span>
-									<button
+									<span>
+										{sub.value} <span>({sub?.posts?.length || 0})</span>
+									</span>
+									<Button
 										type='button'
 										id={sub.id}
 										onClick={onClickDeleteSubCategory}
 									>
 										X
-									</button>
+									</Button>
 								</li>
 							))}
 							{category.id === newSubCategory.parentId && (
-								<form onSubmit={onSubmitSubCategory}>
+								<form onSubmit={onSubmitSubCategory} className='sub-form'>
 									<input
 										type='text'
-										placeholder='new sub'
+										placeholder={`${category.value}의 하위 카테고리..`}
 										onChange={onChangeSubCategoryValue}
 									/>
-									<button type='submit'>저장</button>
+									<span>
+										<Button color='primary' type='submit'>
+											저장
+										</Button>
+										<Button type='button' onClick={onClickSubInputHide}>
+											X
+										</Button>
+									</span>
 								</form>
 							)}
 						</ul>

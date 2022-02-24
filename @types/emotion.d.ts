@@ -28,6 +28,7 @@ declare module '@emotion/react' {
 			onBlue: string;
 
 			primary: string;
+			secondary: string;
 			blue: string;
 			bgCode: string;
 			border: string;

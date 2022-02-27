@@ -30,6 +30,14 @@ interface InitialState {
 	isSubDeleteLoad: boolean;
 	isSubDeleteDone: boolean;
 	isSubDeleteErr: null | any;
+
+	isEditLoad: boolean;
+	isEditDone: boolean;
+	isEditErr: null | any;
+
+	isSubEditLoad: boolean;
+	isSubEditDone: boolean;
+	isSubEditErr: null | any;
 }
 
 const initialState: InitialState = {
@@ -53,6 +61,14 @@ const initialState: InitialState = {
 	isSubDeleteLoad: false,
 	isSubDeleteDone: false,
 	isSubDeleteErr: null,
+
+	isEditLoad: false,
+	isEditDone: false,
+	isEditErr: null,
+
+	isSubEditLoad: false,
+	isSubEditDone: false,
+	isSubEditErr: null,
 };
 
 const category = createSlice({
@@ -78,11 +94,11 @@ const category = createSlice({
 
 			.addCase(postCategory.pending, (state) => {
 				state.isCreateLoad = true;
-				state.isCreateDone = true;
+				state.isCreateDone = false;
 				state.isCreateErr = null;
 			})
 			.addCase(postCategory.fulfilled, (state) => {
-				state.isCreateDone = false;
+				state.isCreateDone = true;
 				state.isCreateLoad = false;
 			})
 			.addCase(postCategory.rejected, (state, { payload }) => {
@@ -130,6 +146,34 @@ const category = createSlice({
 			.addCase(deleteSubCategory.rejected, (state, { payload }) => {
 				state.isSubDeleteLoad = false;
 				state.isSubDeleteErr = payload;
+			})
+
+			.addCase(patchCategory.pending, (state) => {
+				state.isEditLoad = true;
+				state.isEditDone = false;
+				state.isEditErr = null;
+			})
+			.addCase(patchCategory.fulfilled, (state) => {
+				state.isEditDone = true;
+				state.isEditLoad = false;
+			})
+			.addCase(patchCategory.rejected, (state, { payload }) => {
+				state.isEditLoad = false;
+				state.isEditErr = payload;
+			})
+
+			.addCase(patchSubCategory.pending, (state) => {
+				state.isSubEditLoad = true;
+				state.isSubEditDone = false;
+				state.isSubEditErr = null;
+			})
+			.addCase(patchSubCategory.fulfilled, (state) => {
+				state.isSubEditDone = true;
+				state.isSubEditLoad = false;
+			})
+			.addCase(patchSubCategory.rejected, (state, { payload }) => {
+				state.isSubEditLoad = false;
+				state.isSubEditErr = payload;
 			}),
 });
 
@@ -171,6 +215,40 @@ export const postSubCategory = createAsyncThunk(
 		try {
 			await api.post(`/category/${data.parentId}/sub`, {
 				value: data.value,
+			});
+			dispatch(getCategory());
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const patchCategory = createAsyncThunk(
+	'category/patchCategory',
+	async (
+		data: { id: string; value: string },
+		{ rejectWithValue, dispatch }
+	) => {
+		const { id, value } = data;
+		try {
+			await api.patch(`/category/${id}`, { value });
+			dispatch(getCategory());
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const patchSubCategory = createAsyncThunk(
+	'category/patchSubCategory',
+	async (
+		data: { id: string; value: string },
+		{ rejectWithValue, dispatch }
+	) => {
+		try {
+			const { id, value } = data;
+			await api.patch(`/category/${id}/sub`, {
+				value,
 			});
 			dispatch(getCategory());
 		} catch (err: any) {

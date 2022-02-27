@@ -14,17 +14,7 @@ import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import 'src/lib/markedConfig';
 import { useNotification } from 'src/hooks/useNotification';
 import { api } from 'src/lib/api';
-
-const categoryOptions = Array.from({ length: 10 }).map((_, i) => ({
-	id: i.toString(),
-	value: i.toString(),
-	categories: Array.from({ length: Math.round(Math.random() * 3) }).map(
-		(_, i) => ({
-			id: (i + i).toString(),
-			value: (i + i).toString(),
-		})
-	),
-}));
+import { useAppSelector } from 'src/store/config';
 
 const tags = [
 	{
@@ -61,6 +51,7 @@ DOMPurify.setConfig({
 const PostWrite = () => {
 	const router = useRouter();
 	const { callNotification } = useNotification();
+	const { categories } = useAppSelector((state) => state.category);
 
 	// query에 'edit={title}'이 존재하면 수정모드
 	const isEditMode = useMemo(() => {
@@ -434,7 +425,7 @@ const PostWrite = () => {
 
 					{isCascaderOpen && (
 						<ul className='category'>
-							{categoryOptions.map((option) => (
+							{categories.map((option) => (
 								<li
 									key={option.id}
 									className={`category-list ${

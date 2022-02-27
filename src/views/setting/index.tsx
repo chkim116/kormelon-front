@@ -1,10 +1,15 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
+import { BsCheck } from 'react-icons/bs';
+import { MdClose, MdModeEdit } from 'react-icons/md';
 import Button from 'src/components/Button';
 import { useNotification } from 'src/hooks/useNotification';
 
 import {
+	Category,
 	deleteCategory,
 	deleteSubCategory,
+	patchCategory,
+	patchSubCategory,
 	postCategory,
 	postSubCategory,
 } from 'src/store/category';
@@ -24,12 +29,24 @@ const Setting = () => {
 		isSubCreateErr,
 		isDeleteErr,
 		isSubDeleteErr,
+		isEditDone,
+		isEditErr,
+		isSubEditDone,
+		isSubEditErr,
 	} = useAppSelector((state) => state.category);
 	const { callNotification } = useNotification();
 
 	const [newCategoryValue, setNewCategoryValue] = useState<string>('');
+	const [editCategoryValue, setEditCategoryValue] = useState({
+		id: '',
+		value: '',
+	});
 	const [newSubCategory, setNewSubCategory] = useState({
 		parentId: '',
+		value: '',
+	});
+	const [editSubCategory, setEditSubCategory] = useState({
+		id: '',
 		value: '',
 	});
 
@@ -42,12 +59,42 @@ const Setting = () => {
 		setNewSubCategory({ parentId: id, value: '' });
 	}, []);
 
+	const onClickEditCategory = useCallback(
+		(e) => {
+			const { id } = e.target;
+			setEditCategoryValue((prev) => ({
+				id,
+				value: categories.find((category) => category.id === id)?.value || '',
+			}));
+		},
+		[categories]
+	);
+
+	const onChangeEditCategoryValue = useCallback((e) => {
+		setEditCategoryValue((prev) => ({ ...prev, value: e.target.value }));
+	}, []);
+
 	const onChangeCategoryValue = useCallback((e) => {
 		setNewCategoryValue(e.target.value);
 	}, []);
 
 	const onChangeSubCategoryValue = useCallback((e) => {
 		setNewSubCategory((prev) => ({ ...prev, value: e.target.value }));
+	}, []);
+
+	const onSubmitEditCategory = useCallback(
+		(e) => {
+			e.preventDefault();
+			if (window.confirm('수정하시겠습니까?')) {
+				dispatch(patchCategory(editCategoryValue));
+				setEditCategoryValue({ id: '', value: '' });
+			}
+		},
+		[dispatch, editCategoryValue]
+	);
+
+	const onClickCancelEdit = useCallback((e) => {
+		setEditCategoryValue({ id: '', value: '' });
 	}, []);
 
 	const onSubmitCategory = useCallback(
@@ -99,6 +146,40 @@ const Setting = () => {
 		[dispatch]
 	);
 
+	const onClickEditSubCategory = useCallback(
+		(e) => {
+			const { id } = e.currentTarget;
+			const { parentid: parentId } = e.currentTarget.dataset;
+			console.log(id, parentId);
+			const value =
+				categories
+					?.find((cate: Category) => cate.id === parentId)
+					?.categories.find((sub: Category) => sub.id === id)?.value || '';
+
+			setEditSubCategory((prev) => ({ ...prev, id, value }));
+		},
+		[categories]
+	);
+
+	const onChangeEditSubCategory = useCallback((e) => {
+		setEditSubCategory((prev) => ({ ...prev, value: e.target.value }));
+	}, []);
+
+	const onSubmitEditSubCategory = useCallback(
+		(e) => {
+			e.preventDefault();
+			if (window.confirm('수정하시겠습니까?')) {
+				dispatch(patchSubCategory(editSubCategory));
+				setEditSubCategory({ id: '', value: '' });
+			}
+		},
+		[dispatch, editSubCategory]
+	);
+
+	const onClickCancelSubEdit = useCallback((e) => {
+		setEditSubCategory({ id: '', value: '' });
+	}, []);
+
 	const onClickDeleteSubCategory = useCallback(
 		(e) => {
 			const { id } = e.target;
@@ -113,6 +194,24 @@ const Setting = () => {
 
 	// TODO: 리팩터링
 	// success
+	useEffect(() => {
+		if (isSubEditDone) {
+			callNotification({
+				type: 'success',
+				message: '올바르게 수정되었습니다.',
+			});
+		}
+	}, [callNotification, isSubEditDone]);
+
+	useEffect(() => {
+		if (isEditDone) {
+			callNotification({
+				type: 'success',
+				message: '올바르게 수정되었습니다.',
+			});
+		}
+	}, [callNotification, isEditDone]);
+
 	useEffect(() => {
 		if (isSubDeleteDone) {
 			callNotification({
@@ -150,6 +249,24 @@ const Setting = () => {
 	}, [callNotification, isCreateDone]);
 
 	// error
+	useEffect(() => {
+		if (isSubEditErr) {
+			callNotification({
+				type: 'danger',
+				message: isSubEditErr,
+			});
+		}
+	}, [callNotification, isSubEditErr]);
+
+	useEffect(() => {
+		if (isEditErr) {
+			callNotification({
+				type: 'danger',
+				message: isEditErr,
+			});
+		}
+	}, [callNotification, isEditErr]);
+
 	useEffect(() => {
 		if (isSubDeleteErr) {
 			callNotification({
@@ -205,38 +322,101 @@ const Setting = () => {
 				{categories.map((category) => (
 					<Fragment key={category.id}>
 						<span className='parent-category'>
-							<h4>- {category.value}</h4>
-							<span>
-								<Button
-									color='primary'
-									id={category.id}
-									type='button'
-									onClick={onClickCreateSubCategory}
-								>
-									+
-								</Button>
-								<Button
-									type='button'
-									id={category.id}
-									onClick={onClickDeleteCategory}
-								>
-									X
-								</Button>
-							</span>
+							{editCategoryValue.id !== category.id ? (
+								<>
+									<h4>- {category.value}</h4>
+									<span>
+										<Button
+											color='primary'
+											id={category.id}
+											type='button'
+											onClick={onClickCreateSubCategory}
+										>
+											+
+										</Button>
+										<Button
+											id={category.id}
+											type='button'
+											onClick={onClickEditCategory}
+										>
+											<MdModeEdit />
+										</Button>
+										<Button
+											type='button'
+											id={category.id}
+											onClick={onClickDeleteCategory}
+										>
+											<MdClose />
+										</Button>
+									</span>
+								</>
+							) : (
+								<form className='edit-category' onSubmit={onSubmitEditCategory}>
+									<span>
+										<input
+											type='text'
+											value={editCategoryValue.value}
+											onChange={onChangeEditCategoryValue}
+										/>
+									</span>
+									<span>
+										<Button color='primary' type='submit'>
+											<BsCheck />
+										</Button>
+										<Button type='button' onClick={onClickCancelEdit}>
+											<MdClose />
+										</Button>
+									</span>
+								</form>
+							)}
 						</span>
 						<ul className='category-sub-list'>
 							{category.categories.map((sub) => (
 								<li key={sub.id}>
-									<span>
-										{sub.value} <span>({sub?.posts?.length || 0})</span>
-									</span>
-									<Button
-										type='button'
-										id={sub.id}
-										onClick={onClickDeleteSubCategory}
-									>
-										X
-									</Button>
+									{editSubCategory.id !== sub.id ? (
+										<>
+											<span>
+												{sub.value} <span>({sub?.posts?.length || 0})</span>
+											</span>
+											<span>
+												<Button
+													type='button'
+													id={sub.id}
+													data-parentid={category.id}
+													onClick={onClickEditSubCategory}
+												>
+													<MdModeEdit />
+												</Button>
+
+												<Button
+													type='button'
+													id={sub.id}
+													onClick={onClickDeleteSubCategory}
+												>
+													<MdClose />
+												</Button>
+											</span>
+										</>
+									) : (
+										<form
+											className='edit-sub-category'
+											onSubmit={onSubmitEditSubCategory}
+										>
+											<input
+												type='text'
+												value={editSubCategory.value}
+												onChange={onChangeEditSubCategory}
+											/>
+											<span>
+												<Button color='primary' type='submit'>
+													<BsCheck />
+												</Button>
+												<Button type='button' onClick={onClickCancelSubEdit}>
+													<MdClose />
+												</Button>
+											</span>
+										</form>
+									)}
 								</li>
 							))}
 							{category.id === newSubCategory.parentId && (
@@ -251,7 +431,7 @@ const Setting = () => {
 											저장
 										</Button>
 										<Button type='button' onClick={onClickSubInputHide}>
-											X
+											<MdClose />
 										</Button>
 									</span>
 								</form>

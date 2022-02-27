@@ -40,6 +40,20 @@ const SettingStyle = styled.div`
 					padding: 0;
 				}
 			}
+
+			/* 수정시 */
+			.edit-category {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				input {
+					font-size: ${({ theme }) => theme.fontSizes.lg};
+				}
+				button {
+					padding: 4px 0;
+				}
+			}
 		}
 
 		.category-sub-list {
@@ -48,11 +62,32 @@ const SettingStyle = styled.div`
 				display: flex;
 				justify-content: space-between;
 				padding: 4px 0;
-				button {
+
+				span {
 					display: flex;
-					justify-content: center;
-					width: 32px;
-					padding: 2px 6px;
+					gap: 4px;
+					button {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						width: 32px;
+						padding: 2px 6px;
+					}
+				}
+
+				.edit-sub-category {
+					width: 100%;
+					justify-content: space-between;
+					display: flex;
+
+					input {
+						font-size: ${({ theme }) => theme.fontSizes.md};
+					}
+
+					span {
+						gap: 4px;
+						display: flex;
+					}
 				}
 			}
 			.sub-form {

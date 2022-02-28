@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
 
-type Tags = {
+export type Tags = {
 	id: string;
 	value: string;
 	count: number;

@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 
 import { PostCommentStyle } from './PostStyle';
 
-interface Comment {
+export interface Comment {
 	id: string;
 	text: string;
 	username: string;

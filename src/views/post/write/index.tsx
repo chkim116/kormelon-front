@@ -16,9 +16,10 @@ import { useNotification } from 'src/hooks/useNotification';
 import { api } from 'src/lib/api';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { postSearchTag } from 'src/store/tag';
+import { postCreate } from 'src/store/post';
 
 interface Post {
-	id: string;
+	id?: string;
 	parentCategory: string;
 	category: string;
 	title: string;
@@ -52,7 +53,6 @@ const PostWrite = () => {
 	const searchListRef = useRef(null);
 	const editorRef = useRef<HTMLTextAreaElement>(null);
 	const [post, setPost] = useState<Post>({
-		id: '',
 		parentCategory: '',
 		category: '',
 		tags: [],
@@ -76,9 +76,9 @@ const PostWrite = () => {
 	const onClickSubmitPost = useCallback(
 		(e) => {
 			e.preventDefault();
-			console.log(post, parsedContent);
+			dispatch(postCreate({ ...post, content: parsedContent }));
 		},
-		[parsedContent, post]
+		[dispatch, parsedContent, post]
 	);
 
 	const onKeyDown = useCallback(
@@ -592,7 +592,7 @@ const PostWrite = () => {
 							임시저장
 						</Button>
 					</div>
-					<Button color='primary' type='submit' onClick={onClickSubmitPost}>
+					<Button color='primary' type='button' onClick={onClickSubmitPost}>
 						{isEditMode ? '수정완료' : '작성완료'}
 					</Button>
 				</div>

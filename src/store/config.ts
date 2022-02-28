@@ -1,21 +1,33 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, AnyAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import logger from 'redux-logger';
-import { createWrapper } from 'next-redux-wrapper';
+import { createWrapper, HYDRATE } from 'next-redux-wrapper';
 
 import gnb from './gnb';
 import themeMode from './themeMode';
 import user from './user';
 import category from './category';
 import tag from './tag';
+import post from './post';
 
-const reducer = combineReducers({
+const combineReducer = combineReducers({
 	gnb,
 	themeMode,
 	user,
 	category,
 	tag,
+	post,
 });
+
+const reducer = (state: any, action: AnyAction) => {
+	switch (action.type) {
+		case HYDRATE:
+			return action.payload;
+		default: {
+			return combineReducer(state, action);
+		}
+	}
+};
 
 const makeStore = () =>
 	configureStore({

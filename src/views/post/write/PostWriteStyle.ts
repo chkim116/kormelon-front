@@ -153,6 +153,7 @@ const PostWriteStyle = styled.div`
 				border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 				margin-bottom: 24px;
 				width: 150px;
+				margin-right: 6px;
 			}
 
 			.tags-list {

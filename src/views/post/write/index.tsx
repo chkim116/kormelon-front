@@ -73,6 +73,14 @@ const PostWrite = () => {
 		return DOMPurify.sanitize(marked.parse(post.content));
 	}, [post.content]);
 
+	const onClickSubmitPost = useCallback(
+		(e) => {
+			e.preventDefault();
+			console.log(post, parsedContent);
+		},
+		[parsedContent, post]
+	);
+
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 			const editor = editorRef.current!;
@@ -228,6 +236,19 @@ const PostWrite = () => {
 		const { value } = e.target;
 		setSearchTagText(value);
 	}, []);
+
+	const onKeyUpTag = useCallback(
+		(e) => {
+			if (e.nativeEvent.key === 'Enter') {
+				setSearchTagText('');
+				setPost((prev) => ({
+					...prev,
+					tags: [...prev.tags, searchTagText],
+				}));
+			}
+		},
+		[searchTagText]
+	);
 
 	const onClickAddTag = useCallback(
 		(e) => {
@@ -412,7 +433,7 @@ const PostWrite = () => {
 				</ul>
 			</Modal>
 
-			<form>
+			<form onSubmit={(e) => e.preventDefault()}>
 				{/* title */}
 				<input
 					onChange={onChangeTitle}
@@ -473,12 +494,22 @@ const PostWrite = () => {
 
 				{/* Tag */}
 				<div className='tag-container'>
-					<input
-						type='text'
-						placeholder='태그를 입력하세요.'
-						value={searchTagText}
-						onChange={onChangeSearchTag}
-					/>
+					<span>
+						<input
+							type='text'
+							placeholder='태그를 입력하세요.'
+							value={searchTagText}
+							onChange={onChangeSearchTag}
+							onKeyUp={onKeyUpTag}
+						/>
+						<Button
+							type='button'
+							data-value={searchTagText}
+							onClick={onClickAddTag}
+						>
+							확인
+						</Button>
+					</span>
 					<div className='tags-list'>
 						{post.tags.map((tag) => (
 							<Tag key={tag} data-value={tag} onClick={onClickDeleteTag}>
@@ -561,7 +592,7 @@ const PostWrite = () => {
 							임시저장
 						</Button>
 					</div>
-					<Button color='primary' type='submit'>
+					<Button color='primary' type='submit' onClick={onClickSubmitPost}>
 						{isEditMode ? '수정완료' : '작성완료'}
 					</Button>
 				</div>

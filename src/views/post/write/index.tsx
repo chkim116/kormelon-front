@@ -1,7 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { marked } from 'marked';
-import { useClickAway, useToggle } from 'react-use';
+import { useClickAway, useDebounce, useToggle } from 'react-use';
 import { MdArrowRight, MdDeleteForever } from 'react-icons/md';
 import { useRouter } from 'next/router';
 
@@ -14,20 +14,8 @@ import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import 'src/lib/markedConfig';
 import { useNotification } from 'src/hooks/useNotification';
 import { api } from 'src/lib/api';
-import { useAppSelector } from 'src/store/config';
-
-const tags = [
-	{
-		id: 1,
-		value: '자바스크립트',
-		posts: [1, 2],
-	},
-	{
-		id: 2,
-		value: '리액트',
-		posts: [1],
-	},
-];
+import { useAppDispatch, useAppSelector } from 'src/store/config';
+import { postSearchTag } from 'src/store/tag';
 
 interface Post {
 	id: string;
@@ -50,6 +38,8 @@ DOMPurify.setConfig({
 
 const PostWrite = () => {
 	const router = useRouter();
+	const dispatch = useAppDispatch();
+	const { tags } = useAppSelector((state) => state.tag);
 	const { callNotification } = useNotification();
 	const { categories } = useAppSelector((state) => state.category);
 
@@ -234,14 +224,10 @@ const PostWrite = () => {
 	);
 
 	// * 태그 관련 로직
-	const onChangeSearchTag = useCallback(
-		(e) => {
-			const { value } = e.target;
-			setSearchTagText(value);
-			toggleSearchList(!!value);
-		},
-		[toggleSearchList]
-	);
+	const onChangeSearchTag = useCallback((e) => {
+		const { value } = e.target;
+		setSearchTagText(value);
+	}, []);
 
 	const onClickAddTag = useCallback(
 		(e) => {
@@ -358,6 +344,17 @@ const PostWrite = () => {
 	useClickAway(cascaderRef, () => toggleCascader(false));
 	useClickAway(searchListRef, () => toggleSearchList(false));
 
+	// 태그 검색
+	useDebounce(
+		() => {
+			if (searchTagText) {
+				dispatch(postSearchTag(searchTagText));
+			}
+		},
+		100,
+		[searchTagText]
+	);
+
 	// 임시 저장 목록을 끄기 위함
 	useEffect(() => {
 		if (isSaveList) {
@@ -370,6 +367,12 @@ const PostWrite = () => {
 			}
 		};
 	}, [isSaveList, openSaveList]);
+
+	useEffect(() => {
+		if (tags.length) {
+			toggleSearchList(true);
+		}
+	}, [tags.length, toggleSearchList]);
 
 	useEffect(() => {
 		if (typeof window === 'object') {
@@ -386,22 +389,26 @@ const PostWrite = () => {
 
 			<Modal isOpen={isSaveList}>
 				<ul className='load-list'>
-					{saveList.map((saved) => (
-						<li
-							key={saved.saveId}
-							data-saveid={saved.saveId}
-							onClick={onClickLoadPost}
-						>
-							{saved.title}
-							<span
-								className='load-delete'
+					{saveList.length ? (
+						saveList.map((saved) => (
+							<li
+								key={saved.saveId}
 								data-saveid={saved.saveId}
-								onClick={onClickDeleteSavePost}
+								onClick={onClickLoadPost}
 							>
-								<MdDeleteForever />
-							</span>
-						</li>
-					))}
+								{saved.title}
+								<span
+									className='load-delete'
+									data-saveid={saved.saveId}
+									onClick={onClickDeleteSavePost}
+								>
+									<MdDeleteForever />
+								</span>
+							</li>
+						))
+					) : (
+						<h5>아직 저장한 게시글이 없습니다.</h5>
+					)}
 				</ul>
 			</Modal>
 
@@ -483,7 +490,7 @@ const PostWrite = () => {
 					{/* TODO: 태그 서칭 */}
 					{isSearchListOpen && (
 						<ul className='tag-search' ref={searchListRef}>
-							{tags.filter((tag) => !post.tags.includes(tag.value)).length ? (
+							{tags.length ? (
 								tags.map((tag) => (
 									<li
 										key={tag.id}
@@ -492,7 +499,7 @@ const PostWrite = () => {
 										onClick={onClickAddTag}
 									>
 										{tag.value}
-										<small>({tag.posts.length})</small>
+										<small>({tag.count})</small>
 									</li>
 								))
 							) : (

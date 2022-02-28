@@ -1,8 +1,4 @@
-import {
-	configureStore,
-	applyMiddleware,
-	combineReducers,
-} from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import logger from 'redux-logger';
 import { createWrapper } from 'next-redux-wrapper';
@@ -11,18 +7,23 @@ import gnb from './gnb';
 import themeMode from './themeMode';
 import user from './user';
 import category from './category';
+import tag from './tag';
 
 const reducer = combineReducers({
 	gnb,
 	themeMode,
 	user,
 	category,
+	tag,
 });
 
 const makeStore = () =>
 	configureStore({
 		reducer,
-		enhancers: [applyMiddleware(logger)],
+		middleware: (getDefaultMiddleware) =>
+			process.env.NODE_ENV !== 'production'
+				? [...getDefaultMiddleware(), logger]
+				: [...getDefaultMiddleware()],
 		devTools: process.env.NODE_ENV !== 'production',
 	});
 

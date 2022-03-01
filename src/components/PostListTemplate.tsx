@@ -19,14 +19,14 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 
 	return (
 		<PostListTemplateStyle>
-			{results.length &&
+			{results.length ? (
 				results.map((post) => (
 					<div className='container' key={post.id}>
 						<div className='category'>
 							{post.category.parentValue} {'>'} {post.category.value}
 						</div>
 						<h2 className='title'>
-							<Link href={`/post/${encodeURIComponent(post.title)}`}>
+							<Link href={`/post/${post.id}/${encodeURIComponent(post.title)}`}>
 								{post.title}
 							</Link>
 						</h2>
@@ -41,7 +41,11 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 							<small>{Math.floor(post.readTime)} min to read</small>
 						</div>
 					</div>
-				))}
+				))
+			) : (
+				// TODO: Empty
+				<div>없습니다..</div>
+			)}
 		</PostListTemplateStyle>
 	);
 };

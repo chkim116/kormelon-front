@@ -1,5 +1,3 @@
-import dayJs from 'dayJs';
-
 import { PostListTemplate } from 'src/components/PostListTemplate';
 import { Post } from 'src/store/post';
 import HomeStyle from './HomeStyle';

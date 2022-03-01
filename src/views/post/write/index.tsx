@@ -41,8 +41,8 @@ const PostWrite = () => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const { tags } = useAppSelector((state) => state.tag);
-	const { callNotification } = useNotification();
 	const { categories } = useAppSelector((state) => state.category);
+	const { callNotification } = useNotification();
 
 	// query에 'edit={title}'이 존재하면 수정모드
 	const isEditMode = useMemo(() => {
@@ -76,9 +76,31 @@ const PostWrite = () => {
 	const onClickSubmitPost = useCallback(
 		(e) => {
 			e.preventDefault();
-			dispatch(postCreate({ ...post, content: parsedContent }));
+
+			if (
+				!post.title ||
+				!post.content ||
+				!post.parentCategory ||
+				!post.category
+			) {
+				return callNotification({
+					type: 'danger',
+					message: '필수 항목을 입력해 주세요.',
+				});
+			}
+
+			dispatch(postCreate({ ...post, content: parsedContent }))
+				.then((res) => {
+					router.push(res.payload);
+				})
+				.catch(() =>
+					callNotification({
+						type: 'danger',
+						message: '게시글 작성에 실패했습니다.',
+					})
+				);
 		},
-		[dispatch, parsedContent, post]
+		[dispatch, postCreate, parsedContent, post, router, callNotification]
 	);
 
 	const onKeyDown = useCallback(
@@ -241,10 +263,16 @@ const PostWrite = () => {
 		(e) => {
 			if (e.nativeEvent.key === 'Enter') {
 				setSearchTagText('');
-				setPost((prev) => ({
-					...prev,
-					tags: [...prev.tags, searchTagText],
-				}));
+				setPost((prev) => {
+					if (prev.tags.includes(searchTagText)) {
+						return prev;
+					}
+
+					return {
+						...prev,
+						tags: [...prev.tags, searchTagText],
+					};
+				});
 			}
 		},
 		[searchTagText]
@@ -254,9 +282,17 @@ const PostWrite = () => {
 		(e) => {
 			const { value } = e.currentTarget.dataset;
 			toggleSearchList(false);
-
 			setSearchTagText('');
-			setPost((prev) => ({ ...prev, tags: [...prev.tags, value] }));
+			setPost((prev) => {
+				if (prev.tags.includes(value)) {
+					return prev;
+				}
+
+				return {
+					...prev,
+					tags: [...prev.tags, value],
+				};
+			});
 		},
 		[toggleSearchList]
 	);
@@ -390,10 +426,15 @@ const PostWrite = () => {
 	}, [isSaveList, openSaveList]);
 
 	useEffect(() => {
+		if (!searchTagText) {
+			return toggleSearchList(false);
+		}
 		if (tags.length) {
 			toggleSearchList(true);
+		} else {
+			toggleSearchList(false);
 		}
-	}, [tags.length, toggleSearchList]);
+	}, [tags, toggleSearchList, searchTagText]);
 
 	useEffect(() => {
 		if (typeof window === 'object') {

@@ -43,7 +43,7 @@ const store = createWrapper(makeStore, { debug: false });
 export default store;
 
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore['getState']>;
+export type RootState = ReturnType<typeof combineReducer>;
 export type AppDispatch = AppStore['dispatch'];
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

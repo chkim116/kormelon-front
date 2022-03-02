@@ -23,6 +23,7 @@ export type Post = {
 
 export type PostDetail = {
 	id: string;
+	userId: string;
 	title: string;
 	content: string;
 	category: PostCategory;
@@ -49,12 +50,17 @@ interface PostState {
 	isWriteLoad: boolean;
 	isWriteDone: boolean;
 	isWriteErr: null | any;
+
+	isWriteEditLoad: boolean;
+	isWriteEditDone: boolean;
+	isWriteEditErr: null | any;
 }
 
 const initialState: PostState = {
 	posts: [],
 	post: {
 		id: '',
+		userId: '',
 		title: '',
 		content: '',
 		category: {
@@ -82,6 +88,10 @@ const initialState: PostState = {
 	isWriteLoad: false,
 	isWriteDone: false,
 	isWriteErr: null,
+
+	isWriteEditLoad: false,
+	isWriteEditDone: false,
+	isWriteEditErr: null,
 };
 
 const post = createSlice({
@@ -102,6 +112,20 @@ const post = createSlice({
 			.addCase(postCreate.rejected, (state, { payload }) => {
 				state.isWriteLoad = false;
 				state.isWriteErr = payload;
+			})
+
+			.addCase(patchPost.pending, (state) => {
+				state.isWriteEditLoad = true;
+				state.isWriteEditDone = false;
+				state.isWriteEditErr = null;
+			})
+			.addCase(patchPost.fulfilled, (state) => {
+				state.isWriteEditDone = true;
+				state.isWriteEditLoad = false;
+			})
+			.addCase(patchPost.rejected, (state, { payload }) => {
+				state.isWriteEditLoad = false;
+				state.isWriteEditErr = payload;
 			})
 
 			.addCase(getPost.pending, (state) => {
@@ -152,6 +176,32 @@ export const postCreate = createAsyncThunk(
 	) => {
 		try {
 			const postId = await api.post('/post', data).then((res) => res.data);
+			return postId;
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const patchPost = createAsyncThunk(
+	'post/patchPost',
+	async (
+		data: {
+			id: string;
+			title: string;
+			content: string;
+			isPrivate: boolean;
+			parentCategory: string;
+			category: string;
+			tags: string[];
+		},
+		{ rejectWithValue }
+	) => {
+		try {
+			const { id, ...withoutId } = data;
+			const postId = await api
+				.patch(`/post/${id}`, withoutId)
+				.then((res) => res.data);
 			return postId;
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);

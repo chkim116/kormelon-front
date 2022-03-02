@@ -19,7 +19,7 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 
 	return (
 		<PostListTemplateStyle>
-			{results.length ? (
+			{results?.length ? (
 				results.map((post) => (
 					<div className='container' key={post.id}>
 						<div className='category'>

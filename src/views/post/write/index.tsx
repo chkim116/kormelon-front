@@ -16,7 +16,7 @@ import { useNotification } from 'src/hooks/useNotification';
 import { api } from 'src/lib/api';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { postSearchTag } from 'src/store/tag';
-import { postCreate } from 'src/store/post';
+import { patchPost, postCreate, PostDetail } from 'src/store/post';
 
 interface Post {
 	id?: string;
@@ -37,7 +37,11 @@ DOMPurify.setConfig({
 	ALLOWED_URI_REGEXP,
 });
 
-const PostWrite = () => {
+interface PostWriteProps {
+	prevPost?: PostDetail;
+}
+
+const PostWrite = ({ prevPost }: PostWriteProps) => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const { tags } = useAppSelector((state) => state.tag);
@@ -46,20 +50,23 @@ const PostWrite = () => {
 
 	// query에 'edit={title}'이 존재하면 수정모드
 	const isEditMode = useMemo(() => {
-		return Boolean(router.query['edit']);
-	}, [router]);
+		return Boolean(prevPost);
+	}, [prevPost]);
 
 	const cascaderRef = useRef(null);
 	const searchListRef = useRef(null);
 	const editorRef = useRef<HTMLTextAreaElement>(null);
-	const [post, setPost] = useState<Post>({
-		parentCategory: '',
-		category: '',
-		tags: [],
-		title: '',
-		content: '',
-		isPrivate: false,
-	});
+	const initialPost = useMemo(() => {
+		return {
+			parentCategory: prevPost?.category.parentValue || '',
+			category: prevPost?.category.value || '',
+			tags: prevPost?.tags.map((tag) => tag.value) || [],
+			title: prevPost?.title || '',
+			content: prevPost?.content || '',
+			isPrivate: prevPost?.isPrivate || false,
+		};
+	}, [prevPost]);
+	const [post, setPost] = useState<Post>(initialPost);
 	const [searchTagText, setSearchTagText] = useState('');
 	const [isCascaderOpen, toggleCascader] = useToggle(false);
 	const [isSearchListOpen, toggleSearchList] = useToggle(false);
@@ -89,7 +96,22 @@ const PostWrite = () => {
 				});
 			}
 
-			dispatch(postCreate({ ...post, content: parsedContent }))
+			if (isEditMode) {
+				const id = router.query['edit'] as string;
+				dispatch(patchPost({ ...post, id }))
+					.then((res) => {
+						router.push(res.payload);
+					})
+					.catch(() =>
+						callNotification({
+							type: 'danger',
+							message: '게시글 수정에 실패했습니다.',
+						})
+					);
+				return;
+			}
+
+			dispatch(postCreate(post))
 				.then((res) => {
 					router.push(res.payload);
 				})
@@ -100,7 +122,16 @@ const PostWrite = () => {
 					})
 				);
 		},
-		[dispatch, postCreate, parsedContent, post, router, callNotification]
+		[
+			dispatch,
+			postCreate,
+			parsedContent,
+			post,
+			router,
+			callNotification,
+			isEditMode,
+			patchPost,
+		]
 	);
 
 	const onKeyDown = useCallback(

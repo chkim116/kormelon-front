@@ -54,6 +54,10 @@ interface PostState {
 	isWriteEditLoad: boolean;
 	isWriteEditDone: boolean;
 	isWriteEditErr: null | any;
+
+	isPostDeleteLoad: boolean;
+	isPostDeleteDone: boolean;
+	isPostDeleteErr: null | any;
 }
 
 const initialState: PostState = {
@@ -92,6 +96,10 @@ const initialState: PostState = {
 	isWriteEditLoad: false,
 	isWriteEditDone: false,
 	isWriteEditErr: null,
+
+	isPostDeleteLoad: false,
+	isPostDeleteDone: false,
+	isPostDeleteErr: null,
 };
 
 const post = createSlice({
@@ -156,6 +164,20 @@ const post = createSlice({
 			.addCase(getPosts.rejected, (state, { payload }) => {
 				state.isPostLoad = false;
 				state.isPostErr = payload;
+			})
+
+			.addCase(deletePost.pending, (state) => {
+				state.isPostDeleteLoad = true;
+				state.isPostDeleteDone = false;
+				state.isPostDeleteErr = null;
+			})
+			.addCase(deletePost.fulfilled, (state) => {
+				state.isPostDeleteDone = true;
+				state.isPostDeleteLoad = false;
+			})
+			.addCase(deletePost.rejected, (state, { payload }) => {
+				state.isPostDeleteLoad = false;
+				state.isPostDeleteErr = payload;
 			}),
 });
 
@@ -227,6 +249,17 @@ export const getPosts = createAsyncThunk(
 		try {
 			const post = await api.get('/post').then((res) => res.data);
 			return post;
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const deletePost = createAsyncThunk(
+	'post/deletePost',
+	async (id: string, { rejectWithValue }) => {
+		try {
+			await api.delete(`/post/${id}`).then((res) => res.data);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

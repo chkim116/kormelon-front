@@ -71,6 +71,9 @@ const user = createSlice({
 
 			.addCase(getUser.fulfilled, (state, { payload }) => {
 				state.userData = payload;
+			})
+			.addCase(getUser.rejected, (state) => {
+				state.userData = null;
 			}),
 });
 

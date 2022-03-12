@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
@@ -14,8 +14,11 @@ import { PostStyle } from './PostStyle';
 import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import Tag from 'src/components/Tag';
 import 'src/lib/markedConfig';
-import { PostDetail } from 'src/store/post';
-import { useAppSelector } from 'src/store/config';
+import { deletePost, PostDetail } from 'src/store/post';
+import { useAppDispatch, useAppSelector } from 'src/store/config';
+import Button from 'src/components/Button';
+import { useRouter } from 'next/router';
+import { useNotification } from 'src/hooks/useNotification';
 
 DOMPurify.setConfig({
 	ALLOWED_TAGS,
@@ -27,7 +30,11 @@ interface PostProps {
 }
 
 const Post = ({ post }: PostProps) => {
+	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
+	const { callNotification } = useNotification();
+	const router = useRouter();
+
 	// h1 뽑는 정규
 	const anchorRegExp =
 		/<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\{\:\\\/\}\>]+<\/\h1>/g;
@@ -62,6 +69,17 @@ const Post = ({ post }: PostProps) => {
 		};
 	});
 
+	const onClickPostDelete = useCallback((e) => {
+		const { id } = e.currentTarget;
+		if (window.confirm('정말 삭제 하십니까?')) {
+			dispatch(deletePost(id))
+				.then(() => router.push('/'))
+				.catch(() =>
+					callNotification({ type: 'danger', message: '삭제에 실패했습니다.' })
+				);
+		}
+	}, []);
+
 	return (
 		<PostStyle>
 			<div className='post'>
@@ -87,12 +105,16 @@ const Post = ({ post }: PostProps) => {
 
 				{post.userId === userData?.id && userData?.isAdmin && (
 					<div>
-						<Link href={`/post/write/?edit=${post.id}`} passHref>
-							<a>
-								<BsPencil />
-							</a>
-						</Link>
-						<MdDelete />
+						<Button>
+							<Link href={`/post/write/?edit=${post.id}`} passHref>
+								<a>
+									<BsPencil />
+								</a>
+							</Link>
+						</Button>
+						<Button id={post.id} onClick={onClickPostDelete}>
+							<MdDelete />
+						</Button>
 					</div>
 				)}
 

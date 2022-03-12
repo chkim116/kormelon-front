@@ -94,13 +94,14 @@ const Post = ({ post }: PostProps) => {
 				</div>
 
 				<div className='tags'>
-					{post.tags.length &&
-						post.tags.map((tag) => (
-							// TODO: tag link..
-							<Tag key={tag.id} href={`/${tag}`}>
-								{tag.value}
-							</Tag>
-						))}
+					{post.tags.length
+						? post.tags.map((tag) => (
+								// TODO: tag link..
+								<Tag key={tag.id} href={`/${tag}`}>
+									{tag.value}
+								</Tag>
+						  ))
+						: null}
 				</div>
 
 				{post.userId === userData?.id && userData?.isAdmin && (

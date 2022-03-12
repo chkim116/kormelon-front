@@ -6,7 +6,14 @@ import dayjs from 'dayjs';
 
 import Button from 'src/components/Button';
 import { useNotification } from 'src/hooks/useNotification';
-import { postCreateComment, postCreateReply } from 'src/store/comment';
+import {
+	deleteComment,
+	deleteReply,
+	patchComment,
+	patchReply,
+	postCreateComment,
+	postCreateReply,
+} from 'src/store/comment';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
@@ -50,6 +57,11 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	const [anonymousUser, setAnonymousUser] = useState({
 		username: '익명',
 		password: '',
+	});
+
+	const [editCommentValue, setEditCommentValue] = useState({
+		id: '',
+		text: '',
 	});
 
 	const onClickOpenReply = useCallback((e) => {
@@ -134,6 +146,52 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		[commentValues, anonymousUser, userData]
 	);
 
+	// 댓글 수정과 삭제
+	const onChangeEditComment = useCallback((e) => {
+		setEditCommentValue((prev) => ({ ...prev, text: e.target.value }));
+	}, []);
+
+	const onClickToChangeEditMode = useCallback((e) => {
+		const { id, text } = e.currentTarget.dataset;
+		setEditCommentValue({ id, text });
+	}, []);
+
+	const onClickEditSubmit = useCallback(
+		(e) => {
+			const { type } = e.currentTarget.dataset;
+
+			if (type === 'comment') {
+				dispatch(patchComment(editCommentValue));
+			}
+
+			if (type === 'reply') {
+				dispatch(patchReply(editCommentValue));
+			}
+		},
+		[dispatch, patchComment, patchReply, editCommentValue]
+	);
+
+	const onClickCommentDelete = useCallback(
+		(e) => {
+			const { id, type } = e.currentTarget.dataset;
+
+			if (window.confirm('댓글을 삭제하십니까?')) {
+				if (type === 'comment') {
+					dispatch(deleteComment(id));
+				}
+
+				if (type === 'reply') {
+					dispatch(deleteReply(id));
+				}
+			}
+		},
+		[dispatch, deleteComment, deleteReply]
+	);
+
+	const onClickEditCancel = useCallback(() => {
+		setEditCommentValue({ id: '', text: '' });
+	}, []);
+
 	return (
 		<PostCommentStyle>
 			<div className='comment-container'>
@@ -146,6 +204,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 					data-id={query.id}
 				>
 					<textarea
+						className='comment-input'
 						name='comment'
 						placeholder='댓글을 작성하세요.'
 						data-id={query.id}
@@ -183,16 +242,45 @@ const PostComment = ({ comments }: PostCommentProps) => {
 									<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
 								</div>
 								<div className='etc'>
-									<span>
+									<span
+										data-id={comment.id}
+										data-text={comment.text}
+										onClick={onClickToChangeEditMode}
+									>
 										<BsPencil />
 									</span>
-									<span>
+									<span
+										data-id={comment.id}
+										data-type='comment'
+										onClick={onClickCommentDelete}
+									>
 										<MdDelete />
 									</span>
 								</div>
 							</div>
 
-							<div className='text'>{comment.text}</div>
+							{/* 수정시 textarea로 */}
+							{editCommentValue.id === comment.id ? (
+								<div className='comment-edit'>
+									<textarea
+										className='comment-input edit'
+										onChange={onChangeEditComment}
+										defaultValue={comment.text}
+									/>
+									<span>
+										<Button
+											color='primary'
+											data-type='comment'
+											onClick={onClickEditSubmit}
+										>
+											수정
+										</Button>
+										<Button onClick={onClickEditCancel}>취소</Button>
+									</span>
+								</div>
+							) : (
+								<div className='text'>{comment.text}</div>
+							)}
 
 							<div className='reply-btn'>
 								<div onClick={onClickOpenReply} data-commentid={comment.id}>
@@ -219,6 +307,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 									data-id={comment.id}
 								>
 									<textarea
+										className='comment-input'
 										name='reply'
 										placeholder='답변을 작성하세요.'
 										data-id={comment.id}
@@ -256,16 +345,44 @@ const PostComment = ({ comments }: PostCommentProps) => {
 											</div>
 
 											<div className='etc'>
-												<span>
+												<span
+													data-id={reply.id}
+													data-text={reply.text}
+													onClick={onClickToChangeEditMode}
+												>
 													<BsPencil />
 												</span>
-												<span>
+												<span
+													data-id={reply.id}
+													data-type='reply'
+													onClick={onClickCommentDelete}
+												>
 													<MdDelete />
 												</span>
 											</div>
 										</div>
 
-										<div className='text'>{reply.text}</div>
+										{editCommentValue.id === reply.id ? (
+											<div className='comment-edit'>
+												<textarea
+													className='comment-input edit'
+													onChange={onChangeEditComment}
+													defaultValue={reply.text}
+												/>
+												<span>
+													<Button
+														color='primary'
+														data-type='reply'
+														onClick={onClickEditSubmit}
+													>
+														수정
+													</Button>
+													<Button onClick={onClickEditCancel}>취소</Button>
+												</span>
+											</div>
+										) : (
+											<div className='text'>{reply.text}</div>
+										)}
 									</div>
 								))}
 							</div>

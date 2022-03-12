@@ -91,6 +91,23 @@ const PostCommentStyle = styled.div`
 			margin: 8px 0;
 		}
 
+		.comment-input {
+			width: 100%;
+			resize: none;
+			padding: 8px;
+			height: 100px;
+			border-radius: 4px;
+			outline: none;
+			font-size: ${({ theme }) => theme.fontSizes.md};
+			color: ${({ theme }) => theme.colors.onPrimary};
+			background-color: ${({ theme }) => theme.colors.primary};
+			border: 1px solid ${({ theme }) => theme.colors.border};
+
+			&.edit {
+				border: 1px solid ${({ theme }) => theme.colors.blue};
+			}
+		}
+
 		form {
 			display: flex;
 			flex-direction: column;
@@ -111,18 +128,6 @@ const PostCommentStyle = styled.div`
 					color: ${({ theme }) => theme.colors.onPrimary};
 				}
 			}
-			textarea {
-				width: 100%;
-				resize: none;
-				padding: 8px;
-				height: 100px;
-				border-radius: 4px;
-				outline: none;
-				font-size: ${({ theme }) => theme.fontSizes.md};
-				color: ${({ theme }) => theme.colors.onPrimary};
-				background-color: ${({ theme }) => theme.colors.primary};
-				border: 1px solid ${({ theme }) => theme.colors.border};
-			}
 
 			button {
 				width: fit-content;
@@ -141,9 +146,24 @@ const PostCommentStyle = styled.div`
 		margin: 25px 0;
 		width: 100%;
 
+		.comment-edit {
+			display: flex;
+			flex-direction: column;
+
+			span {
+				margin: 8px 0 8px auto;
+
+				button + button {
+					margin-left: 4px;
+				}
+			}
+		}
+
 		.box-title {
 			display: flex;
+			align-items: center;
 			justify-content: space-between;
+
 			.user {
 				div:nth-of-type(1) {
 					font-weight: 700;

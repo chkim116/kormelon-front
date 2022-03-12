@@ -16,7 +16,7 @@ export const getServerSideProps = store.getServerSideProps(
 			};
 		}
 
-		const [id] = params['id'] as string[];
+		const id = params['id'] as string;
 		const { dispatch, getState } = store;
 		await dispatch(getPost(id));
 		const post = getState().post.post;

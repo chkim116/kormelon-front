@@ -3,6 +3,7 @@ import { BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
 
 import Button from 'src/components/Button';
+import { useNotification } from 'src/hooks/useNotification';
 import { useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
@@ -26,11 +27,23 @@ interface PostCommentProps {
 	comments: Comment[];
 }
 
+interface CommentValue {
+	commentId?: string;
+	type: 'comment' | 'reply' | '';
+	value: string;
+}
+
 const PostComment = ({ comments }: PostCommentProps) => {
 	const { userData } = useAppSelector((state) => state.user);
 	const isLogged = useMemo(() => !!userData?.id, []);
+	const { callNotification } = useNotification();
 
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
+	const [commentValues, setCommentValues] = useState<CommentValue[]>([]);
+	const [anonymousUser, setAnonymousUser] = useState({
+		username: '익명',
+		password: '',
+	});
 
 	const onClickOpenReply = useCallback((e) => {
 		const { commentid: commentId } = e.currentTarget.dataset;
@@ -48,19 +61,91 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		});
 	}, []);
 
+	const onChangeForm = useCallback((e) => {
+		const {
+			name: type,
+			value,
+			dataset: { commentid: commentId },
+		} = e.target;
+
+		if (type !== 'reply' && type !== 'comment') {
+			return setAnonymousUser((prev) => ({ ...prev, [type]: value }));
+		}
+
+		setCommentValues((prev) => {
+			if (!prev.length) {
+				return [{ type, value, commentId }];
+			}
+
+			if (prev.find((value) => value.commentId === commentId)) {
+				return prev.map((v) => ({
+					...v,
+					type: v.commentId === commentId ? type : v.type,
+					value: v.commentId === commentId ? value : v.value,
+				}));
+			}
+
+			return [...prev, { type, value, commentId }];
+		});
+	}, []);
+
+	const onSubmitForm = useCallback(
+		(e) => {
+			e.preventDefault();
+			const { commentid: commentId } = e.target.dataset;
+
+			// 작성을 누른 곳에 값이 없으면
+			if (
+				!commentValues.find((value) => value.commentId === commentId)?.value
+			) {
+				return callNotification({
+					type: 'danger',
+					message: '값을 입력해 주세요.',
+				});
+			}
+
+			// TODO: 익명 유저 or 로그인 유저일시
+
+			console.log(anonymousUser, commentValues);
+		},
+		[commentValues, anonymousUser]
+	);
+
+	console.log(commentValues);
+
 	return (
 		<PostCommentStyle>
 			<div className='comment-container'>
 				<div className='count'>{comments.length}개의 댓글</div>
 
 				{/* 댓글 */}
-				<form>
-					<textarea placeholder='댓글을 작성하세요.' />
+				<form
+					onChange={onChangeForm}
+					onSubmit={onSubmitForm}
+					data-commentid='comment'
+				>
+					<textarea
+						name='comment'
+						placeholder='댓글을 작성하세요.'
+						data-commentid='comment'
+					/>
 					{/* 로그인 안했을시만 오픈, 익명 댓글을 위함 */}
 					{isLogged ? null : (
 						<div className='anonymous'>
-							<input type='text' placeholder='이름' />
-							<input type='password' placeholder='비밀번호' />
+							<input
+								type='text'
+								placeholder='이름'
+								name='username'
+								autoComplete='username'
+								defaultValue={anonymousUser.username}
+							/>
+							<input
+								type='password'
+								placeholder='비밀번호'
+								name='password'
+								autoComplete='current-password'
+								defaultValue={anonymousUser.password}
+							/>
 						</div>
 					)}
 					<Button type='submit' color='primary'>
@@ -96,13 +181,33 @@ const PostComment = ({ comments }: PostCommentProps) => {
 						{/* 대댓글 */}
 						{isOpenReplyids.includes(comment.id) && (
 							<div className='reply-box'>
-								<form>
-									<textarea placeholder='답변을 작성하세요.' />
+								<form
+									onChange={onChangeForm}
+									onSubmit={onSubmitForm}
+									data-commentid={comment.id}
+								>
+									<textarea
+										name='reply'
+										placeholder='답변을 작성하세요.'
+										data-commentid={comment.id}
+									/>
 									{/* 로그인 안했을시만 오픈, 익명 대댓을 위함 */}
 									{isLogged ? null : (
 										<div className='anonymous'>
-											<input type='text' placeholder='이름' />
-											<input type='password' placeholder='비밀번호' />
+											<input
+												type='text'
+												placeholder='이름'
+												name='username'
+												autoComplete='username'
+												defaultValue={anonymousUser.username}
+											/>
+											<input
+												type='password'
+												placeholder='비밀번호'
+												name='password'
+												autoComplete='current-password'
+												defaultValue={anonymousUser.password}
+											/>
 										</div>
 									)}
 									<Button color='primary' type='submit'>

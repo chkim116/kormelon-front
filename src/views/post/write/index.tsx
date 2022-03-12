@@ -100,7 +100,9 @@ const PostWrite = ({ prevPost }: PostWriteProps) => {
 				const id = router.query['edit'] as string;
 				dispatch(patchPost({ ...post, id }))
 					.then((res) => {
-						router.push(res.payload);
+						router.push(
+							`/post/${res.payload}/${encodeURIComponent(post.title)}`
+						);
 					})
 					.catch(() =>
 						callNotification({
@@ -113,7 +115,7 @@ const PostWrite = ({ prevPost }: PostWriteProps) => {
 
 			dispatch(postCreate(post))
 				.then((res) => {
-					router.push(res.payload);
+					router.push(`/post/${res.payload}/${encodeURIComponent(post.title)}`);
 				})
 				.catch(() =>
 					callNotification({

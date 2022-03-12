@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
-import { BsPlus } from 'react-icons/bs';
+import { BsPencil, BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
 import dayjs from 'dayjs';
 
@@ -10,6 +10,7 @@ import { postCreateComment, postCreateReply } from 'src/store/comment';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
+import { MdDelete } from 'react-icons/md';
 
 export interface Comment {
 	id: string;
@@ -176,10 +177,21 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				{comments.map((comment) => (
 					<div className='comment-list' key={comment.id}>
 						<div className='comment-box'>
-							<div className='user'>
-								<div>{comment.username}</div>
-								<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
+							<div className='box-title'>
+								<div className='user'>
+									<div>{comment.username}</div>
+									<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
+								</div>
+								<div className='etc'>
+									<span>
+										<BsPencil />
+									</span>
+									<span>
+										<MdDelete />
+									</span>
+								</div>
 							</div>
+
 							<div className='text'>{comment.text}</div>
 
 							<div className='reply-btn'>
@@ -237,10 +249,22 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 								{comment.commentReplies.map((reply) => (
 									<div className='comment-box' key={reply.id}>
-										<div className='user'>
-											<div>{reply.username}</div>
-											<div>{dayjs(reply.createdAt).format('YYYY-MM-DD')}</div>
+										<div className='box-title'>
+											<div className='user'>
+												<div>{reply.username}</div>
+												<div>{dayjs(reply.createdAt).format('YYYY-MM-DD')}</div>
+											</div>
+
+											<div className='etc'>
+												<span>
+													<BsPencil />
+												</span>
+												<span>
+													<MdDelete />
+												</span>
+											</div>
 										</div>
+
 										<div className='text'>{reply.text}</div>
 									</div>
 								))}

@@ -141,13 +141,37 @@ const PostCommentStyle = styled.div`
 		margin: 25px 0;
 		width: 100%;
 
-		.user {
-			div:nth-of-type(1) {
-				font-weight: 700;
+		.box-title {
+			display: flex;
+			justify-content: space-between;
+			.user {
+				div:nth-of-type(1) {
+					font-weight: 700;
+				}
+				div:nth-of-type(2) {
+					margin: 8px 0;
+					font-size: ${({ theme }) => theme.fontSizes.sm};
+				}
 			}
-			div:nth-of-type(2) {
-				margin: 8px 0;
-				font-size: ${({ theme }) => theme.fontSizes.sm};
+
+			.etc {
+				span {
+					cursor: pointer;
+					padding: 0 12px;
+					color: ${({ theme }) => theme.colors.blue};
+					font-size: 14px;
+
+					&:hover {
+						svg {
+							transform: scale(1.2);
+							transition: scale 300ms;
+						}
+					}
+				}
+
+				button + button {
+					margin-left: 4px;
+				}
 			}
 		}
 

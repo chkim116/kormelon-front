@@ -35,6 +35,7 @@ const Post = ({ post }: PostProps) => {
 	const { callNotification } = useNotification();
 	const router = useRouter();
 
+	console.log(post);
 	// h1 뽑는 정규
 	const anchorRegExp =
 		/<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\{\:\\\/\}\>]+<\/\h1>/g;
@@ -47,27 +48,6 @@ const Post = ({ post }: PostProps) => {
 	const anchors = parsedContent
 		.match(anchorRegExp)
 		?.map((anchor) => anchor.replace(/<[^>]*>?/g, '').replace(/ /g, '-'));
-
-	const comments = Array.from({ length: 10 }).map((_, i) => {
-		return {
-			id: i.toString(),
-			text: '댓글인데요' + i,
-			createdAt: dayjs().format('YYYY-MM-DD'),
-			username: 'ckim',
-			password: '123',
-			commentReplies: Math.round(Math.random() * 1)
-				? [
-						{
-							id: '2',
-							text: '대댓글인데요',
-							username: 'userna',
-							password: 'pas',
-							createdAt: dayjs().format('YYYY-MM-DD'),
-						},
-				  ]
-				: [],
-		};
-	});
 
 	const onClickPostDelete = useCallback((e) => {
 		const { id } = e.currentTarget;
@@ -125,7 +105,7 @@ const Post = ({ post }: PostProps) => {
 						__html: parsedContent,
 					}}
 				/>
-				<PostComment comments={comments} />
+				<PostComment comments={post.comments} />
 			</div>
 
 			<div className='anchors'>

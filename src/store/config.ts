@@ -9,6 +9,7 @@ import user from './user';
 import category from './category';
 import tag from './tag';
 import post from './post';
+import comment from './comment';
 
 const combineReducer = combineReducers({
 	gnb,
@@ -17,6 +18,7 @@ const combineReducer = combineReducers({
 	category,
 	tag,
 	post,
+	comment,
 });
 
 const reducer = (state: any, action: AnyAction) => {

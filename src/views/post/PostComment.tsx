@@ -1,10 +1,13 @@
+import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
 import { BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
+import dayjs from 'dayjs';
 
 import Button from 'src/components/Button';
 import { useNotification } from 'src/hooks/useNotification';
-import { useAppSelector } from 'src/store/config';
+import { postCreateComment, postCreateReply } from 'src/store/comment';
+import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
 
@@ -28,15 +31,18 @@ interface PostCommentProps {
 }
 
 interface CommentValue {
-	commentId?: string;
+	id: string;
 	type: 'comment' | 'reply' | '';
-	value: string;
+	text: string;
 }
 
 const PostComment = ({ comments }: PostCommentProps) => {
+	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
-	const isLogged = useMemo(() => !!userData?.id, []);
+	const { query } = useRouter();
 	const { callNotification } = useNotification();
+
+	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
 	const [commentValues, setCommentValues] = useState<CommentValue[]>([]);
@@ -64,54 +70,68 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	const onChangeForm = useCallback((e) => {
 		const {
 			name: type,
-			value,
-			dataset: { commentid: commentId },
+			value: text,
+			dataset: { id },
 		} = e.target;
 
 		if (type !== 'reply' && type !== 'comment') {
-			return setAnonymousUser((prev) => ({ ...prev, [type]: value }));
+			return setAnonymousUser((prev) => ({ ...prev, [type]: text }));
 		}
 
 		setCommentValues((prev) => {
 			if (!prev.length) {
-				return [{ type, value, commentId }];
+				return [{ type, text, id }];
 			}
 
-			if (prev.find((value) => value.commentId === commentId)) {
+			if (prev.find((value) => value.id === id)) {
 				return prev.map((v) => ({
 					...v,
-					type: v.commentId === commentId ? type : v.type,
-					value: v.commentId === commentId ? value : v.value,
+					type: v.id === id ? type : v.type,
+					text: v.id === id ? text : v.text,
 				}));
 			}
 
-			return [...prev, { type, value, commentId }];
+			return [...prev, { type, text, id }];
 		});
 	}, []);
 
 	const onSubmitForm = useCallback(
 		(e) => {
 			e.preventDefault();
-			const { commentid: commentId } = e.target.dataset;
+			const { id } = e.target.dataset;
 
 			// 작성을 누른 곳에 값이 없으면
-			if (
-				!commentValues.find((value) => value.commentId === commentId)?.value
-			) {
+			if (!commentValues.find((value) => value.id === id)?.text) {
 				return callNotification({
 					type: 'danger',
 					message: '값을 입력해 주세요.',
 				});
 			}
 
-			// TODO: 익명 유저 or 로그인 유저일시
+			const commentValue = commentValues.find((value) => value.id === id);
 
-			console.log(anonymousUser, commentValues);
+			if (!commentValue) {
+				return callNotification({
+					type: 'danger',
+					message: '오류 입니다. 새로고침 후 시도해 보세요.',
+				});
+			}
+			// 익명 유저일시 동봉. 로그인 유저일시 동봉하지 않음.
+			const toCreateData = Object.assign(
+				{
+					id: commentValue.id,
+					text: commentValue.text,
+				},
+				userData ? {} : anonymousUser
+			);
+
+			commentValue.type === 'comment' &&
+				dispatch(postCreateComment(toCreateData));
+
+			commentValue.type === 'reply' && dispatch(postCreateReply(toCreateData));
 		},
-		[commentValues, anonymousUser]
+		[commentValues, anonymousUser, userData]
 	);
-
-	console.log(commentValues);
 
 	return (
 		<PostCommentStyle>
@@ -122,12 +142,12 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				<form
 					onChange={onChangeForm}
 					onSubmit={onSubmitForm}
-					data-commentid='comment'
+					data-id={query.id}
 				>
 					<textarea
 						name='comment'
 						placeholder='댓글을 작성하세요.'
-						data-commentid='comment'
+						data-id={query.id}
 					/>
 					{/* 로그인 안했을시만 오픈, 익명 댓글을 위함 */}
 					{isLogged ? null : (
@@ -158,7 +178,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 						<div className='comment-box'>
 							<div className='user'>
 								<div>{comment.username}</div>
-								<div>{comment.createdAt}</div>
+								<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
 							</div>
 							<div className='text'>{comment.text}</div>
 
@@ -184,12 +204,12 @@ const PostComment = ({ comments }: PostCommentProps) => {
 								<form
 									onChange={onChangeForm}
 									onSubmit={onSubmitForm}
-									data-commentid={comment.id}
+									data-id={comment.id}
 								>
 									<textarea
 										name='reply'
 										placeholder='답변을 작성하세요.'
-										data-commentid={comment.id}
+										data-id={comment.id}
 									/>
 									{/* 로그인 안했을시만 오픈, 익명 대댓을 위함 */}
 									{isLogged ? null : (
@@ -219,7 +239,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 									<div className='comment-box' key={reply.id}>
 										<div className='user'>
 											<div>{reply.username}</div>
-											<div>{reply.createdAt}</div>
+											<div>{dayjs(reply.createdAt).format('YYYY-MM-DD')}</div>
 										</div>
 										<div className='text'>{reply.text}</div>
 									</div>

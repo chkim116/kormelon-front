@@ -1,6 +1,9 @@
+import { useCallback, useMemo, useState } from 'react';
 import { BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
+
 import Button from 'src/components/Button';
+import { useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
 
@@ -24,17 +27,42 @@ interface PostCommentProps {
 }
 
 const PostComment = ({ comments }: PostCommentProps) => {
+	const { userData } = useAppSelector((state) => state.user);
+	const isLogged = useMemo(() => !!userData?.id, []);
+
+	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
+
+	const onClickOpenReply = useCallback((e) => {
+		const { commentid: commentId } = e.currentTarget.dataset;
+
+		setIsOpenReplyIds((prev) => {
+			if (!prev.length) {
+				return [commentId];
+			}
+
+			if (prev.includes(commentId)) {
+				return prev.filter((id) => id !== commentId);
+			}
+
+			return [...prev, commentId];
+		});
+	}, []);
+
 	return (
 		<PostCommentStyle>
 			<div className='comment-container'>
 				<div className='count'>{comments.length}개의 댓글</div>
+
+				{/* 댓글 */}
 				<form>
 					<textarea placeholder='댓글을 작성하세요.' />
-					{/* TODO: 로그인 안했을시만 오픈, 익명을 위함 */}
-					<div className='anonymous'>
-						<input type='text' placeholder='이름' />
-						<input type='password' placeholder='비밀번호' />
-					</div>
+					{/* 로그인 안했을시만 오픈, 익명 댓글을 위함 */}
+					{isLogged ? null : (
+						<div className='anonymous'>
+							<input type='text' placeholder='이름' />
+							<input type='password' placeholder='비밀번호' />
+						</div>
+					)}
 					<Button type='submit' color='primary'>
 						댓글 작성
 					</Button>
@@ -50,27 +78,38 @@ const PostComment = ({ comments }: PostCommentProps) => {
 							<div className='text'>{comment.text}</div>
 
 							<div className='reply-btn'>
-								<span>{true ? <FiMinus /> : <BsPlus />}</span>
-								<button type='button'>
-									{comment.commentReplies.length}개의 답글
-								</button>
+								<div onClick={onClickOpenReply} data-commentid={comment.id}>
+									<span>
+										{isOpenReplyids.includes(comment.id) ? (
+											<FiMinus />
+										) : (
+											<BsPlus />
+										)}
+									</span>
+									<button type='button'>
+										{comment.commentReplies.length}개의 답글
+									</button>
+								</div>
 							</div>
 						</div>
 
-						{/* TODO: 여부에 따른 hide */}
-						{true && (
+						{/* 대댓글 */}
+						{isOpenReplyids.includes(comment.id) && (
 							<div className='reply-box'>
 								<form>
 									<textarea placeholder='답변을 작성하세요.' />
-									{/* TODO: 로그인 안했을시만 오픈, 익명을 위함 */}
-									<div className='anonymous'>
-										<input type='text' placeholder='이름' />
-										<input type='password' placeholder='비밀번호' />
-									</div>
+									{/* 로그인 안했을시만 오픈, 익명 대댓을 위함 */}
+									{isLogged ? null : (
+										<div className='anonymous'>
+											<input type='text' placeholder='이름' />
+											<input type='password' placeholder='비밀번호' />
+										</div>
+									)}
 									<Button color='primary' type='submit'>
 										답변 작성
 									</Button>
 								</form>
+
 								{comment.commentReplies.map((reply) => (
 									<div className='comment-box' key={reply.id}>
 										<div className='user'>

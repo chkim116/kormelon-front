@@ -162,16 +162,22 @@ const PostCommentStyle = styled.div`
 			align-items: center;
 			color: ${({ theme }) => theme.colors.onPrimary};
 
-			svg {
-				cursor: pointer;
-				background-color: #d7d7d71a;
-			}
+			div {
+				display: flex;
+				align-items: center;
 
-			button {
-				color: ${({ theme }) => theme.colors.onBlue};
+				svg {
+					margin-top: 6px;
+					cursor: pointer;
+					background-color: #d7d7d71a;
+				}
 
-				&:hover {
-					text-decoration: underline;
+				button {
+					color: ${({ theme }) => theme.colors.onBlue};
+
+					&:hover {
+						text-decoration: underline;
+					}
 				}
 			}
 		}

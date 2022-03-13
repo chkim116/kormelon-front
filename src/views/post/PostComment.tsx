@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
 import { MdDelete } from 'react-icons/md';
+import Modal from 'src/components/Modal';
 
 export interface Comment {
 	id: string;
@@ -25,11 +26,14 @@ export interface Comment {
 	username: string;
 	password: string;
 	createdAt: string;
+	deletedAt: string | null;
+	isAnonymous: boolean;
 	commentReplies: {
 		id: string;
 		text: string;
 		username: string;
 		password: string;
+		isAnonymous: boolean;
 		createdAt: string;
 	}[];
 }
@@ -52,6 +56,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
 	const [commentValues, setCommentValues] = useState<CommentValue[]>([]);
 	const [anonymousUser, setAnonymousUser] = useState({
@@ -152,7 +157,12 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	}, []);
 
 	const onClickToChangeEditMode = useCallback((e) => {
-		const { id, text } = e.currentTarget.dataset;
+		const { id, text, anonymous } = e.currentTarget.dataset;
+
+		if (anonymous === 'true') {
+			return setIsModalOpen(true);
+		}
+
 		setEditCommentValue({ id, text });
 	}, []);
 
@@ -167,13 +177,20 @@ const PostComment = ({ comments }: PostCommentProps) => {
 			if (type === 'reply') {
 				dispatch(patchReply(editCommentValue));
 			}
+
+			setEditCommentValue({ id: '', text: '' });
 		},
 		[dispatch, patchComment, patchReply, editCommentValue]
 	);
 
 	const onClickCommentDelete = useCallback(
 		(e) => {
-			const { id, type } = e.currentTarget.dataset;
+			const { id, type, anonymous } = e.currentTarget.dataset;
+
+			if (anonymous === 'true') {
+				setIsModalOpen(true);
+				return;
+			}
 
 			if (window.confirm('댓글을 삭제하십니까?')) {
 				if (type === 'comment') {
@@ -194,6 +211,12 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 	return (
 		<PostCommentStyle>
+			<Modal
+				isOpen={isModalOpen}
+				onClickOk={(_) => setIsModalOpen(true)}
+				onClickCancel={(_) => setIsModalOpen(false)}
+				isFooter
+			/>
 			<div className='comment-container'>
 				<div className='count'>{comments.length}개의 댓글</div>
 
@@ -241,22 +264,47 @@ const PostComment = ({ comments }: PostCommentProps) => {
 									<div>{comment.username}</div>
 									<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
 								</div>
-								<div className='etc'>
-									<span
-										data-id={comment.id}
-										data-text={comment.text}
-										onClick={onClickToChangeEditMode}
-									>
-										<BsPencil />
-									</span>
-									<span
-										data-id={comment.id}
-										data-type='comment'
-										onClick={onClickCommentDelete}
-									>
-										<MdDelete />
-									</span>
-								</div>
+								{/* case 1. user is anonoymous */}
+								{/* case 2. user is logged in my blog */}
+								{/* case 3. user is admin. */}
+								{comment.isAnonymous ? (
+									<div className='etc'>
+										<span
+											data-id={comment.id}
+											data-text={comment.text}
+											data-anonymous={comment.isAnonymous}
+											onClick={onClickToChangeEditMode}
+										>
+											<BsPencil />
+										</span>
+										<span
+											data-id={comment.id}
+											data-type='comment'
+											onClick={onClickCommentDelete}
+										>
+											<MdDelete />
+										</span>
+									</div>
+								) : userData?.username === comment.username ||
+								  userData?.isAdmin ? (
+									<div className='etc'>
+										<span
+											data-id={comment.id}
+											data-text={comment.text}
+											data-anonymous={comment.isAnonymous}
+											onClick={onClickToChangeEditMode}
+										>
+											<BsPencil />
+										</span>
+										<span
+											data-id={comment.id}
+											data-type='comment'
+											onClick={onClickCommentDelete}
+										>
+											<MdDelete />
+										</span>
+									</div>
+								) : null}
 							</div>
 
 							{/* 수정시 textarea로 */}
@@ -344,22 +392,44 @@ const PostComment = ({ comments }: PostCommentProps) => {
 												<div>{dayjs(reply.createdAt).format('YYYY-MM-DD')}</div>
 											</div>
 
-											<div className='etc'>
-												<span
-													data-id={reply.id}
-													data-text={reply.text}
-													onClick={onClickToChangeEditMode}
-												>
-													<BsPencil />
-												</span>
-												<span
-													data-id={reply.id}
-													data-type='reply'
-													onClick={onClickCommentDelete}
-												>
-													<MdDelete />
-												</span>
-											</div>
+											{reply.isAnonymous ? (
+												<div className='etc'>
+													<span
+														data-id={reply.id}
+														data-text={reply.text}
+														data-anonymous={comment.isAnonymous}
+														onClick={onClickToChangeEditMode}
+													>
+														<BsPencil />
+													</span>
+													<span
+														data-id={reply.id}
+														data-type='reply'
+														onClick={onClickCommentDelete}
+													>
+														<MdDelete />
+													</span>
+												</div>
+											) : userData?.username === reply.username ||
+											  userData?.isAdmin ? (
+												<div className='etc'>
+													<span
+														data-id={reply.id}
+														data-text={reply.text}
+														data-anonymous={comment.isAnonymous}
+														onClick={onClickToChangeEditMode}
+													>
+														<BsPencil />
+													</span>
+													<span
+														data-id={reply.id}
+														data-type='reply'
+														onClick={onClickCommentDelete}
+													>
+														<MdDelete />
+													</span>
+												</div>
+											) : null}
 										</div>
 
 										{editCommentValue.id === reply.id ? (

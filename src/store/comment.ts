@@ -155,9 +155,9 @@ export const postCreateComment = createAsyncThunk(
 		},
 		{ rejectWithValue }
 	) => {
-		const { id, ...rest } = data;
+		const { id, ...withoutId } = data;
 		try {
-			await api.post(`/post/comment/${id}`, rest);
+			await api.post(`/post/comment/${id}`, withoutId);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -175,9 +175,9 @@ export const postCreateReply = createAsyncThunk(
 		},
 		{ rejectWithValue }
 	) => {
-		const { id, ...rest } = data;
+		const { id, ...withoutId } = data;
 		try {
-			await api.post(`/post/comment/reply/${id}`, rest);
+			await api.post(`/post/comment/reply/${id}`, withoutId);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -186,10 +186,13 @@ export const postCreateReply = createAsyncThunk(
 
 export const patchComment = createAsyncThunk(
 	'comment/patchComment',
-	async (data: { id: string; text: string }, { rejectWithValue }) => {
-		const { id, text } = data;
+	async (
+		data: { id: string; text: string; password?: string },
+		{ rejectWithValue }
+	) => {
+		const { id, ...withoutId } = data;
 		try {
-			await api.patch(`/post/comment/${id}`, { text });
+			await api.patch(`/post/comment/${id}`, withoutId);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -198,10 +201,13 @@ export const patchComment = createAsyncThunk(
 
 export const patchReply = createAsyncThunk(
 	'comment/patchReply',
-	async (data: { id: string; text: string }, { rejectWithValue }) => {
-		const { id, text } = data;
+	async (
+		data: { id: string; text: string; password?: string },
+		{ rejectWithValue }
+	) => {
+		const { id, ...withoutId } = data;
 		try {
-			await api.patch(`/post/comment/reply/${id}`, { text });
+			await api.patch(`/post/comment/reply/${id}`, withoutId);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

@@ -81,6 +81,38 @@ const PostStyle = styled.div`
 `;
 
 const PostCommentStyle = styled.div`
+	/* 익명을 뚫기위한 비밀번호 입력 폼 */
+	.anonymous-form {
+		p {
+			margin-bottom: 20px;
+		}
+
+		input {
+			width: 100%;
+			background-color: ${({ theme }) => theme.colors.primary};
+			color: ${({ theme }) => theme.colors.onPrimary};
+			padding: 6px 12px;
+			border: none;
+			border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+			font-size: 22px;
+
+			@media screen and (max-width: 768px) {
+				font-size: 20px;
+			}
+		}
+
+		.buttons {
+			margin-top: 28px;
+			button + button {
+				margin-left: 8px;
+			}
+
+			button {
+				padding: 8px 18px;
+			}
+		}
+	}
+
 	.comment-container {
 		width: 100%;
 		padding: 24px 0;

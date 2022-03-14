@@ -3,8 +3,11 @@ import { useCallback, useMemo, useState } from 'react';
 import { BsPencil, BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
 import dayjs from 'dayjs';
+import { MdDelete } from 'react-icons/md';
 
 import Button from 'src/components/Button';
+import Modal from 'src/components/Modal';
+
 import { useNotification } from 'src/hooks/useNotification';
 import {
 	deleteComment,
@@ -17,8 +20,6 @@ import {
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
-import { MdDelete } from 'react-icons/md';
-import Modal from 'src/components/Modal';
 
 export interface Comment {
 	id: string;
@@ -56,7 +57,8 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
 	const [commentValues, setCommentValues] = useState<CommentValue[]>([]);
 	const [anonymousUser, setAnonymousUser] = useState({
@@ -67,6 +69,12 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	const [editCommentValue, setEditCommentValue] = useState({
 		id: '',
 		text: '',
+		type: '',
+		anonymous: '',
+	});
+	const [deleteCommentValue, setDeleteCommentValue] = useState({
+		id: '',
+		type: '',
 	});
 
 	const onClickOpenReply = useCallback((e) => {
@@ -113,6 +121,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		});
 	}, []);
 
+	// 댓글 작성시
 	const onSubmitForm = useCallback(
 		(e) => {
 			e.preventDefault();
@@ -151,72 +160,195 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		[commentValues, anonymousUser, userData]
 	);
 
-	// 댓글 수정과 삭제
+	// * 댓글 수정 입력 받기
 	const onChangeEditComment = useCallback((e) => {
 		setEditCommentValue((prev) => ({ ...prev, text: e.target.value }));
 	}, []);
 
-	const onClickToChangeEditMode = useCallback((e) => {
-		const { id, text, anonymous } = e.currentTarget.dataset;
+	// * 수정 버튼 클릭 시
+	const onClickToChangeEditMode = useCallback(
+		(e) => {
+			const { id, text, type, anonymous } = e.currentTarget.dataset;
 
-		if (anonymous === 'true') {
-			return setIsModalOpen(true);
-		}
+			setEditCommentValue({ id, text, type, anonymous });
+		},
+		[userData]
+	);
 
-		setEditCommentValue({ id, text });
+	// * 수정 모드 취소
+	const onClickEditCancel = useCallback(() => {
+		setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
 	}, []);
 
+	// * 수정 완료
 	const onClickEditSubmit = useCallback(
 		(e) => {
-			const { type } = e.currentTarget.dataset;
+			const { type, anonymous, ...data } = editCommentValue;
+
+			if (!userData?.isAdmin && anonymous === 'true') {
+				return setIsEditModalOpen(true);
+			}
 
 			if (type === 'comment') {
-				dispatch(patchComment(editCommentValue));
+				dispatch(patchComment(data));
 			}
 
 			if (type === 'reply') {
-				dispatch(patchReply(editCommentValue));
+				dispatch(patchReply(data));
 			}
 
-			setEditCommentValue({ id: '', text: '' });
+			setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
 		},
 		[dispatch, patchComment, patchReply, editCommentValue]
 	);
 
+	// * 삭제 버튼 클릭 시
 	const onClickCommentDelete = useCallback(
 		(e) => {
 			const { id, type, anonymous } = e.currentTarget.dataset;
 
-			if (anonymous === 'true') {
-				setIsModalOpen(true);
+			// 관리자가 아닌데, 익명 글을 삭제하려면. 모달이 등장.
+			if (!userData?.isAdmin && anonymous === 'true') {
+				setDeleteCommentValue({ id, type });
+				setIsDeleteModalOpen(true);
 				return;
 			}
 
 			if (window.confirm('댓글을 삭제하십니까?')) {
 				if (type === 'comment') {
-					dispatch(deleteComment(id));
+					dispatch(deleteComment({ id }));
 				}
 
 				if (type === 'reply') {
-					dispatch(deleteReply(id));
+					dispatch(deleteReply({ id }));
 				}
 			}
 		},
-		[dispatch, deleteComment, deleteReply]
+		[dispatch, deleteComment, deleteReply, userData]
 	);
 
-	const onClickEditCancel = useCallback(() => {
-		setEditCommentValue({ id: '', text: '' });
+	const [isAnonymousPw, setIsAnonymousPw] = useState('');
+
+	const onClickModalCancel = useCallback(() => {
+		setIsEditModalOpen(false);
+		setIsAnonymousPw('');
 	}, []);
+
+	const onChangeAnonymousPw = useCallback((e) => {
+		setIsAnonymousPw(e.target.value);
+	}, []);
+
+	const onSubmitAnonymous = useCallback(
+		(e) => {
+			e.preventDefault();
+			const { type, anonymous, ...data } = editCommentValue;
+			const withPassword = { ...data, password: isAnonymousPw };
+
+			if (type === 'comment') {
+				dispatch(patchComment(withPassword))
+					.unwrap()
+					.catch((msg) => callNotification({ type: 'danger', message: msg }));
+			}
+
+			if (type === 'reply') {
+				dispatch(patchReply(withPassword))
+					.unwrap()
+					.catch((msg) => callNotification({ type: 'danger', message: msg }));
+			}
+
+			setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
+			setIsEditModalOpen(false);
+			setIsAnonymousPw('');
+		},
+		[
+			callNotification,
+			editCommentValue,
+			dispatch,
+			patchComment,
+			isAnonymousPw,
+			patchReply,
+		]
+	);
+
+	const onSubmitAnonymousDelete = useCallback(
+		(e) => {
+			e.preventDefault();
+
+			const { id, type } = deleteCommentValue;
+
+			if (window.confirm('댓글을 삭제하십니까?')) {
+				if (type === 'comment') {
+					dispatch(deleteComment({ id, password: isAnonymousPw }))
+						.unwrap()
+						.catch((msg) => callNotification({ type: 'danger', message: msg }));
+				}
+
+				if (type === 'reply') {
+					dispatch(deleteReply({ id, password: isAnonymousPw }))
+						.unwrap()
+						.catch((msg) => callNotification({ type: 'danger', message: msg }));
+				}
+
+				setDeleteCommentValue({ id: '', type: '' });
+				setIsAnonymousPw('');
+				setIsDeleteModalOpen(false);
+			}
+		},
+		[
+			dispatch,
+			deleteCommentValue,
+			isAnonymousPw,
+			deleteComment,
+			deleteReply,
+			callNotification,
+		]
+	);
 
 	return (
 		<PostCommentStyle>
-			<Modal
-				isOpen={isModalOpen}
-				onClickOk={(_) => setIsModalOpen(true)}
-				onClickCancel={(_) => setIsModalOpen(false)}
-				isFooter
-			/>
+			<Modal isOpen={isDeleteModalOpen}>
+				<form
+					className='anonymous-form'
+					onChange={onChangeAnonymousPw}
+					onSubmit={onSubmitAnonymousDelete}
+				>
+					<p>비밀번호를 입력하세요.</p>
+					<input
+						type='text'
+						name='password'
+						autoComplete='off'
+						placeholder='password'
+					/>
+					<div className='buttons'>
+						<Button type='submit' color='primary'>
+							확인
+						</Button>
+						<Button onClick={onClickModalCancel}>취소</Button>
+					</div>
+				</form>
+			</Modal>
+
+			<Modal isOpen={isEditModalOpen}>
+				<form
+					className='anonymous-form'
+					onChange={onChangeAnonymousPw}
+					onSubmit={onSubmitAnonymous}
+				>
+					<p>비밀번호를 입력하세요.</p>
+					<input
+						type='text'
+						name='password'
+						autoComplete='off'
+						placeholder='password'
+					/>
+					<div className='buttons'>
+						<Button type='submit' color='primary'>
+							확인
+						</Button>
+						<Button onClick={onClickModalCancel}>취소</Button>
+					</div>
+				</form>
+			</Modal>
 			<div className='comment-container'>
 				<div className='count'>{comments.length}개의 댓글</div>
 
@@ -272,6 +404,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										<span
 											data-id={comment.id}
 											data-text={comment.text}
+											data-type='comment'
 											data-anonymous={comment.isAnonymous}
 											onClick={onClickToChangeEditMode}
 										>
@@ -280,6 +413,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										<span
 											data-id={comment.id}
 											data-type='comment'
+											data-anonymous={comment.isAnonymous}
 											onClick={onClickCommentDelete}
 										>
 											<MdDelete />
@@ -291,6 +425,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										<span
 											data-id={comment.id}
 											data-text={comment.text}
+											data-type='comment'
 											data-anonymous={comment.isAnonymous}
 											onClick={onClickToChangeEditMode}
 										>
@@ -299,6 +434,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										<span
 											data-id={comment.id}
 											data-type='comment'
+											data-anonymous={comment.isAnonymous}
 											onClick={onClickCommentDelete}
 										>
 											<MdDelete />
@@ -316,11 +452,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 										defaultValue={comment.text}
 									/>
 									<span>
-										<Button
-											color='primary'
-											data-type='comment'
-											onClick={onClickEditSubmit}
-										>
+										<Button color='primary' onClick={onClickEditSubmit}>
 											수정
 										</Button>
 										<Button onClick={onClickEditCancel}>취소</Button>
@@ -397,7 +529,8 @@ const PostComment = ({ comments }: PostCommentProps) => {
 													<span
 														data-id={reply.id}
 														data-text={reply.text}
-														data-anonymous={comment.isAnonymous}
+														data-type='reply'
+														data-anonymous={reply.isAnonymous}
 														onClick={onClickToChangeEditMode}
 													>
 														<BsPencil />
@@ -405,6 +538,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 													<span
 														data-id={reply.id}
 														data-type='reply'
+														data-anonymous={reply.isAnonymous}
 														onClick={onClickCommentDelete}
 													>
 														<MdDelete />
@@ -416,7 +550,8 @@ const PostComment = ({ comments }: PostCommentProps) => {
 													<span
 														data-id={reply.id}
 														data-text={reply.text}
-														data-anonymous={comment.isAnonymous}
+														data-type='reply'
+														data-anonymous={reply.isAnonymous}
 														onClick={onClickToChangeEditMode}
 													>
 														<BsPencil />
@@ -424,6 +559,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 													<span
 														data-id={reply.id}
 														data-type='reply'
+														data-anonymous={reply.isAnonymous}
 														onClick={onClickCommentDelete}
 													>
 														<MdDelete />
@@ -440,11 +576,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 													defaultValue={reply.text}
 												/>
 												<span>
-													<Button
-														color='primary'
-														data-type='reply'
-														onClick={onClickEditSubmit}
-													>
+													<Button color='primary' onClick={onClickEditSubmit}>
 														수정
 													</Button>
 													<Button onClick={onClickEditCancel}>취소</Button>

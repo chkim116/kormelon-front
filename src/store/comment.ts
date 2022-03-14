@@ -216,9 +216,10 @@ export const patchReply = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
 	'comment/deleteComment',
-	async (id: string, { rejectWithValue }) => {
+	async (data: { id: string; password?: string }, { rejectWithValue }) => {
+		const { id, password } = data;
 		try {
-			await api.delete(`/post/comment/${id}`);
+			await api.delete(`/post/comment/${id}`, { data: { password } });
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -227,9 +228,10 @@ export const deleteComment = createAsyncThunk(
 
 export const deleteReply = createAsyncThunk(
 	'comment/deleteReply',
-	async (id: string, { rejectWithValue }) => {
+	async (data: { id: string; password?: string }, { rejectWithValue }) => {
+		const { id, password } = data;
 		try {
-			await api.delete(`/post/comment/reply/${id}`);
+			await api.delete(`/post/comment/reply/${id}`, { data: { password } });
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

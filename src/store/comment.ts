@@ -157,7 +157,9 @@ export const postCreateComment = createAsyncThunk(
 	) => {
 		const { id, ...withoutId } = data;
 		try {
-			await api.post(`/post/comment/${id}`, withoutId);
+			return await api
+				.post(`/post/comment/${id}`, withoutId)
+				.then((res) => res.data);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -177,7 +179,9 @@ export const postCreateReply = createAsyncThunk(
 	) => {
 		const { id, ...withoutId } = data;
 		try {
-			await api.post(`/post/comment/reply/${id}`, withoutId);
+			return await api
+				.post(`/post/comment/reply/${id}`, withoutId)
+				.then((res) => res.data);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

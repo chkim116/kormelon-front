@@ -24,29 +24,29 @@ import { PostCommentStyle } from './PostStyle';
 export interface Comment {
 	id: string;
 	text: string;
+	userId: string | null;
 	username: string;
-	password: string;
 	createdAt: string;
 	deletedAt: string | null;
 	isAnonymous: boolean;
 	commentReplies: {
 		id: string;
 		text: string;
+		userId: string | null;
 		username: string;
-		password: string;
 		isAnonymous: boolean;
 		createdAt: string;
 	}[];
-}
-
-interface PostCommentProps {
-	comments: Comment[];
 }
 
 interface CommentValue {
 	id: string;
 	type: 'comment' | 'reply' | '';
 	text: string;
+}
+
+interface PostCommentProps {
+	comments: Comment[];
 }
 
 const PostComment = ({ comments }: PostCommentProps) => {
@@ -57,6 +57,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
+	const [postComments, setPostComments] = useState<Comment[]>(comments);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
@@ -153,9 +154,24 @@ const PostComment = ({ comments }: PostCommentProps) => {
 			);
 
 			commentValue.type === 'comment' &&
-				dispatch(postCreateComment(toCreateData));
+				dispatch(postCreateComment(toCreateData))
+					.unwrap()
+					.then((res) => setPostComments((prev) => [res, ...prev]));
 
-			commentValue.type === 'reply' && dispatch(postCreateReply(toCreateData));
+			commentValue.type === 'reply' &&
+				dispatch(postCreateReply(toCreateData))
+					.unwrap()
+					.then((res) =>
+						setPostComments((prev) =>
+							prev.map((comment) => ({
+								...comment,
+								commentReplies:
+									comment.id === commentValue.id
+										? [res, ...comment.commentReplies]
+										: comment.commentReplies,
+							}))
+						)
+					);
 		},
 		[commentValues, anonymousUser, userData]
 	);
@@ -181,26 +197,44 @@ const PostComment = ({ comments }: PostCommentProps) => {
 	}, []);
 
 	// * 수정 완료
-	const onClickEditSubmit = useCallback(
-		(e) => {
-			const { type, anonymous, ...data } = editCommentValue;
+	const onClickEditSubmit = useCallback(() => {
+		const { type, anonymous, ...data } = editCommentValue;
 
-			if (!userData?.isAdmin && anonymous === 'true') {
-				return setIsEditModalOpen(true);
-			}
+		if (!userData?.isAdmin && anonymous === 'true') {
+			return setIsEditModalOpen(true);
+		}
 
-			if (type === 'comment') {
-				dispatch(patchComment(data));
-			}
+		if (type === 'comment') {
+			dispatch(patchComment(data))
+				.unwrap()
+				.then(() =>
+					setPostComments((prev) =>
+						prev.map((comment) => ({
+							...comment,
+							text: comment.id === data.id ? data.text : comment.text,
+						}))
+					)
+				);
+		}
 
-			if (type === 'reply') {
-				dispatch(patchReply(data));
-			}
+		if (type === 'reply') {
+			dispatch(patchReply(data))
+				.unwrap()
+				.then(() =>
+					setPostComments((prev) =>
+						prev.map((comment) => ({
+							...comment,
+							commentReplies: comment.commentReplies.map((reply) => ({
+								...reply,
+								text: reply.id === data.id ? data.text : reply.text,
+							})),
+						}))
+					)
+				);
+		}
 
-			setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
-		},
-		[dispatch, patchComment, patchReply, editCommentValue]
-	);
+		setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
+	}, [dispatch, patchComment, patchReply, editCommentValue]);
 
 	// * 삭제 버튼 클릭 시
 	const onClickCommentDelete = useCallback(
@@ -216,11 +250,28 @@ const PostComment = ({ comments }: PostCommentProps) => {
 
 			if (window.confirm('댓글을 삭제하십니까?')) {
 				if (type === 'comment') {
-					dispatch(deleteComment({ id }));
+					dispatch(deleteComment({ id }))
+						.unwrap()
+						.then(() =>
+							setPostComments((prev) =>
+								prev.filter((comment) => comment.id !== id)
+							)
+						);
 				}
 
 				if (type === 'reply') {
-					dispatch(deleteReply({ id }));
+					dispatch(deleteReply({ id }))
+						.unwrap()
+						.then(() =>
+							setPostComments((prev) =>
+								prev.map((comment) => ({
+									...comment,
+									commentReplies: comment.commentReplies.filter(
+										(reply) => reply.id !== id
+									),
+								}))
+							)
+						);
 				}
 			}
 		},
@@ -304,6 +355,8 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		]
 	);
 
+	console.log(postComments);
+
 	return (
 		<PostCommentStyle>
 			<Modal isOpen={isDeleteModalOpen}>
@@ -350,7 +403,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				</form>
 			</Modal>
 			<div className='comment-container'>
-				<div className='count'>{comments.length}개의 댓글</div>
+				<div className='count'>{postComments.length}개의 댓글</div>
 
 				{/* 댓글 */}
 				<form
@@ -388,7 +441,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 					</Button>
 				</form>
 
-				{comments.map((comment) => (
+				{postComments.map((comment) => (
 					<div className='comment-list' key={comment.id}>
 						<div className='comment-box'>
 							<div className='box-title'>
@@ -419,8 +472,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 											<MdDelete />
 										</span>
 									</div>
-								) : userData?.username === comment.username ||
-								  userData?.isAdmin ? (
+								) : userData?.id === comment.userId || userData?.isAdmin ? (
 									<div className='etc'>
 										<span
 											data-id={comment.id}
@@ -544,8 +596,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 														<MdDelete />
 													</span>
 												</div>
-											) : userData?.username === reply.username ||
-											  userData?.isAdmin ? (
+											) : userData?.id === reply.userId || userData?.isAdmin ? (
 												<div className='etc'>
 													<span
 														data-id={reply.id}

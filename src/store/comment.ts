@@ -1,5 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
+import {
+	addPostComment,
+	addPostCommentReply,
+	deletePostComment,
+	deletePostCommentReply,
+	updatePostComment,
+	updatePostCommentReply,
+} from './post';
 
 interface CommentState {
 	isCreateCommentLoad: boolean;
@@ -153,13 +161,14 @@ export const postCreateComment = createAsyncThunk(
 			username?: string;
 			password?: string;
 		},
-		{ rejectWithValue }
+		{ rejectWithValue, dispatch }
 	) => {
 		const { id, ...withoutId } = data;
 		try {
-			return await api
+			const comment = await api
 				.post(`/post/comment/${id}`, withoutId)
 				.then((res) => res.data);
+			dispatch(addPostComment(comment));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -175,13 +184,14 @@ export const postCreateReply = createAsyncThunk(
 			username?: string;
 			password?: string;
 		},
-		{ rejectWithValue }
+		{ rejectWithValue, dispatch }
 	) => {
 		const { id, ...withoutId } = data;
 		try {
-			return await api
+			const commentReply = await api
 				.post(`/post/comment/reply/${id}`, withoutId)
 				.then((res) => res.data);
+			dispatch(addPostCommentReply({ id, commentReply }));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -192,11 +202,12 @@ export const patchComment = createAsyncThunk(
 	'comment/patchComment',
 	async (
 		data: { id: string; text: string; password?: string },
-		{ rejectWithValue }
+		{ rejectWithValue, dispatch }
 	) => {
 		const { id, ...withoutId } = data;
 		try {
 			await api.patch(`/post/comment/${id}`, withoutId);
+			dispatch(updatePostComment({ id, text: withoutId.text }));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -207,11 +218,12 @@ export const patchReply = createAsyncThunk(
 	'comment/patchReply',
 	async (
 		data: { id: string; text: string; password?: string },
-		{ rejectWithValue }
+		{ rejectWithValue, dispatch }
 	) => {
 		const { id, ...withoutId } = data;
 		try {
 			await api.patch(`/post/comment/reply/${id}`, withoutId);
+			dispatch(updatePostCommentReply({ id, text: withoutId.text }));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -220,10 +232,14 @@ export const patchReply = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
 	'comment/deleteComment',
-	async (data: { id: string; password?: string }, { rejectWithValue }) => {
+	async (
+		data: { id: string; password?: string },
+		{ rejectWithValue, dispatch }
+	) => {
 		const { id, password } = data;
 		try {
 			await api.delete(`/post/comment/${id}`, { data: { password } });
+			dispatch(deletePostComment({ id }));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -232,10 +248,14 @@ export const deleteComment = createAsyncThunk(
 
 export const deleteReply = createAsyncThunk(
 	'comment/deleteReply',
-	async (data: { id: string; password?: string }, { rejectWithValue }) => {
+	async (
+		data: { id: string; password?: string },
+		{ rejectWithValue, dispatch }
+	) => {
 		const { id, password } = data;
 		try {
 			await api.delete(`/post/comment/reply/${id}`, { data: { password } });
+			dispatch(deletePostCommentReply({ id }));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

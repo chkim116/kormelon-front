@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
-import { Comment } from 'src/views/post/PostComment';
+import { Comment, CommentReply } from 'src/views/post/PostComment';
 import { Tags } from './tag';
 
 type PostCategory = {
@@ -105,7 +105,61 @@ const initialState: PostState = {
 const post = createSlice({
 	name: 'post',
 	initialState,
-	reducers: {},
+	reducers: {
+		// 댓글 CRUD -> comment reducer에서 사용
+		addPostComment: (state, { payload }: PayloadAction<Comment>) => {
+			state.post.comments = [...state.post.comments, payload];
+		},
+		addPostCommentReply: (
+			state,
+			{ payload }: PayloadAction<{ id: string; commentReply: CommentReply }>
+		) => {
+			state.post.comments = state.post.comments.map((comment) => ({
+				...comment,
+				commentReplies:
+					comment.id === payload.id
+						? [...comment.commentReplies, payload.commentReply]
+						: comment.commentReplies,
+			}));
+		},
+		updatePostComment: (
+			state,
+			{ payload }: PayloadAction<{ id: string; text: string }>
+		) => {
+			state.post.comments = state.post.comments.map((comment) => ({
+				...comment,
+				text: comment.id === payload.id ? payload.text : comment.text,
+			}));
+		},
+		deletePostComment: (state, { payload }: PayloadAction<{ id: string }>) => {
+			state.post.comments = state.post.comments.filter(
+				(comment) => comment.id !== payload.id
+			);
+		},
+		updatePostCommentReply: (
+			state,
+			{ payload }: PayloadAction<{ id: string; text: string }>
+		) => {
+			state.post.comments = state.post.comments.map((comment) => ({
+				...comment,
+				commentReplies: comment.commentReplies.map((reply) => ({
+					...reply,
+					text: reply.id === payload.id ? payload.text : reply.text,
+				})),
+			}));
+		},
+		deletePostCommentReply: (
+			state,
+			{ payload }: PayloadAction<{ id: string }>
+		) => {
+			state.post.comments = state.post.comments.map((comment) => ({
+				...comment,
+				commentReplies: comment.commentReplies.filter(
+					(reply) => reply.id !== payload.id
+				),
+			}));
+		},
+	},
 	extraReducers: (build) =>
 		build
 			.addCase(postCreate.pending, (state) => {
@@ -180,6 +234,15 @@ const post = createSlice({
 				state.isPostDeleteErr = payload;
 			}),
 });
+
+export const {
+	addPostComment,
+	addPostCommentReply,
+	updatePostComment,
+	updatePostCommentReply,
+	deletePostComment,
+	deletePostCommentReply,
+} = post.actions;
 
 export default post.reducer;
 

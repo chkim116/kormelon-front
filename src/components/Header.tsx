@@ -15,6 +15,7 @@ import { toggleThemeMode } from 'src/store/themeMode';
  */
 export const Header = () => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
+	const { userData } = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
 	const mobileSearchRef = useRef<HTMLInputElement>(null);
@@ -85,6 +86,7 @@ export const Header = () => {
 						{themeMode === 'dark' && <MdLightMode className='light' />}
 						{themeMode === 'light' && <MdModeNight className='dark' />}
 					</button>
+					{userData ? <p>{userData.username}</p> : null}
 				</span>
 			</div>
 		</HeaderStyle>

@@ -21,6 +21,14 @@ import { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import { PostCommentStyle } from './PostStyle';
 
+export interface CommentReply {
+	id: string;
+	text: string;
+	userId: string | null;
+	username: string;
+	isAnonymous: boolean;
+	createdAt: string;
+}
 export interface Comment {
 	id: string;
 	text: string;
@@ -29,14 +37,7 @@ export interface Comment {
 	createdAt: string;
 	deletedAt: string | null;
 	isAnonymous: boolean;
-	commentReplies: {
-		id: string;
-		text: string;
-		userId: string | null;
-		username: string;
-		isAnonymous: boolean;
-		createdAt: string;
-	}[];
+	commentReplies: CommentReply[];
 }
 
 interface CommentValue {
@@ -45,19 +46,15 @@ interface CommentValue {
 	text: string;
 }
 
-interface PostCommentProps {
-	comments: Comment[];
-}
-
-const PostComment = ({ comments }: PostCommentProps) => {
+const PostComment = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
+	const { comments } = useAppSelector((state) => state.post.post);
 	const { query } = useRouter();
 	const { callNotification } = useNotification();
 
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
-	const [postComments, setPostComments] = useState<Comment[]>(comments);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
@@ -156,24 +153,32 @@ const PostComment = ({ comments }: PostCommentProps) => {
 			commentValue.type === 'comment' &&
 				dispatch(postCreateComment(toCreateData))
 					.unwrap()
-					.then((res) => setPostComments((prev) => [res, ...prev]));
+					.then(() => {
+						callNotification({
+							type: 'success',
+							message: '댓글이 작성되었습니다.',
+						});
+					});
 
 			commentValue.type === 'reply' &&
 				dispatch(postCreateReply(toCreateData))
 					.unwrap()
-					.then((res) =>
-						setPostComments((prev) =>
-							prev.map((comment) => ({
-								...comment,
-								commentReplies:
-									comment.id === commentValue.id
-										? [res, ...comment.commentReplies]
-										: comment.commentReplies,
-							}))
-						)
-					);
+					.then(() => {
+						callNotification({
+							type: 'success',
+							message: '댓글이 작성되었습니다.',
+						});
+					});
 		},
-		[commentValues, anonymousUser, userData]
+		[
+			dispatch,
+			postCreateComment,
+			postCreateReply,
+			commentValues,
+			anonymousUser,
+			userData,
+			callNotification,
+		]
 	);
 
 	// * 댓글 수정 입력 받기
@@ -207,34 +212,27 @@ const PostComment = ({ comments }: PostCommentProps) => {
 		if (type === 'comment') {
 			dispatch(patchComment(data))
 				.unwrap()
-				.then(() =>
-					setPostComments((prev) =>
-						prev.map((comment) => ({
-							...comment,
-							text: comment.id === data.id ? data.text : comment.text,
-						}))
-					)
-				);
+				.then(() => {
+					callNotification({
+						type: 'success',
+						message: '댓글이 수정되었습니다.',
+					});
+				});
 		}
 
 		if (type === 'reply') {
 			dispatch(patchReply(data))
 				.unwrap()
-				.then(() =>
-					setPostComments((prev) =>
-						prev.map((comment) => ({
-							...comment,
-							commentReplies: comment.commentReplies.map((reply) => ({
-								...reply,
-								text: reply.id === data.id ? data.text : reply.text,
-							})),
-						}))
-					)
-				);
+				.then(() => {
+					callNotification({
+						type: 'success',
+						message: '댓글이 수정되었습니다.',
+					});
+				});
 		}
 
 		setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
-	}, [dispatch, patchComment, patchReply, editCommentValue]);
+	}, [dispatch, patchComment, patchReply, editCommentValue, callNotification]);
 
 	// * 삭제 버튼 클릭 시
 	const onClickCommentDelete = useCallback(
@@ -252,30 +250,27 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				if (type === 'comment') {
 					dispatch(deleteComment({ id }))
 						.unwrap()
-						.then(() =>
-							setPostComments((prev) =>
-								prev.filter((comment) => comment.id !== id)
-							)
-						);
+						.then(() => {
+							callNotification({
+								type: 'success',
+								message: '댓글이 삭제 되었습니다.',
+							});
+						});
 				}
 
 				if (type === 'reply') {
 					dispatch(deleteReply({ id }))
 						.unwrap()
-						.then(() =>
-							setPostComments((prev) =>
-								prev.map((comment) => ({
-									...comment,
-									commentReplies: comment.commentReplies.filter(
-										(reply) => reply.id !== id
-									),
-								}))
-							)
-						);
+						.then(() => {
+							callNotification({
+								type: 'success',
+								message: '댓글이 삭제 되었습니다.',
+							});
+						});
 				}
 			}
 		},
-		[dispatch, deleteComment, deleteReply, userData]
+		[dispatch, deleteComment, deleteReply, userData, callNotification]
 	);
 
 	const [isAnonymousPw, setIsAnonymousPw] = useState('');
@@ -298,12 +293,24 @@ const PostComment = ({ comments }: PostCommentProps) => {
 			if (type === 'comment') {
 				dispatch(patchComment(withPassword))
 					.unwrap()
+					.then(() => {
+						callNotification({
+							type: 'success',
+							message: '댓글이 수정 되었습니다.',
+						});
+					})
 					.catch((msg) => callNotification({ type: 'danger', message: msg }));
 			}
 
 			if (type === 'reply') {
 				dispatch(patchReply(withPassword))
 					.unwrap()
+					.then(() => {
+						callNotification({
+							type: 'success',
+							message: '댓글이 수정되었습니다.',
+						});
+					})
 					.catch((msg) => callNotification({ type: 'danger', message: msg }));
 			}
 
@@ -331,12 +338,24 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				if (type === 'comment') {
 					dispatch(deleteComment({ id, password: isAnonymousPw }))
 						.unwrap()
+						.then(() =>
+							callNotification({
+								type: 'success',
+								message: '댓글이 삭제되었습니다.',
+							})
+						)
 						.catch((msg) => callNotification({ type: 'danger', message: msg }));
 				}
 
 				if (type === 'reply') {
 					dispatch(deleteReply({ id, password: isAnonymousPw }))
 						.unwrap()
+						.then(() =>
+							callNotification({
+								type: 'success',
+								message: '댓글이 삭제되었습니다.',
+							})
+						)
 						.catch((msg) => callNotification({ type: 'danger', message: msg }));
 				}
 
@@ -354,8 +373,6 @@ const PostComment = ({ comments }: PostCommentProps) => {
 			callNotification,
 		]
 	);
-
-	console.log(postComments);
 
 	return (
 		<PostCommentStyle>
@@ -403,7 +420,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 				</form>
 			</Modal>
 			<div className='comment-container'>
-				<div className='count'>{postComments.length}개의 댓글</div>
+				<div className='count'>{comments.length}개의 댓글</div>
 
 				{/* 댓글 */}
 				<form
@@ -441,7 +458,7 @@ const PostComment = ({ comments }: PostCommentProps) => {
 					</Button>
 				</form>
 
-				{postComments.map((comment) => (
+				{comments.map((comment) => (
 					<div className='comment-list' key={comment.id}>
 						<div className='comment-box'>
 							<div className='box-title'>

@@ -10,6 +10,7 @@ import category from './category';
 import tag from './tag';
 import post from './post';
 import comment from './comment';
+import notification from './notification';
 
 const combineReducer = combineReducers({
 	gnb,
@@ -19,6 +20,7 @@ const combineReducer = combineReducers({
 	tag,
 	post,
 	comment,
+	notification,
 });
 
 const reducer = (state: any, action: AnyAction) => {

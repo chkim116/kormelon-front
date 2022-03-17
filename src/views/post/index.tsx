@@ -55,7 +55,9 @@ const Post = () => {
 		<PostStyle>
 			<div className='post'>
 				<div className='category'>
-					{post.category.parentValue} {'>'} {post.category.value}
+					{post.category.parentValue}
+					<span>{'>'}</span>
+					{post.category.value}
 				</div>
 				<h1 className='title'>{post.title}</h1>
 				<div className='info'>

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
+import dayjs from 'dayjs';
 
 import { Post } from 'src/store/post';
+import Tag from 'src/components/Tag';
 
 interface PostListTemplateProps {
 	posts: {
@@ -23,22 +25,26 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 				results.map((post) => (
 					<div className='container' key={post.id}>
 						<div className='category'>
-							{post.category.parentValue} {'>'} {post.category.value}
+							{post.category.parentValue}
+							<span>{'>'}</span>
+							{post.category.value}
 						</div>
 						<h2 className='title'>
 							<Link href={`/post/${post.id}/${encodeURIComponent(post.title)}`}>
 								{post.title}
 							</Link>
 						</h2>
-						<div>
+						<div className='tags'>
 							{post.tags?.map((tag) => (
-								<span key={tag.id}>{tag.value}</span>
+								<Tag key={tag.id} className='tag'>
+									{tag.value}
+								</Tag>
 							))}
 						</div>
 						<div className='meta'>
-							<small>{post.createdAt}</small>
+							<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
 							<span className='separator'>·</span>
-							<small>{Math.floor(post.readTime)} min to read</small>
+							<small>{post.readTime}</small>
 						</div>
 					</div>
 				))
@@ -58,11 +64,22 @@ const PostListTemplateStyle = styled.article`
 		flex-direction: column;
 		gap: 8px;
 
-		.title {
+		.category {
+			margin-bottom: 10px;
+			font-size: 13px;
+
+			span {
+				margin: 0 6px;
+			}
 		}
 
-		.category {
-			margin-bottom: 6px;
+		.title {
+			margin-bottom: 16px;
+		}
+
+		.tags {
+			display: flex;
+			gap: 8px;
 		}
 
 		.meta {

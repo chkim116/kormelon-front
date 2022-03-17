@@ -45,6 +45,11 @@ const PostStyle = styled.div`
 
 		.category {
 			margin-bottom: 20px;
+			font-size: 13px;
+
+			span {
+				margin: 0 6px;
+			}
 		}
 
 		.title {

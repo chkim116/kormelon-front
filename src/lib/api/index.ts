@@ -12,6 +12,7 @@ export const api = axios.create({
 api.interceptors.response.use(
 	(res) => res,
 	(err) => {
+		console.dir(err);
 		// 오류 응답을 처리
 		if (err.config.url === '/user/auth') {
 			return Promise.reject(err);

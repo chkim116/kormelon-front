@@ -25,9 +25,13 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 				results.map((post) => (
 					<div className='container' key={post.id}>
 						<div className='category'>
-							{post.category.parentValue}
+							<Link href={`/search/category?q=${post.category.parentValue}`}>
+								{post.category.parentValue}
+							</Link>
 							<span>{'>'}</span>
-							{post.category.value}
+							<Link href={`/search/category/sub?q=${post.category.value}`}>
+								{post.category.value}
+							</Link>
 						</div>
 						<h2 className='title'>
 							<Link href={`/post/${post.id}/${encodeURIComponent(post.title)}`}>
@@ -36,7 +40,11 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 						</h2>
 						<div className='tags'>
 							{post.tags?.map((tag) => (
-								<Tag key={tag.id} className='tag'>
+								<Tag
+									key={tag.id}
+									href={`/search/tag?q=${tag.value}`}
+									className='tag'
+								>
 									{tag.value}
 								</Tag>
 							))}
@@ -67,6 +75,12 @@ const PostListTemplateStyle = styled.article`
 		.category {
 			margin-bottom: 10px;
 			font-size: 13px;
+
+			a {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
 
 			span {
 				margin: 0 6px;

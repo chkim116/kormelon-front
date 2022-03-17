@@ -42,7 +42,7 @@ const Post = () => {
 	// h1 뽑고.. anchor로 보낼 얘들
 	const anchors = parsedContent
 		.match(anchorRegExp)
-		?.map((anchor) => anchor.replace(/<[^>]*>?/g, '').replace(/ /g, '-'));
+		?.map((anchor) => anchor.replace(/<[^>]*>?/g, ''));
 
 	const onClickPostDelete = useCallback((e) => {
 		const { id } = e.currentTarget;
@@ -76,7 +76,7 @@ const Post = () => {
 				</div>
 
 				{post.userId === userData?.id && userData?.isAdmin && (
-					<div>
+					<div className='btns'>
 						<Button>
 							<Link href={`/post/write/?edit=${post.id}`} passHref>
 								<a>

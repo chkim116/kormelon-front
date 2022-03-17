@@ -4,6 +4,12 @@ interface PostAnchorsProps {
 	anchors: string[];
 }
 
+function toReplace(anchor: string) {
+	return anchor
+		.replace(/[\!\@\#\$\%\^\&\*\(\)\_\+\?\.\,\_\=\~\`\/\*\-\+]+/g, '')
+		.replace(/ /g, '-');
+}
+
 const PostAnchors = ({ anchors }: PostAnchorsProps) => {
 	const [activeAnchor, setActiveAnchor] = useState('');
 	// anchor 클릭 시 scroll이 움직여 자동으로 onScroll가 실행된다. 이를 방지.
@@ -20,8 +26,12 @@ const PostAnchors = ({ anchors }: PostAnchorsProps) => {
 		const res: { [x: string]: number } = {};
 
 		for (const anchor of anchors) {
+			const reAnchor = toReplace(anchor);
 			// 2로 나눈 이유는, 시작 지점이 아니라 그 이전에 앵커를 active하기 위함.
-			res[anchor] = document.getElementById(anchor)!.offsetTop / 2;
+			const aDom = document.getElementById(reAnchor);
+			if (aDom) {
+				res[reAnchor] = aDom.offsetTop - 200;
+			}
 		}
 
 		return res;
@@ -88,18 +98,21 @@ const PostAnchors = ({ anchors }: PostAnchorsProps) => {
 
 	return (
 		<>
-			{anchors?.map((anchor, index) => (
-				<a
-					key={anchor}
-					onClick={onClickAnchor}
-					data-id={anchor}
-					data-index={index}
-					href={`#${anchor}`}
-					className={`anchor ${activeAnchor === anchor ? 'active' : ''}`}
-				>
-					{anchor.replaceAll('-', ' ')}
-				</a>
-			))}
+			{anchors?.map((anchor, index) => {
+				const reAnchor = toReplace(anchor);
+				return (
+					<a
+						key={reAnchor}
+						onClick={onClickAnchor}
+						data-id={reAnchor}
+						data-index={index}
+						href={`#${reAnchor}`}
+						className={`anchor ${activeAnchor === reAnchor ? 'active' : ''}`}
+					>
+						{anchor}
+					</a>
+				);
+			})}
 		</>
 	);
 };

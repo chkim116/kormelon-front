@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
+import { addNotification } from './notification';
 import {
 	addPostComment,
 	addPostCommentReply,
@@ -169,6 +170,9 @@ export const postCreateComment = createAsyncThunk(
 				.post(`/post/comment/${id}`, withoutId)
 				.then((res) => res.data);
 			dispatch(addPostComment(comment));
+			dispatch(
+				addNotification({ type: 'success', message: '댓글이 작성되었습니다.' })
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -192,6 +196,12 @@ export const postCreateReply = createAsyncThunk(
 				.post(`/post/comment/reply/${id}`, withoutId)
 				.then((res) => res.data);
 			dispatch(addPostCommentReply({ id, commentReply }));
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '댓글이 작성되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -208,6 +218,12 @@ export const patchComment = createAsyncThunk(
 		try {
 			await api.patch(`/post/comment/${id}`, withoutId);
 			dispatch(updatePostComment({ id, text: withoutId.text }));
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '댓글이 수정되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -224,6 +240,12 @@ export const patchReply = createAsyncThunk(
 		try {
 			await api.patch(`/post/comment/reply/${id}`, withoutId);
 			dispatch(updatePostCommentReply({ id, text: withoutId.text }));
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '댓글이 수정되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -240,6 +262,12 @@ export const deleteComment = createAsyncThunk(
 		try {
 			await api.delete(`/post/comment/${id}`, { data: { password } });
 			dispatch(deletePostComment({ id }));
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '댓글이 삭제되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -256,6 +284,12 @@ export const deleteReply = createAsyncThunk(
 		try {
 			await api.delete(`/post/comment/reply/${id}`, { data: { password } });
 			dispatch(deletePostCommentReply({ id }));
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '댓글이 삭제되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

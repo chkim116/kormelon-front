@@ -173,14 +173,7 @@ const PostComment = () => {
 			);
 
 			if (commentValue.type === 'comment') {
-				dispatch(postCreateComment(toCreateData))
-					.unwrap()
-					.then(() => {
-						callNotification({
-							type: 'success',
-							message: '댓글이 작성되었습니다.',
-						});
-					});
+				dispatch(postCreateComment(toCreateData));
 
 				// 댓글 입력 정보 삭제
 				setCommentValues((prev) =>
@@ -189,14 +182,7 @@ const PostComment = () => {
 			}
 
 			if (commentValue.type === 'reply') {
-				dispatch(postCreateReply(toCreateData))
-					.unwrap()
-					.then(() => {
-						callNotification({
-							type: 'success',
-							message: '댓글이 작성되었습니다.',
-						});
-					});
+				dispatch(postCreateReply(toCreateData));
 
 				// 대댓글 입력 정보 삭제
 				setCommentValues((prev) =>
@@ -244,29 +230,15 @@ const PostComment = () => {
 		}
 
 		if (type === 'comment') {
-			dispatch(patchComment(data))
-				.unwrap()
-				.then(() => {
-					callNotification({
-						type: 'success',
-						message: '댓글이 수정되었습니다.',
-					});
-				});
+			dispatch(patchComment(data));
 		}
 
 		if (type === 'reply') {
-			dispatch(patchReply(data))
-				.unwrap()
-				.then(() => {
-					callNotification({
-						type: 'success',
-						message: '댓글이 수정되었습니다.',
-					});
-				});
+			dispatch(patchReply(data));
 		}
 
 		setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
-	}, [dispatch, patchComment, patchReply, editCommentValue, callNotification]);
+	}, [dispatch, patchComment, patchReply, editCommentValue]);
 
 	// * 삭제 버튼 클릭 시
 	const onClickCommentDelete = useCallback(
@@ -282,29 +254,15 @@ const PostComment = () => {
 
 			if (window.confirm('댓글을 삭제하십니까?')) {
 				if (type === 'comment') {
-					dispatch(deleteComment({ id }))
-						.unwrap()
-						.then(() => {
-							callNotification({
-								type: 'success',
-								message: '댓글이 삭제 되었습니다.',
-							});
-						});
+					dispatch(deleteComment({ id }));
 				}
 
 				if (type === 'reply') {
-					dispatch(deleteReply({ id }))
-						.unwrap()
-						.then(() => {
-							callNotification({
-								type: 'success',
-								message: '댓글이 삭제 되었습니다.',
-							});
-						});
+					dispatch(deleteReply({ id }));
 				}
 			}
 		},
-		[dispatch, deleteComment, deleteReply, userData, callNotification]
+		[dispatch, deleteComment, deleteReply, userData]
 	);
 
 	const [isAnonymousPw, setIsAnonymousPw] = useState('');
@@ -325,41 +283,18 @@ const PostComment = () => {
 			const withPassword = { ...data, password: isAnonymousPw };
 
 			if (type === 'comment') {
-				dispatch(patchComment(withPassword))
-					.unwrap()
-					.then(() => {
-						callNotification({
-							type: 'success',
-							message: '댓글이 수정 되었습니다.',
-						});
-					})
-					.catch((msg) => callNotification({ type: 'danger', message: msg }));
+				dispatch(patchComment(withPassword));
 			}
 
 			if (type === 'reply') {
-				dispatch(patchReply(withPassword))
-					.unwrap()
-					.then(() => {
-						callNotification({
-							type: 'success',
-							message: '댓글이 수정되었습니다.',
-						});
-					})
-					.catch((msg) => callNotification({ type: 'danger', message: msg }));
+				dispatch(patchReply(withPassword));
 			}
 
 			setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
 			setIsEditModalOpen(false);
 			setIsAnonymousPw('');
 		},
-		[
-			callNotification,
-			editCommentValue,
-			dispatch,
-			patchComment,
-			isAnonymousPw,
-			patchReply,
-		]
+		[editCommentValue, dispatch, patchComment, isAnonymousPw, patchReply]
 	);
 
 	const onSubmitAnonymousDelete = useCallback(
@@ -370,27 +305,11 @@ const PostComment = () => {
 
 			if (window.confirm('댓글을 삭제하십니까?')) {
 				if (type === 'comment') {
-					dispatch(deleteComment({ id, password: isAnonymousPw }))
-						.unwrap()
-						.then(() =>
-							callNotification({
-								type: 'success',
-								message: '댓글이 삭제되었습니다.',
-							})
-						)
-						.catch((msg) => callNotification({ type: 'danger', message: msg }));
+					dispatch(deleteComment({ id, password: isAnonymousPw }));
 				}
 
 				if (type === 'reply') {
-					dispatch(deleteReply({ id, password: isAnonymousPw }))
-						.unwrap()
-						.then(() =>
-							callNotification({
-								type: 'success',
-								message: '댓글이 삭제되었습니다.',
-							})
-						)
-						.catch((msg) => callNotification({ type: 'danger', message: msg }));
+					dispatch(deleteReply({ id, password: isAnonymousPw }));
 				}
 
 				setDeleteCommentValue({ id: '', type: '' });
@@ -398,14 +317,7 @@ const PostComment = () => {
 				setIsDeleteModalOpen(false);
 			}
 		},
-		[
-			dispatch,
-			deleteCommentValue,
-			isAnonymousPw,
-			deleteComment,
-			deleteReply,
-			callNotification,
-		]
+		[dispatch, deleteCommentValue, isAnonymousPw, deleteComment, deleteReply]
 	);
 
 	return (

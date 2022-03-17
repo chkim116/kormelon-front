@@ -59,6 +59,28 @@ const PostComment = () => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isOpenReplyids, setIsOpenReplyIds] = useState<string[]>([]);
 	const [commentValues, setCommentValues] = useState<CommentValue[]>([]);
+
+	const commentText = useMemo(() => {
+		return (
+			commentValues.find((comment) => comment.type === 'comment')?.text || ''
+		);
+	}, [commentValues]);
+
+	const commentReplyText = useCallback(
+		(commentId: string) => {
+			const commentReplies = commentValues.filter(
+				(comment) => comment.type === 'reply'
+			);
+
+			return (
+				// reply이긴 하지만, id는 comment.id를 받기 때문에
+				// 실상은 comment.id === commentId이다.
+				commentReplies.find((reply) => reply.id === commentId)?.text || ''
+			);
+		},
+		[commentValues]
+	);
+
 	const [anonymousUser, setAnonymousUser] = useState({
 		username: '익명',
 		password: '',
@@ -150,7 +172,7 @@ const PostComment = () => {
 				userData ? {} : anonymousUser
 			);
 
-			commentValue.type === 'comment' &&
+			if (commentValue.type === 'comment') {
 				dispatch(postCreateComment(toCreateData))
 					.unwrap()
 					.then(() => {
@@ -160,7 +182,13 @@ const PostComment = () => {
 						});
 					});
 
-			commentValue.type === 'reply' &&
+				// 댓글 입력 정보 삭제
+				setCommentValues((prev) =>
+					prev.filter((comment) => comment.type !== 'comment')
+				);
+			}
+
+			if (commentValue.type === 'reply') {
 				dispatch(postCreateReply(toCreateData))
 					.unwrap()
 					.then(() => {
@@ -169,6 +197,12 @@ const PostComment = () => {
 							message: '댓글이 작성되었습니다.',
 						});
 					});
+
+				// 대댓글 입력 정보 삭제
+				setCommentValues((prev) =>
+					prev.filter((comment) => comment.id !== toCreateData.id)
+				);
+			}
 		},
 		[
 			dispatch,
@@ -374,6 +408,8 @@ const PostComment = () => {
 		]
 	);
 
+	console.log(commentValues);
+
 	return (
 		<PostCommentStyle>
 			<Modal isOpen={isDeleteModalOpen}>
@@ -429,6 +465,7 @@ const PostComment = () => {
 					data-id={query.id}
 				>
 					<textarea
+						value={commentText}
 						className='comment-input'
 						name='comment'
 						placeholder='댓글을 작성하세요.'
@@ -516,9 +553,9 @@ const PostComment = () => {
 							{editCommentValue.id === comment.id ? (
 								<div className='comment-edit'>
 									<textarea
+										value={editCommentValue.text}
 										className='comment-input edit'
 										onChange={onChangeEditComment}
-										defaultValue={comment.text}
 									/>
 									<span>
 										<Button color='primary' onClick={onClickEditSubmit}>
@@ -556,6 +593,7 @@ const PostComment = () => {
 									data-id={comment.id}
 								>
 									<textarea
+										value={commentReplyText(comment.id)}
 										className='comment-input'
 										name='reply'
 										placeholder='답변을 작성하세요.'
@@ -641,7 +679,7 @@ const PostComment = () => {
 												<textarea
 													className='comment-input edit'
 													onChange={onChangeEditComment}
-													defaultValue={reply.text}
+													value={editCommentValue.text}
 												/>
 												<span>
 													<Button color='primary' onClick={onClickEditSubmit}>

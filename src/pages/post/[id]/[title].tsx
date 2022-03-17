@@ -17,14 +17,11 @@ export const getServerSideProps = store.getServerSideProps(
 		}
 
 		const id = params['id'] as string;
-		const { dispatch, getState } = store;
+		const { dispatch } = store;
 		await dispatch(getPost(id));
-		const post = getState().post.post;
 
 		return {
-			props: {
-				post,
-			},
+			props: {},
 		};
 	}
 );

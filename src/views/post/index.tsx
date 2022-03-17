@@ -14,7 +14,7 @@ import { PostStyle } from './PostStyle';
 import { ALLOWED_TAGS, ALLOWED_URI_REGEXP } from 'src/lib/domPurifyConfig';
 import Tag from 'src/components/Tag';
 import 'src/lib/markedConfig';
-import { deletePost, PostDetail } from 'src/store/post';
+import { deletePost } from 'src/store/post';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import Button from 'src/components/Button';
 import { useRouter } from 'next/router';
@@ -25,13 +25,10 @@ DOMPurify.setConfig({
 	ALLOWED_URI_REGEXP,
 });
 
-interface PostProps {
-	post: PostDetail;
-}
-
-const Post = ({ post }: PostProps) => {
+const Post = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
+	const { post } = useAppSelector((state) => state.post);
 	const { callNotification } = useNotification();
 	const router = useRouter();
 
@@ -105,7 +102,7 @@ const Post = ({ post }: PostProps) => {
 						__html: parsedContent,
 					}}
 				/>
-				<PostComment comments={post.comments} />
+				<PostComment />
 			</div>
 
 			<div className='anchors'>

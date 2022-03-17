@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useToggle } from 'react-use';
 
 import Button from 'src/components/Button';
-import { useNotification } from 'src/hooks/useNotification';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { postLogin, postRegister } from 'src/store/user';
 
@@ -46,10 +45,8 @@ const Login = () => {
 	const router = useRouter();
 
 	const dispatch = useAppDispatch();
-	const { isLoginDone, isLoginErr, isRegisterDone, isRegisterErr } =
-		useAppSelector((state) => state.user);
+	const { isLoginDone, isRegisterDone } = useAppSelector((state) => state.user);
 
-	const { callNotification } = useNotification();
 	const [isLogin, onClickToggle] = useToggle(true);
 	const [form, setForm] = useState({
 		email: '',
@@ -91,20 +88,6 @@ const Login = () => {
 			onClickToggle(true);
 		}
 	}, [isRegisterDone, onClickToggle]);
-
-	// 가입 에러
-	useEffect(() => {
-		if (isRegisterErr) {
-			callNotification({ type: 'danger', message: isRegisterErr });
-		}
-	}, [callNotification, isRegisterErr]);
-
-	// 로그인 에러
-	useEffect(() => {
-		if (isLoginErr) {
-			callNotification({ type: 'danger', message: isLoginErr });
-		}
-	}, [callNotification, isLoginErr]);
 
 	return (
 		<SignForm>

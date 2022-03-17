@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { MdClose, MdModeEdit } from 'react-icons/md';
 import Button from 'src/components/Button';
@@ -19,21 +19,7 @@ import SettingStyle from './SettingStyle';
 
 const Setting = () => {
 	const dispatch = useAppDispatch();
-	const {
-		categories,
-		isDeleteDone,
-		isSubDeleteDone,
-		isCreateDone,
-		isSubCreateDone,
-		isCreateErr,
-		isSubCreateErr,
-		isDeleteErr,
-		isSubDeleteErr,
-		isEditDone,
-		isEditErr,
-		isSubEditDone,
-		isSubEditErr,
-	} = useAppSelector((state) => state.category);
+	const { categories } = useAppSelector((state) => state.category);
 	const { callNotification } = useNotification();
 
 	const [newCategoryValue, setNewCategoryValue] = useState<string>('');
@@ -191,117 +177,6 @@ const Setting = () => {
 		},
 		[dispatch]
 	);
-
-	// TODO: 리팩터링
-	// success
-	useEffect(() => {
-		if (isSubEditDone) {
-			callNotification({
-				type: 'success',
-				message: '올바르게 수정되었습니다.',
-			});
-		}
-	}, [callNotification, isSubEditDone]);
-
-	useEffect(() => {
-		if (isEditDone) {
-			callNotification({
-				type: 'success',
-				message: '올바르게 수정되었습니다.',
-			});
-		}
-	}, [callNotification, isEditDone]);
-
-	useEffect(() => {
-		if (isSubDeleteDone) {
-			callNotification({
-				type: 'success',
-				message: '하위 카테고리가 삭제되었습니다.',
-			});
-		}
-	}, [callNotification, isSubDeleteDone]);
-
-	useEffect(() => {
-		if (isDeleteDone) {
-			callNotification({
-				type: 'success',
-				message: '카테고리가 삭제되었습니다.',
-			});
-		}
-	}, [callNotification, isDeleteDone]);
-
-	useEffect(() => {
-		if (isSubCreateDone) {
-			callNotification({
-				type: 'success',
-				message: '하위 카테고리가 생성되었습니다.',
-			});
-		}
-	}, [callNotification, isSubCreateDone]);
-
-	useEffect(() => {
-		if (isCreateDone) {
-			callNotification({
-				type: 'success',
-				message: '카테고리가 생성되었습니다.',
-			});
-		}
-	}, [callNotification, isCreateDone]);
-
-	// error
-	useEffect(() => {
-		if (isSubEditErr) {
-			callNotification({
-				type: 'danger',
-				message: isSubEditErr,
-			});
-		}
-	}, [callNotification, isSubEditErr]);
-
-	useEffect(() => {
-		if (isEditErr) {
-			callNotification({
-				type: 'danger',
-				message: isEditErr,
-			});
-		}
-	}, [callNotification, isEditErr]);
-
-	useEffect(() => {
-		if (isSubDeleteErr) {
-			callNotification({
-				type: 'danger',
-				message: isSubDeleteErr,
-			});
-		}
-	}, [callNotification, isSubDeleteErr]);
-
-	useEffect(() => {
-		if (isDeleteErr) {
-			callNotification({
-				type: 'danger',
-				message: isDeleteErr,
-			});
-		}
-	}, [callNotification, isDeleteErr]);
-
-	useEffect(() => {
-		if (isSubCreateErr) {
-			callNotification({
-				type: 'danger',
-				message: isSubCreateErr,
-			});
-		}
-	}, [callNotification, isSubCreateErr]);
-
-	useEffect(() => {
-		if (isCreateErr) {
-			callNotification({
-				type: 'danger',
-				message: isCreateErr,
-			});
-		}
-	}, [callNotification, isCreateErr]);
 
 	return (
 		<SettingStyle>

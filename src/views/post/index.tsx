@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -17,8 +18,6 @@ import 'src/lib/markedConfig';
 import { deletePost } from 'src/store/post';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import Button from 'src/components/Button';
-import { useRouter } from 'next/router';
-import { useNotification } from 'src/hooks/useNotification';
 
 DOMPurify.setConfig({
 	ALLOWED_TAGS,
@@ -29,7 +28,6 @@ const Post = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
 	const { post } = useAppSelector((state) => state.post);
-	const { callNotification } = useNotification();
 	const router = useRouter();
 
 	console.log(post);
@@ -49,11 +47,7 @@ const Post = () => {
 	const onClickPostDelete = useCallback((e) => {
 		const { id } = e.currentTarget;
 		if (window.confirm('정말 삭제 하십니까?')) {
-			dispatch(deletePost(id))
-				.then(() => router.push('/'))
-				.catch(() =>
-					callNotification({ type: 'danger', message: '삭제에 실패했습니다.' })
-				);
+			dispatch(deletePost(id)).then(() => router.push('/'));
 		}
 	}, []);
 

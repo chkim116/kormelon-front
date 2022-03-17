@@ -216,42 +216,36 @@ const PostWrite = ({ prevPost }: PostWriteProps) => {
 		e.preventDefault();
 	}, []);
 
-	const onDrop = useCallback(
-		async (e) => {
-			e.preventDefault();
+	const onDrop = useCallback(async (e) => {
+		e.preventDefault();
 
-			if (!editorRef.current) return;
-			const editor = editorRef.current;
-			const file = e.dataTransfer.files[0];
+		if (!editorRef.current) return;
+		const editor = editorRef.current;
+		const file = e.dataTransfer.files[0];
 
-			const formData = new FormData();
-			formData.append('image', file);
+		const formData = new FormData();
+		formData.append('image', file);
 
-			try {
-				const url = await getImg();
+		try {
+			const url = await getImg();
 
-				editor.setRangeText(
-					`\n![alt](${url})`,
-					editor.selectionStart,
-					editor.selectionEnd,
-					'end'
-				);
+			editor.setRangeText(
+				`\n![alt](${url})`,
+				editor.selectionStart,
+				editor.selectionEnd,
+				'end'
+			);
 
-				setPost((prev) => ({ ...prev, content: editor.value }));
-				editor.focus();
-			} catch (err: any) {
-				callNotification({
-					type: 'danger',
-					message: err.response.data.message,
-				});
-			}
+			setPost((prev) => ({ ...prev, content: editor.value }));
+			editor.focus();
+		} catch (err: any) {
+			console.error(err);
+		}
 
-			function getImg() {
-				return api.post('/post/img', formData).then((res) => res.data);
-			}
-		},
-		[callNotification]
-	);
+		function getImg() {
+			return api.post('/post/img', formData).then((res) => res.data);
+		}
+	}, []);
 
 	const onChangeTitle = useCallback((e) => {
 		const { value } = e.target;

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { api } from 'src/lib/api';
+import { addNotification } from './notification';
 
 export interface Category {
 	id: string;
@@ -200,6 +201,12 @@ export const postCategory = createAsyncThunk(
 		try {
 			await api.post('/category', { value });
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '카테고리가 생성되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -217,6 +224,12 @@ export const postSubCategory = createAsyncThunk(
 				value: data.value,
 			});
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '하위 카테고리가 생성되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -233,6 +246,12 @@ export const patchCategory = createAsyncThunk(
 		try {
 			await api.patch(`/category/${id}`, { value });
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '상위 카테고리가 수정 되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -251,6 +270,12 @@ export const patchSubCategory = createAsyncThunk(
 				value,
 			});
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '하위 카테고리가 수정 되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -263,6 +288,12 @@ export const deleteCategory = createAsyncThunk(
 		try {
 			await api.delete(`/category/${id}`);
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '하위 카테고리가 삭제되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -275,6 +306,12 @@ export const deleteSubCategory = createAsyncThunk(
 		try {
 			await api.delete(`/category/${id}/sub`);
 			dispatch(getCategory());
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '하위 카테고리가 삭제되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

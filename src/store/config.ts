@@ -33,7 +33,7 @@ const reducer = (state: any, action: AnyAction) => {
 	}
 };
 
-const makeStore = () =>
+export const makeStore = () =>
 	configureStore({
 		reducer,
 		middleware: (getDefaultMiddleware) =>

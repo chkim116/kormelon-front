@@ -408,8 +408,6 @@ const PostComment = () => {
 		]
 	);
 
-	console.log(commentValues);
-
 	return (
 		<PostCommentStyle>
 			<Modal isOpen={isDeleteModalOpen}>
@@ -459,12 +457,9 @@ const PostComment = () => {
 				<div className='count'>{comments.length}개의 댓글</div>
 
 				{/* 댓글 */}
-				<form
-					onChange={onChangeForm}
-					onSubmit={onSubmitForm}
-					data-id={query.id}
-				>
+				<form onSubmit={onSubmitForm} data-id={query.id}>
 					<textarea
+						onChange={onChangeForm}
 						value={commentText}
 						className='comment-input'
 						name='comment'
@@ -475,6 +470,7 @@ const PostComment = () => {
 					{isLogged ? null : (
 						<div className='anonymous'>
 							<input
+								onChange={onChangeForm}
 								type='text'
 								placeholder='이름'
 								name='username'
@@ -482,6 +478,7 @@ const PostComment = () => {
 								defaultValue={anonymousUser.username}
 							/>
 							<input
+								onChange={onChangeForm}
 								type='password'
 								placeholder='비밀번호'
 								name='password'
@@ -587,12 +584,9 @@ const PostComment = () => {
 						{/* 대댓글 */}
 						{isOpenReplyids.includes(comment.id) && (
 							<div className='reply-box'>
-								<form
-									onChange={onChangeForm}
-									onSubmit={onSubmitForm}
-									data-id={comment.id}
-								>
+								<form onSubmit={onSubmitForm} data-id={comment.id}>
 									<textarea
+										onChange={onChangeForm}
 										value={commentReplyText(comment.id)}
 										className='comment-input'
 										name='reply'
@@ -607,6 +601,7 @@ const PostComment = () => {
 												placeholder='이름'
 												name='username'
 												autoComplete='username'
+												onChange={onChangeForm}
 												defaultValue={anonymousUser.username}
 											/>
 											<input
@@ -614,6 +609,7 @@ const PostComment = () => {
 												placeholder='비밀번호'
 												name='password'
 												autoComplete='current-password'
+												onChange={onChangeForm}
 												defaultValue={anonymousUser.password}
 											/>
 										</div>

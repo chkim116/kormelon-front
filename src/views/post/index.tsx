@@ -61,7 +61,7 @@ const Post = () => {
 				<div className='info'>
 					<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
 					<span className='separator'>·</span>
-					<small>{Math.floor(post.readTime)} min to read</small>
+					<small>{post.readTime}</small>
 				</div>
 
 				<div className='tags'>

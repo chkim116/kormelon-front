@@ -235,14 +235,22 @@ const PostWriteStyle = styled.div`
 					@media all and (max-width: 800px) {
 						display: none;
 					}
+					white-space: pre-line;
+					overflow-wrap: break-word;
+					word-break: keep-all;
+					line-height: 2em;
+					font-size: 1.1em;
 					width: 100%;
 					height: 80vh;
 					overflow: auto;
 					padding: 8px;
 					border: 1px solid ${({ theme }) => theme.colors.border};
 					font-size: ${({ theme }) => theme.fontSizes.md};
-					white-space: pre;
 					tab-size: 2;
+
+					p {
+						margin-bottom: 6px;
+					}
 
 					img {
 						margin: 4px 0;

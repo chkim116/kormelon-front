@@ -43,11 +43,12 @@ const PostStyle = styled.div`
 			margin-bottom: 12px;
 		}
 
-		.title {
+		.category {
+			margin-bottom: 20px;
 		}
 
-		.category {
-			margin-bottom: 8px;
+		.title {
+			margin-bottom: 12px;
 		}
 
 		.separator {
@@ -60,8 +61,22 @@ const PostStyle = styled.div`
 			padding: 12px 0;
 		}
 
+		.btns {
+			display: flex;
+			justify-content: right;
+		}
+
 		.content {
 			padding: 24px 0 100px 0;
+			white-space: pre-line;
+			overflow-wrap: break-word;
+			word-break: keep-all;
+			line-height: 2em;
+			font-size: 1.1em;
+
+			p {
+				margin-bottom: 6px;
+			}
 
 			img {
 				margin: 4px 0;

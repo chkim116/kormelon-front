@@ -28,7 +28,7 @@ const TagStyle = styled.span`
 	span {
 		font-size: ${({ theme }) => theme.fontSizes.sm};
 		color: ${({ theme }) => theme.colors.onSecondary};
-		background-color: #d7d7d71a;
+		background-color: ${({ theme }) => theme.colors.secondary};
 		padding: 6px 12px;
 	}
 `;

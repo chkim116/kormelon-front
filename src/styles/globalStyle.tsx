@@ -135,8 +135,8 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 
 				a {
 					cursor: pointer;
-					color: inherit;
 					text-decoration: none;
+					color: ${theme.colors.onPrimary};
 				}
 
 				button {

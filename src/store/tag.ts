@@ -13,6 +13,10 @@ interface Tag {
 	isTagSearchDone: boolean;
 	isTagSearchLoad: boolean;
 	isTagSearchErr: null | any;
+
+	isTagsSearchDone: boolean;
+	isTagsSearchLoad: boolean;
+	isTagsSearchErr: null | any;
 }
 
 const initialState: Tag = {
@@ -20,6 +24,10 @@ const initialState: Tag = {
 	isTagSearchDone: false,
 	isTagSearchLoad: false,
 	isTagSearchErr: null,
+
+	isTagsSearchDone: false,
+	isTagsSearchLoad: false,
+	isTagsSearchErr: null,
 };
 
 const tag = createSlice({
@@ -44,6 +52,21 @@ const tag = createSlice({
 			.addCase(postSearchTag.rejected, (state, { payload }) => {
 				state.isTagSearchLoad = false;
 				state.isTagSearchErr = payload;
+			})
+
+			.addCase(getTags.pending, (state) => {
+				state.isTagsSearchLoad = true;
+				state.isTagsSearchDone = false;
+				state.isTagsSearchErr = null;
+			})
+			.addCase(getTags.fulfilled, (state, { payload }: PayloadAction<Tags>) => {
+				state.isTagsSearchLoad = false;
+				state.isTagsSearchDone = true;
+				state.tags = payload;
+			})
+			.addCase(getTags.rejected, (state, { payload }) => {
+				state.isTagsSearchLoad = false;
+				state.isTagsSearchErr = payload;
 			}),
 });
 
@@ -59,6 +82,17 @@ export const postSearchTag = createAsyncThunk(
 			return tags;
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const getTags = createAsyncThunk(
+	'tag/getTags',
+	async (_, { rejectWithValue }) => {
+		try {
+			return await api.get('/tags').then((res) => res.data);
+		} catch (err) {
+			return rejectWithValue(err);
 		}
 	}
 );

@@ -137,7 +137,7 @@ export const Gnb = () => {
 					</div>
 					<div>
 						<BsFillTagsFill />
-						<Link href='/tags'>Tags</Link>
+						<Link href='/search/tag/all'>Tags</Link>
 					</div>
 					<div>
 						<BsGithub />

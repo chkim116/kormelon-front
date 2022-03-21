@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
 import dayJs from 'dayJs';
@@ -20,6 +20,8 @@ import 'react-notifications-component/dist/theme.css';
 import 'src/styles/hljs.atom.css';
 import { getUser } from 'src/store/user';
 import { getView } from 'src/store/view';
+import { useRouter } from 'next/router';
+import { pageview } from 'src/lib/gtagConfig';
 
 // korean 시간
 dayJs.locale('ko');
@@ -68,8 +70,34 @@ const Auth = () => {
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
+	const router = useRouter();
+	const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+
+	useEffect(() => {
+		// gtags
+		const gtagRouteChange = (url: string) => {
+			pageview(url);
+		};
+
+		router.events.on('routeChangeStart', () => {
+			setIsGlobalLoading(true);
+		});
+		router.events.on('routeChangeComplete', (url) => {
+			gtagRouteChange(url);
+			setIsGlobalLoading(false);
+		});
+		router.events.on('routeChangeError', () => setIsGlobalLoading(false));
+
+		return () => {
+			router.events.off('routeChangeStart', () => {});
+			router.events.off('routeChangeComplete', gtagRouteChange);
+			router.events.off('routeChangeError', () => {});
+		};
+	}, []);
+
 	return (
 		<AppTheme>
+			{/* {isGlobalLoading && <Loading />} */}
 			<View />
 			<Auth />
 			<AppStyle>

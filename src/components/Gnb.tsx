@@ -132,7 +132,7 @@ export const Gnb = () => {
 										</li>
 									))
 								) : (
-									<li className='empty'>❗️ Empty :(</li>
+									<li className='empty'>❗️ Empty :( </li>
 								)}
 							</ul>
 						</details>

@@ -6,6 +6,7 @@ import { PostListTemplate } from 'src/components/PostListTemplate';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { getPostByCategory } from 'src/store/search';
+import { DEFAULT_PAGE, DEFAULT_PER } from 'src/lib/constants';
 
 const SearchByCategory = () => {
 	const { query } = useRouter();
@@ -20,8 +21,8 @@ const SearchByCategory = () => {
 			return;
 		}
 
-		const page = query['page'] || 1;
-		const per = query['per'] || 10;
+		const page = query['page'] || DEFAULT_PAGE;
+		const per = query['per'] || DEFAULT_PER;
 
 		const toQuery = queryString.stringify({ q, per, page });
 		dispatch(getPostByCategory(toQuery));

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
@@ -14,12 +15,15 @@ import { toggleThemeMode } from 'src/store/themeMode';
  * 홈페이지 헤더
  */
 export const Header = () => {
+	const router = useRouter();
+
 	const { themeMode } = useAppSelector((state) => state.themeMode);
 	const { userData } = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
 	const mobileSearchRef = useRef<HTMLInputElement>(null);
 
+	const [searchText, setSearchText] = useState('');
 	const [isShowMobileSearchBar, setIsShowMobileSearchBar] = useState(false);
 
 	const onClickChangeTheme = useCallback(() => {
@@ -33,6 +37,20 @@ export const Header = () => {
 	const onClickShowSearch = useCallback(() => {
 		setIsShowMobileSearchBar((prev) => !prev);
 	}, []);
+
+	const onChangeSearch = useCallback((e) => {
+		setSearchText(e.target.value);
+	}, []);
+
+	const onSubmitSearch = useCallback(
+		(e) => {
+			e.preventDefault();
+
+			router.push(`/search?q=${searchText}`);
+			setSearchText('');
+		},
+		[searchText, router]
+	);
 
 	useEffect(() => {
 		if (isShowMobileSearchBar) {
@@ -53,8 +71,13 @@ export const Header = () => {
 					</p>
 				</span>
 				<span className='status'>
-					<form className='search-form'>
-						<input type='text' placeholder='검색..' />
+					<form className='search-form' onSubmit={onSubmitSearch}>
+						<input
+							type='text'
+							placeholder='제목 검색..'
+							value={searchText}
+							onChange={onChangeSearch}
+						/>
 						<button type='submit'>
 							<AiOutlineSearch />
 						</button>

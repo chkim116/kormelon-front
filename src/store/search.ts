@@ -15,7 +15,10 @@ const initialState: SearchState = {
 	searchErr: null,
 	searchDone: false,
 
-	postByQuery: [],
+	postByQuery: {
+		total: 0,
+		results: [],
+	},
 };
 
 const search = createSlice({
@@ -24,6 +27,21 @@ const search = createSlice({
 	reducers: {},
 	extraReducers: (build) =>
 		build
+			.addCase(getPostByText.pending, (state) => {
+				state.searchLoad = true;
+				state.searchDone = false;
+				state.searchErr = null;
+			})
+			.addCase(getPostByText.fulfilled, (state, { payload }) => {
+				state.searchLoad = false;
+				state.searchDone = true;
+				state.postByQuery = payload;
+			})
+			.addCase(getPostByText.rejected, (state, { payload }) => {
+				state.searchLoad = false;
+				state.searchErr = payload;
+			})
+
 			.addCase(getPostByTag.pending, (state) => {
 				state.searchLoad = true;
 				state.searchDone = false;
@@ -71,6 +89,17 @@ const search = createSlice({
 });
 
 export default search.reducer;
+
+export const getPostByText = createAsyncThunk(
+	'search/getPostByText',
+	async (query: string, { rejectWithValue }) => {
+		try {
+			return await api.get(`/search?${query}`).then((res) => res.data);
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
 
 export const getPostByTag = createAsyncThunk(
 	'search/getPostByTag',

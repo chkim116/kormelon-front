@@ -54,9 +54,13 @@ const Post = () => {
 		<PostStyle>
 			<div className='post'>
 				<div className='category'>
-					{post.category.parentValue}
+					<Link href={`/search/category?q=${post.category.parentValue}`}>
+						{post.category.parentValue}
+					</Link>
 					<span>{'>'}</span>
-					{post.category.value}
+					<Link href={`/search/category/sub?q=${post.category.value}`}>
+						{post.category.value}
+					</Link>
 				</div>
 				<h1 className='title'>{post.title}</h1>
 				<div className='info'>
@@ -68,8 +72,7 @@ const Post = () => {
 				<div className='tags'>
 					{post.tags.length
 						? post.tags.map((tag) => (
-								// TODO: tag link..
-								<Tag key={tag.id} href={`/${tag}`}>
+								<Tag key={tag.id} href={`/search/tag?q=${tag.value}`}>
 									{tag.value}
 								</Tag>
 						  ))

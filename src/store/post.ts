@@ -311,9 +311,9 @@ export const getPost = createAsyncThunk(
 
 export const getPosts = createAsyncThunk(
 	'post/getPosts',
-	async (_, { rejectWithValue }) => {
+	async (queries: string, { rejectWithValue }) => {
 		try {
-			const post = await api.get('/post').then((res) => res.data);
+			const post = await api.get(`/post?${queries}`).then((res) => res.data);
 			return post;
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);

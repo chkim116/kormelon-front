@@ -70,6 +70,8 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 };
 
 const PostListTemplateStyle = styled.article`
+	min-height: 80vh;
+
 	.container {
 		padding: 30px 0;
 		margin-bottom: 10px;

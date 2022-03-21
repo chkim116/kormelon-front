@@ -45,8 +45,10 @@ export default PostListSkeleton;
 const PostListSkeletonStyle = styled.div`
 	display: flex;
 	flex-direction: column;
+	min-height: 80vh;
 
 	.wrapper {
+		padding: 30px 0;
 		margin-bottom: 30px;
 
 		.category {

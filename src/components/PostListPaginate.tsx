@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import queryString from 'query-string';
+import Link from 'next/link';
 
 interface PostListPaginateProps {
 	total: number;
@@ -12,6 +14,13 @@ const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
 	const { push, query, pathname } = useRouter();
 
 	const [selectedPage, setSelectedPage] = useState(Number(query?.page) || 1);
+
+	const getQuery = useCallback(
+		(page: number) => {
+			return queryString.stringify({ q: query.q, page });
+		},
+		[query.q]
+	);
 
 	const pages = useMemo(() => {
 		const length = Math.ceil(total / per);
@@ -31,16 +40,23 @@ const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
 
 	const onClickNext = useCallback(() => {
 		setSelectedPage((prev) => (prev + 1 > pages.length ? prev : prev + 1));
-	}, [pages.length]);
+
+		push(
+			`${pathname}/?${getQuery(
+				selectedPage + 1 > pages.length ? selectedPage : selectedPage + 1
+			)}`
+		);
+	}, [getQuery, pages.length, pathname, push, selectedPage]);
 
 	const onClickPrev = useCallback(() => {
 		setSelectedPage((prev) => (prev - 1 > 0 ? prev - 1 : prev));
-	}, []);
 
-	useEffect(() => {
-		push(`${pathname}?page=${selectedPage}`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedPage]);
+		push(
+			`${pathname}?${getQuery(
+				selectedPage - 1 > 0 ? selectedPage - 1 : selectedPage
+			)}`
+		);
+	}, [getQuery, pathname, push, selectedPage]);
 
 	return (
 		<PostListPaginateStyle>
@@ -52,7 +68,9 @@ const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
 					data-page={page}
 					key={page}
 				>
-					{page}
+					<Link href={`${pathname}?${getQuery(page)}`} passHref>
+						<a>{page}</a>
+					</Link>
 				</PaginateBtn>
 			))}
 			<li onClick={onClickNext}>{'>'}</li>
@@ -74,10 +92,15 @@ const PostListPaginateStyle = styled.div`
 		color: ${({ theme }) => theme.colors.onPrimary};
 		border: 1px solid ${({ theme }) => theme.colors.border};
 		font-size: ${({ theme }) => theme.fontSizes.sm};
-		width: 30px;
-		height: 30px;
 		text-align: center;
 		cursor: pointer;
+		width: 30px;
+		height: 30px;
+		a {
+			display: block;
+			width: 30px;
+			height: 30px;
+		}
 	}
 `;
 
@@ -87,7 +110,10 @@ const PaginateBtn = styled.li<{ selected?: boolean }>`
 			return css`
 				font-weight: bold;
 				background-color: ${theme.colors.onSecondary} !important;
-				color: ${theme.colors.secondary} !important;
+
+				a {
+					color: ${theme.colors.secondary} !important;
+				}
 			`;
 		}
 	}};

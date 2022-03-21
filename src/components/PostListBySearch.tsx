@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import queryString from 'query-string';
 
 import { DEFAULT_PAGE, DEFAULT_PER } from 'src/lib/constants';
@@ -21,6 +21,20 @@ const PostListBySearch = ({
 	const { query } = useRouter();
 
 	const dispatch = useAppDispatch();
+
+	const toQuery = useMemo(() => {
+		const q = query['q'] || '';
+
+		if (!q) {
+			return;
+		}
+
+		const page = query['page'] || DEFAULT_PAGE;
+		const per = query['per'] || DEFAULT_PER;
+
+		return queryString.stringify({ q, per, page });
+	}, [query]);
+
 	const toDispatch = useCallback(
 		(query) => {
 			if (type === 'tag') {
@@ -41,18 +55,8 @@ const PostListBySearch = ({
 	const { postByQuery, searchLoad } = useAppSelector((state) => state.search);
 
 	useEffect(() => {
-		const q = query['q'] || '';
-
-		if (!q) {
-			return;
-		}
-
-		const page = query['page'] || DEFAULT_PAGE;
-		const per = query['per'] || DEFAULT_PER;
-
-		const toQuery = queryString.stringify({ q, per, page });
-		toDispatch?.(toQuery);
-	}, [dispatch, toDispatch, query]);
+		toQuery && toDispatch?.(toQuery);
+	}, [toDispatch, toQuery]);
 
 	if (searchLoad) {
 		return <PostListSkeleton />;

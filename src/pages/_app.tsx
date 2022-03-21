@@ -19,6 +19,7 @@ import 'react-notifications-component/dist/theme.css';
  */
 import 'src/styles/hljs.atom.css';
 import { getUser } from 'src/store/user';
+import { getView } from 'src/store/view';
 
 // korean 시간
 dayJs.locale('ko');
@@ -43,6 +44,16 @@ const AppTheme: FC = ({ children }) => {
 	);
 };
 
+const View = () => {
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		dispatch(getView());
+	}, [dispatch, getView]);
+
+	return null;
+};
+
 const Auth = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
@@ -59,6 +70,7 @@ const Auth = () => {
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<AppTheme>
+			<View />
 			<Auth />
 			<AppStyle>
 				<ReactNotifications />

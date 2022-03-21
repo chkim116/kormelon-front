@@ -12,6 +12,7 @@ import post from './post';
 import comment from './comment';
 import notification from './notification';
 import search from './search';
+import view from './view';
 
 const combineReducer = combineReducers({
 	gnb,
@@ -23,6 +24,7 @@ const combineReducer = combineReducers({
 	comment,
 	notification,
 	search,
+	view,
 });
 
 const reducer = (state: any, action: AnyAction) => {

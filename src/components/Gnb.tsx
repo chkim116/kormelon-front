@@ -29,6 +29,7 @@ export const Gnb = () => {
 	const { isGnbOpen } = useAppSelector((state) => state.gnb);
 	const { categories } = useAppSelector((state) => state.category);
 	const { userData } = useAppSelector((state) => state.user);
+	const { today, total } = useAppSelector((state) => state.view);
 
 	const styles = useSpring({
 		translateX: isGnbOpen ? 0 : -260,
@@ -37,10 +38,6 @@ export const Gnb = () => {
 		},
 	});
 	const gnbRef = useRef(null);
-
-	// TODO: 실데이터 연동
-	const today = 1;
-	const total = 0;
 
 	const temp = useMemo(() => {
 		const res: { [x: string]: boolean } = {};

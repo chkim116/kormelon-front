@@ -43,12 +43,15 @@ const Post = () => {
 		.match(anchorRegExp)
 		?.map((anchor) => anchor.replace(/<[^>]*>?/g, ''));
 
-	const onClickPostDelete = useCallback((e) => {
-		const { id } = e.currentTarget;
-		if (window.confirm('정말 삭제 하십니까?')) {
-			dispatch(deletePost(id)).then(() => router.push('/'));
-		}
-	}, []);
+	const onClickPostDelete = useCallback(
+		(e) => {
+			const { id } = e.currentTarget;
+			if (window.confirm('정말 삭제 하십니까?')) {
+				dispatch(deletePost(id)).then(() => router.push('/'));
+			}
+		},
+		[dispatch, router]
+	);
 
 	return (
 		<PostStyle>

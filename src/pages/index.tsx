@@ -4,7 +4,7 @@ import store from 'src/store/config';
 import { getPosts } from 'src/store/post';
 
 export const getServerSideProps = store.getServerSideProps(
-	(store) => async () => {
+	(store) => async (ctx) => {
 		const { dispatch, getState } = store;
 		await dispatch(getPosts());
 

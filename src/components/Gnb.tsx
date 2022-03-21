@@ -19,6 +19,8 @@ import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
 import { getCategory } from 'src/store/category';
 
+import profileImg from '../../public/static/profile.jpeg';
+
 /**
  * 왼쪽에 표시될 공통 네비게이션
  */
@@ -84,15 +86,10 @@ export const Gnb = () => {
 
 			<div className='user'>
 				<div className='profile'>
-					<Image
-						src='http://placehold.it/32x32'
-						alt='유저 이미지'
-						width={32}
-						height={32}
-					/>
+					<Image src={profileImg} alt='유저 이미지' width={32} height={32} />
 					<span>Kim changhoe</span>
 				</div>
-				<div className='text'>반갑습니다.</div>
+				<div className='text'>😀😎</div>
 			</div>
 
 			<div className='categories'>

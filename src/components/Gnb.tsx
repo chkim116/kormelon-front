@@ -17,7 +17,6 @@ import { useClickAway } from 'react-use';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
-import { getCategory } from 'src/store/category';
 
 import profileImg from '../../public/static/profile.jpeg';
 
@@ -64,10 +63,6 @@ export const Gnb = () => {
 		// open이 아니라 !open인 이유는 한박자 늦게 반영되기 때문.
 		setOpenCategories((prev) => ({ ...prev, [value]: !open }));
 	}, []);
-
-	useEffect(() => {
-		dispatch(getCategory());
-	}, [dispatch]);
 
 	useEffect(() => {
 		if (isGnbOpen) {

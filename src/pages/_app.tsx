@@ -24,6 +24,7 @@ import { getUser } from 'src/store/user';
 import { getView } from 'src/store/view';
 import { useRouter } from 'next/router';
 import { pageView } from 'src/lib/gtagConfig';
+import { getCategory } from 'src/store/category';
 
 // korean 시간
 dayJs.locale('ko');
@@ -62,6 +63,8 @@ const Auth = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
 	useEffect(() => {
+		dispatch(getCategory());
+
 		if (userData) {
 			return;
 		}

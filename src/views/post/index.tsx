@@ -30,7 +30,6 @@ const Post = () => {
 	const { post } = useAppSelector((state) => state.post);
 	const router = useRouter();
 
-	console.log(post);
 	// h1 뽑는 정규
 	const anchorRegExp =
 		/<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\{\:\\\/\}\>]+<\/\h1>/g;

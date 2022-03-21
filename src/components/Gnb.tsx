@@ -143,7 +143,7 @@ export const Gnb = () => {
 				<div className='feed'>
 					<div>
 						<BsFillRssFill />
-						RSS
+						<Link href='/rss'>RSS</Link>
 					</div>
 					<div>
 						<BsFillTagsFill />

@@ -11,14 +11,17 @@ type PostCategory = {
 };
 
 export type Post = {
-	id: string;
-	title: string;
-	content: string;
-	category: PostCategory;
-	tags: Tags;
-	readTime: number;
-	isPrivate: boolean;
-	createdAt: string;
+	total: number;
+	results: {
+		id: string;
+		title: string;
+		content: string;
+		category: PostCategory;
+		tags: Tags;
+		readTime: number;
+		isPrivate: boolean;
+		createdAt: string;
+	}[];
 };
 
 export type PostDetail = {

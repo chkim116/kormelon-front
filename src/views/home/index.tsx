@@ -3,7 +3,7 @@ import { Post } from 'src/store/post';
 import HomeStyle from './HomeStyle';
 
 interface HomeProps {
-	posts: { total: number; results: Post[] };
+	posts: Post;
 }
 
 const Home = ({ posts }: HomeProps) => {

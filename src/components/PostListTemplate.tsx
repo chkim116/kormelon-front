@@ -6,10 +6,7 @@ import { Post } from 'src/store/post';
 import Tag from 'src/components/Tag';
 
 interface PostListTemplateProps {
-	posts: {
-		total: number;
-		results: Post[];
-	};
+	posts: Post;
 	children?: React.ReactChild;
 }
 

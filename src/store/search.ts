@@ -7,7 +7,7 @@ interface SearchState {
 	searchDone: boolean;
 	searchErr: null | any;
 
-	postByQuery: Post[];
+	postByQuery: Post;
 }
 
 const initialState: SearchState = {

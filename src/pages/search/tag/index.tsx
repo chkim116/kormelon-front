@@ -1,5 +1,7 @@
 import queryString from 'query-string';
 
+import SearchByTag from 'src/views/search/tag';
+
 import store from 'src/store/config';
 import { getPostByTag } from 'src/store/search';
 
@@ -27,8 +29,4 @@ export const getServerSideProps = store.getServerSideProps(
 		}
 );
 
-const index = () => {
-	return <div>index</div>;
-};
-
-export default index;
+export default SearchByTag;

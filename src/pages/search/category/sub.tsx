@@ -1,5 +1,7 @@
 import queryString from 'query-string';
 
+import SearchBySub from 'src/views/search/category/sub';
+
 import store from 'src/store/config';
 import { getPostBySubCategory } from 'src/store/search';
 
@@ -27,8 +29,4 @@ export const getServerSideProps = store.getServerSideProps(
 		}
 );
 
-const sub = () => {
-	return <div>sub</div>;
-};
-
-export default sub;
+export default SearchBySub;

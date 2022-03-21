@@ -117,7 +117,7 @@ export const Header = () => {
 					{userData ? (
 						<p className='user-on'>on</p>
 					) : (
-						<Link href='/login'>
+						<Link href='/login' passHref>
 							<span className='user-off'>SignIn</span>
 						</Link>
 					)}

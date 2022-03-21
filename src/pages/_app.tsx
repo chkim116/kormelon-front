@@ -52,7 +52,7 @@ const View = () => {
 
 	useEffect(() => {
 		dispatch(getView());
-	}, [dispatch, getView]);
+	}, [dispatch]);
 
 	return null;
 };
@@ -106,6 +106,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 			router.events.off('routeChangeComplete', gtagRouteChange);
 			router.events.off('routeChangeError', () => {});
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

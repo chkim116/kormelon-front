@@ -36,7 +36,7 @@ const PostListBySearch = ({
 				return dispatch(getPostByCategory(query));
 			}
 		},
-		[getPostByTag, getPostByText, getPostByCategory, getPostBySubCategory]
+		[type, dispatch]
 	);
 	const { postByQuery, searchLoad } = useAppSelector((state) => state.search);
 

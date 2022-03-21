@@ -190,15 +190,7 @@ const PostComment = () => {
 				);
 			}
 		},
-		[
-			dispatch,
-			postCreateComment,
-			postCreateReply,
-			commentValues,
-			anonymousUser,
-			userData,
-			callNotification,
-		]
+		[dispatch, commentValues, anonymousUser, userData, callNotification]
 	);
 
 	// * 댓글 수정 입력 받기
@@ -207,14 +199,11 @@ const PostComment = () => {
 	}, []);
 
 	// * 수정 버튼 클릭 시
-	const onClickToChangeEditMode = useCallback(
-		(e) => {
-			const { id, text, type, anonymous } = e.currentTarget.dataset;
+	const onClickToChangeEditMode = useCallback((e) => {
+		const { id, text, type, anonymous } = e.currentTarget.dataset;
 
-			setEditCommentValue({ id, text, type, anonymous });
-		},
-		[userData]
-	);
+		setEditCommentValue({ id, text, type, anonymous });
+	}, []);
 
 	// * 수정 모드 취소
 	const onClickEditCancel = useCallback(() => {
@@ -238,7 +227,7 @@ const PostComment = () => {
 		}
 
 		setEditCommentValue({ id: '', text: '', type: '', anonymous: '' });
-	}, [dispatch, patchComment, patchReply, editCommentValue]);
+	}, [editCommentValue, userData?.isAdmin, dispatch]);
 
 	// * 삭제 버튼 클릭 시
 	const onClickCommentDelete = useCallback(
@@ -262,7 +251,7 @@ const PostComment = () => {
 				}
 			}
 		},
-		[dispatch, deleteComment, deleteReply, userData]
+		[dispatch, userData]
 	);
 
 	const [isAnonymousPw, setIsAnonymousPw] = useState('');
@@ -294,7 +283,7 @@ const PostComment = () => {
 			setIsEditModalOpen(false);
 			setIsAnonymousPw('');
 		},
-		[editCommentValue, dispatch, patchComment, isAnonymousPw, patchReply]
+		[editCommentValue, dispatch, isAnonymousPw]
 	);
 
 	const onSubmitAnonymousDelete = useCallback(
@@ -317,7 +306,7 @@ const PostComment = () => {
 				setIsDeleteModalOpen(false);
 			}
 		},
-		[dispatch, deleteCommentValue, isAnonymousPw, deleteComment, deleteReply]
+		[dispatch, deleteCommentValue, isAnonymousPw]
 	);
 
 	return (

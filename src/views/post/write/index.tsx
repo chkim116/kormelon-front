@@ -124,16 +124,7 @@ const PostWrite = ({ prevPost }: PostWriteProps) => {
 					})
 				);
 		},
-		[
-			dispatch,
-			postCreate,
-			parsedContent,
-			post,
-			router,
-			callNotification,
-			isEditMode,
-			patchPost,
-		]
+		[dispatch, post, router, callNotification, isEditMode]
 	);
 
 	const onKeyDown = useCallback(

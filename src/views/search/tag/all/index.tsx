@@ -11,7 +11,7 @@ const SearchAllTags = () => {
 
 	useEffect(() => {
 		dispatch(getTags());
-	}, [dispatch, getTags]);
+	}, [dispatch]);
 
 	return (
 		<AllTagStyle>

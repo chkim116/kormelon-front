@@ -10,7 +10,10 @@ interface PostRss {
 	createdAt: string;
 }
 
-const URL = 'http://localhost:3000';
+const URL =
+	process.env.NODE_ENV === 'production'
+		? 'https://kormelon.com'
+		: 'http://localhost:3000';
 const TITLE = 'Kormelon';
 const SITE_DESCRIPTION = 'The most recent home feed on Kormelon Blog';
 

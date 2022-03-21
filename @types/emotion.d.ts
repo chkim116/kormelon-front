@@ -26,6 +26,8 @@ declare module '@emotion/react' {
 			onPrimary: string;
 			onSecondary: string;
 			onBlue: string;
+			onGreen: string;
+			onRed: string;
 
 			primary: string;
 			secondary: string;

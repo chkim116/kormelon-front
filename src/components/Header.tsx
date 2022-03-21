@@ -114,7 +114,13 @@ export const Header = () => {
 						{themeMode === 'dark' && <MdLightMode className='light' />}
 						{themeMode === 'light' && <MdModeNight className='dark' />}
 					</button>
-					{userData ? <p>{userData.username}</p> : null}
+					{userData ? (
+						<p className='user-on'>on</p>
+					) : (
+						<Link href='/login'>
+							<span className='user-off'>SignIn</span>
+						</Link>
+					)}
 				</span>
 			</div>
 		</HeaderStyle>
@@ -269,6 +275,21 @@ const HeaderStyle = styled.header`
 					transform: scale(1.1);
 					transition: 100ms;
 				}
+			}
+
+			.user-on {
+				margin-top: -3px;
+				font-weight: bold;
+				font-size: ${({ theme }) => theme.fontSizes.md};
+				color: ${({ theme }) => theme.colors.onGreen};
+			}
+
+			.user-off {
+				cursor: pointer;
+				margin-top: -3px;
+				font-weight: bold;
+				font-size: ${({ theme }) => theme.fontSizes.md};
+				color: ${({ theme }) => theme.colors.onPrimary};
 			}
 		}
 	}

@@ -115,12 +115,25 @@ export const Gnb = () => {
 								</span>
 							</summary>
 							<ul>
-								{category.categories.map((sub) => (
-									<li key={sub.id}>
-										{sub.value}
-										<span className='count'>({sub?.posts?.length || 0})</span>
-									</li>
-								))}
+								{category.categories.length ? (
+									category.categories.map((sub) => (
+										<li key={sub.id}>
+											<Link
+												href={`/search/category/sub?q=${sub.value}`}
+												passHref
+											>
+												<span>
+													{sub.value}
+													<span className='count'>
+														({sub?.posts?.length || 0})
+													</span>
+												</span>
+											</Link>
+										</li>
+									))
+								) : (
+									<li className='empty'>❗️ Empty :(</li>
+								)}
 							</ul>
 						</details>
 					);
@@ -248,6 +261,11 @@ const GnbStyle = styled(animated.nav)`
 
 				li {
 					padding: 10px 5px 10px 15px;
+				}
+
+				.empty {
+					list-style: none;
+					cursor: default;
 				}
 
 				.count {

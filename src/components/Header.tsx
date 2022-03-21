@@ -67,9 +67,9 @@ export const Header = () => {
 						<GiHamburgerMenu />
 					</button>
 
-					<p>
-						<Link href='/'>My Blog Name</Link>
-					</p>
+					<h3>
+						<Link href='/'>Kormelon</Link>
+					</h3>
 				</span>
 				<span className='status'>
 					<form className='search-form' onSubmit={onSubmitSearch}>
@@ -159,7 +159,7 @@ const HeaderStyle = styled.header`
 			padding: 0 3px;
 			color: ${({ theme }) => theme.colors.onPrimary};
 
-			@media all and (max-width: 1000px) {
+			@media all and (max-width: 1140px) {
 				position: relative;
 				font-size: 20px;
 				left: 0;
@@ -220,12 +220,13 @@ const HeaderStyle = styled.header`
 					font-size: ${({ theme }) => theme.fontSizes.sm};
 					background-color: ${({ theme }) => theme.colors.primary};
 					color: ${({ theme }) => theme.colors.onPrimary};
-					padding: 4px 10px;
+					padding: 8px 10px;
 					padding-right: 35px;
 					border-radius: 8px;
 					outline: none;
 					border: none;
 					border: 1px solid ${({ theme }) => theme.colors.border};
+					font-size: 16px;
 
 					@media all and (max-width: 500px) {
 						display: none;

@@ -11,6 +11,7 @@ import { Gnb } from 'src/components/Gnb';
 import { GlobalStyle } from 'src/styles/globalStyle';
 import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
+import { Footer } from 'src/components/Footer';
 import store, { useAppDispatch, useAppSelector } from 'src/store/config';
 
 import 'react-notifications-component/dist/theme.css';
@@ -121,6 +122,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<div className='main'>
 					<Component {...pageProps} />
 				</div>
+				<Footer />
 			</AppStyle>
 		</AppTheme>
 	);
@@ -133,6 +135,7 @@ const AppStyle = styled.div`
 	/* header height만큼 제거 */
 	min-height: calc(100vh - 50px);
 	display: flex;
+	flex-direction: column;
 	background-color: ${({ theme }) => theme.colors.primary};
 
 	/* 로딩바 */

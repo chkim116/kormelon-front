@@ -4,10 +4,11 @@ import styled from '@emotion/styled';
 import dayJs from 'dayJs';
 import 'dayJs/locale/ko';
 import { ReactNotifications } from 'react-notifications-component';
+import { ThemeProvider, useTheme } from '@emotion/react';
+import ReactLoading from 'react-loading';
 
 import { Gnb } from 'src/components/Gnb';
 import { GlobalStyle } from 'src/styles/globalStyle';
-import { ThemeProvider } from '@emotion/react';
 import { theme } from 'src/styles/theme';
 import { Header } from 'src/components/Header';
 import store, { useAppDispatch, useAppSelector } from 'src/store/config';
@@ -21,7 +22,7 @@ import 'src/styles/hljs.atom.css';
 import { getUser } from 'src/store/user';
 import { getView } from 'src/store/view';
 import { useRouter } from 'next/router';
-import { pageview } from 'src/lib/gtagConfig';
+import { pageView } from 'src/lib/gtagConfig';
 
 // korean 시간
 dayJs.locale('ko');
@@ -69,6 +70,18 @@ const Auth = () => {
 	return null;
 };
 
+const GlobalLoading = () => {
+	const theme = useTheme();
+
+	return (
+		<ReactLoading
+			type='spin'
+			color={theme.colors.onPrimary}
+			className='loader'
+		/>
+	);
+};
+
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const [isGlobalLoading, setIsGlobalLoading] = useState(false);
@@ -76,7 +89,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 	useEffect(() => {
 		// gtags
 		const gtagRouteChange = (url: string) => {
-			pageview(url);
+			pageView(url);
 		};
 
 		router.events.on('routeChangeStart', () => {
@@ -97,10 +110,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 	return (
 		<AppTheme>
-			{/* {isGlobalLoading && <Loading />} */}
 			<View />
 			<Auth />
 			<AppStyle>
+				{isGlobalLoading && <GlobalLoading />}
 				<ReactNotifications />
 				<Gnb />
 				<Header />
@@ -120,6 +133,19 @@ const AppStyle = styled.div`
 	min-height: calc(100vh - 50px);
 	display: flex;
 	background-color: ${({ theme }) => theme.colors.primary};
+
+	/* 로딩바 */
+	.loader {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	}
 
 	.main {
 		width: 100%;

@@ -1,22 +1,30 @@
+import queryString from 'query-string';
+
 import store from 'src/store/config';
+import { getPostBySubCategory } from 'src/store/search';
 
 export const getServerSideProps = store.getServerSideProps(
-	(store) => async (ctx) => {
-		// TODO: 서브카테고리 검색
-		const { query } = ctx;
+	({ dispatch }) =>
+		async (ctx) => {
+			const { query } = ctx;
 
-		if (query['q']) {
-			const subCategory = query['q'];
-			// TODO: 태그 검색
+			if (query['q']) {
+				const q = query['q'];
+				const page = query['page'] || 1;
+				const per = query['per'] || 10;
+
+				const toQuery = queryString.stringify({ q, per, page });
+
+				await dispatch(getPostBySubCategory(toQuery));
+
+				return {
+					props: {},
+				};
+			}
 			return {
 				props: {},
 			};
 		}
-
-		return {
-			props: {},
-		};
-	}
 );
 
 const sub = () => {

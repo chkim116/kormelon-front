@@ -48,6 +48,7 @@ export const Header = () => {
 
 			router.push(`/search?q=${searchText}`);
 			setSearchText('');
+			setIsShowMobileSearchBar((prev) => prev && false);
 		},
 		[searchText, router]
 	);
@@ -87,13 +88,17 @@ export const Header = () => {
 							<input
 								ref={mobileSearchRef}
 								type='text'
-								placeholder='검색..'
+								placeholder='제목 검색..'
 								className='search-mobile-input'
+								value={searchText}
+								onChange={onChangeSearch}
 							/>
 						)}
 						<button
 							type='button'
-							className='search-mobile'
+							className={`search-mobile-btn ${
+								isShowMobileSearchBar ? 'close' : ''
+							}`}
 							onClick={onClickShowSearch}
 						>
 							{isShowMobileSearchBar ? <AiOutlineClose /> : <AiOutlineSearch />}
@@ -171,23 +176,17 @@ const HeaderStyle = styled.header`
 				max-width: 250px;
 				width: 100%;
 
-				.search-mobile {
+				.search-mobile-input,
+				.search-mobile-btn {
 					display: none;
 				}
 
 				@media all and (max-width: 500px) {
-					.search-mobile {
-						display: flex;
-						align-items: center;
-						margin-top: 1px;
-						justify-content: flex-end;
-					}
-
 					.search-mobile-input {
 						position: fixed;
 						display: flex;
 						border: none;
-						width: calc(100% - 60px);
+						width: 100%;
 						border-radius: 0;
 						border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 						height: 50px;
@@ -195,6 +194,18 @@ const HeaderStyle = styled.header`
 						left: 0;
 						padding: 4px 10px;
 						padding-right: 35px;
+					}
+
+					.search-mobile-btn {
+						display: flex;
+
+						&.close {
+							all: unset;
+							position: fixed;
+							top: 15px;
+							right: 6px;
+							cursor: pointer;
+						}
 					}
 				}
 

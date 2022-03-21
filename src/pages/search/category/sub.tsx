@@ -1,3 +1,4 @@
-import SearchBySub from 'src/views/search/category/sub';
+// 하위 카테고리에 따른 결과
+import PostListBySearch from 'src/components/PostListBySearch';
 
-export default SearchBySub;
+export default () => PostListBySearch({ type: 'sub' });

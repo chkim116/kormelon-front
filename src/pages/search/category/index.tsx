@@ -1,3 +1,4 @@
-import SearchByCategory from 'src/views/search/category';
+// 상위 카테고리에 따른 결과
+import PostListBySearch from 'src/components/PostListBySearch';
 
-export default SearchByCategory;
+export default () => PostListBySearch({ type: 'category' });

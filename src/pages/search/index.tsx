@@ -1,3 +1,4 @@
-import SearchByText from 'src/views/search';
+// 검색어에 따른 결과
+import PostListBySearch from 'src/components/PostListBySearch';
 
-export default SearchByText;
+export default () => PostListBySearch({ type: 'text' });

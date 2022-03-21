@@ -1,3 +1,4 @@
-import SearchByTag from 'src/views/search/tag';
+// 태그에 따른 결과
+import PostListBySearch from 'src/components/PostListBySearch';
 
-export default SearchByTag;
+export default () => PostListBySearch({ type: 'tag' });

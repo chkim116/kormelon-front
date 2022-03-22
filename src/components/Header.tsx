@@ -122,7 +122,7 @@ export const Header = () => {
 						<p className='user-on'>on</p>
 					) : (
 						<Link href='/login' passHref>
-							<span className='user-off'>SignIn</span>
+							<span className='user-off'>LogIn</span>
 						</Link>
 					)}
 				</span>

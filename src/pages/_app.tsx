@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
 import dayJs from 'dayJs';
@@ -35,12 +35,10 @@ const AppTheme: FC = ({ children }) => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
 	const dispatch = useAppDispatch();
 
-	// 첫 테마 설정
 	useEffect(() => {
 		const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
 			| 'dark'
 			| 'light';
-
 		dispatch(setThemeMode(existTheme));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -74,6 +72,7 @@ const View = () => {
 const Auth = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
+
 	useEffect(() => {
 		dispatch(getCategory());
 
@@ -101,26 +100,38 @@ const GlobalLoading = () => {
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const [isGlobalLoading, setIsGlobalLoading] = useState(false);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		// gtags
-		const gtagRouteChange = (url: string) => {
-			pageView(url);
+		const onRouteChangeStart = () => {
+			setIsGlobalLoading(true);
 		};
 
-		router.events.on('routeChangeStart', () => {
-			setIsGlobalLoading(true);
-		});
-		router.events.on('routeChangeComplete', (url) => {
-			gtagRouteChange(url);
+		const onRouteChangeComplete = (url: string) => {
 			setIsGlobalLoading(false);
-		});
-		router.events.on('routeChangeError', () => setIsGlobalLoading(false));
+
+			// gtags
+			pageView(url);
+
+			// theme
+			const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
+				| 'dark'
+				| 'light';
+			dispatch(setThemeMode(existTheme));
+		};
+
+		const onRouteChangeError = () => {
+			setIsGlobalLoading(false);
+		};
+
+		router.events.on('routeChangeStart', onRouteChangeStart);
+		router.events.on('routeChangeComplete', onRouteChangeComplete);
+		router.events.on('routeChangeError', onRouteChangeError);
 
 		return () => {
-			router.events.off('routeChangeStart', () => {});
-			router.events.off('routeChangeComplete', gtagRouteChange);
-			router.events.off('routeChangeError', () => {});
+			router.events.off('routeChangeStart', onRouteChangeStart);
+			router.events.off('routeChangeComplete', onRouteChangeComplete);
+			router.events.off('routeChangeError', onRouteChangeError);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

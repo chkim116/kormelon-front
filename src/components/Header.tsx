@@ -9,7 +9,7 @@ import { MdLightMode, MdModeNight } from 'react-icons/md';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
-import { toggleThemeMode } from 'src/store/themeMode';
+import { setThemeMode } from 'src/store/themeMode';
 
 /**
  * 홈페이지 헤더
@@ -27,7 +27,11 @@ export const Header = () => {
 	const [isShowMobileSearchBar, setIsShowMobileSearchBar] = useState(false);
 
 	const onClickChangeTheme = useCallback(() => {
-		dispatch(toggleThemeMode());
+		const themeMode =
+			localStorage.getItem('kblog_theme') === 'dark' ? 'light' : 'dark';
+
+		localStorage.setItem('kblog_theme', themeMode);
+		dispatch(setThemeMode(themeMode));
 	}, [dispatch]);
 
 	const onClickOpenGnb = useCallback(() => {

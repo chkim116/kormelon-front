@@ -25,6 +25,7 @@ import { getView } from 'src/store/view';
 import { useRouter } from 'next/router';
 import { pageView } from 'src/lib/gtagConfig';
 import { getCategory } from 'src/store/category';
+import { setThemeMode } from 'src/store/themeMode';
 
 // korean 시간
 dayJs.locale('ko');
@@ -32,6 +33,17 @@ dayJs.locale('ko');
 // theme, global style 적용
 const AppTheme: FC = ({ children }) => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
+	const dispatch = useAppDispatch();
+
+	// 첫 테마 설정
+	useEffect(() => {
+		const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
+			| 'dark'
+			| 'light';
+
+		dispatch(setThemeMode(existTheme));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		document.body.style.transition = 'all 300ms';

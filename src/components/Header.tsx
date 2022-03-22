@@ -18,7 +18,6 @@ export const Header = () => {
 	const router = useRouter();
 
 	const { themeMode } = useAppSelector((state) => state.themeMode);
-	const { userData } = useAppSelector((state) => state.user);
 	const dispatch = useAppDispatch();
 
 	const mobileSearchRef = useRef<HTMLInputElement>(null);
@@ -118,13 +117,6 @@ export const Header = () => {
 						{themeMode === 'dark' && <MdLightMode className='light' />}
 						{themeMode === 'light' && <MdModeNight className='dark' />}
 					</button>
-					{userData ? (
-						<p className='user-on'>on</p>
-					) : (
-						<Link href='/login' passHref>
-							<span className='user-off'>LogIn</span>
-						</Link>
-					)}
 				</span>
 			</div>
 		</HeaderStyle>
@@ -294,7 +286,7 @@ const HeaderStyle = styled.header`
 				margin-top: -3px;
 				font-weight: bold;
 				font-size: ${({ theme }) => theme.fontSizes.md};
-				color: ${({ theme }) => theme.colors.onPrimary};
+				color: ${({ theme }) => theme.colors.onRed};
 			}
 		}
 	}

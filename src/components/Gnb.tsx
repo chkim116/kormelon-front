@@ -167,6 +167,19 @@ export const Gnb = () => {
 				</div>
 			</div>
 
+			<br />
+
+			{userData ? (
+				<p className='user-on'>{userData.username} ⭐️</p>
+			) : (
+				<span className='user-off'>
+					<span>👉</span>
+					<Link href='/login'>Login</Link>
+				</span>
+			)}
+
+			<br />
+
 			{userData?.isAdmin && (
 				<div className='link-icons'>
 					<Link href='/post/write' passHref>
@@ -333,6 +346,26 @@ const GnbStyle = styled(animated.nav)`
 
 		.write {
 			font-size: 16px;
+		}
+	}
+
+	.user-on {
+		margin-top: -3px;
+		font-weight: bold;
+		font-size: ${({ theme }) => theme.fontSizes.md};
+	}
+
+	.user-off {
+		margin-top: -3px;
+		font-weight: bold;
+		font-size: ${({ theme }) => theme.fontSizes.md};
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		span {
+			margin-right: 8px;
 		}
 	}
 `;

@@ -74,13 +74,16 @@ const Auth = () => {
 	const { userData } = useAppSelector((state) => state.user);
 
 	useEffect(() => {
-		dispatch(getCategory());
-
 		if (userData) {
 			return;
 		}
 		dispatch(getUser());
 	}, [dispatch, userData]);
+
+	useEffect(() => {
+		dispatch(getCategory());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return null;
 };
@@ -118,6 +121,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				| 'dark'
 				| 'light';
 			dispatch(setThemeMode(existTheme));
+			dispatch(getCategory());
 		};
 
 		const onRouteChangeError = () => {

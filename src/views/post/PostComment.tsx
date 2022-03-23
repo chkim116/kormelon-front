@@ -16,6 +16,7 @@ import {
 	patchReply,
 	postCreateComment,
 	postCreateReply,
+	removeFocusCommentId,
 } from 'src/store/comment';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 
@@ -316,9 +317,12 @@ const PostComment = () => {
 		const { current: focusComment } = focusCommentRef;
 		if (focusComment) {
 			focusComment.scrollIntoView({ block: 'center' });
-			focusComment.classList.add('add');
 		}
-	}, [focusId]);
+
+		return () => {
+			dispatch(removeFocusCommentId());
+		};
+	}, [dispatch, focusId]);
 
 	return (
 		<PostCommentStyle>
@@ -404,7 +408,11 @@ const PostComment = () => {
 					</Button>
 				</form>
 				{comments.map((comment) => (
-					<div className='comment-list' key={comment.id} ref={focusCommentRef}>
+					<div
+						className='comment-list'
+						key={comment.id}
+						ref={comment.id === focusId ? focusCommentRef : null}
+					>
 						<div className='comment-box'>
 							<div className='box-title'>
 								<div className='user'>
@@ -535,7 +543,7 @@ const PostComment = () => {
 									<div
 										className='comment-box'
 										key={reply.id}
-										ref={focusCommentRef}
+										ref={comment.id === focusId ? focusCommentRef : null}
 									>
 										<div className='box-title'>
 											<div className='user'>

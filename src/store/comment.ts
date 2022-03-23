@@ -73,6 +73,9 @@ const comment = createSlice({
 		setFocusCommentId: (state, { payload }: PayloadAction<string>) => {
 			state.focusId = payload;
 		},
+		removeFocusCommentId: (state) => {
+			state.focusId = '';
+		},
 	},
 	extraReducers: (build) =>
 		build
@@ -306,6 +309,6 @@ export const deleteReply = createAsyncThunk(
 	}
 );
 
-export const { setFocusCommentId } = comment.actions;
+export const { setFocusCommentId, removeFocusCommentId } = comment.actions;
 
 export default comment.reducer;

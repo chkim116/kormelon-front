@@ -135,9 +135,18 @@ const post = createSlice({
 			}));
 		},
 		deletePostComment: (state, { payload }: PayloadAction<{ id: string }>) => {
-			state.post.comments = state.post.comments.filter(
-				(comment) => comment.id !== payload.id
-			);
+			const existReply = state.post.comments.find(
+				(comment) => comment.id === payload.id
+			)?.commentReplies.length;
+
+			state.post.comments = existReply
+				? state.post.comments.map((comment) => ({
+						...comment,
+						text:
+							comment.id === payload.id ? '삭제된 댓글입니다.' : comment.text,
+						deletedAt: new Date().toISOString(),
+				  }))
+				: state.post.comments.filter((comment) => comment.id !== payload.id);
 		},
 		updatePostCommentReply: (
 			state,

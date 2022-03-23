@@ -434,7 +434,8 @@ const PostComment = () => {
 											<MdDelete />
 										</span>
 									</div>
-								) : userData?.id === comment.userId || userData?.isAdmin ? (
+								) : !comment.deletedAt &&
+								  (userData?.id === comment.userId || userData?.isAdmin) ? (
 									<div className='etc'>
 										<span
 											data-id={comment.id}

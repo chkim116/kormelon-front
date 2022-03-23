@@ -17,6 +17,7 @@ import { useClickAway } from 'react-use';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
+import { getCategory } from 'src/store/category';
 
 import profileImg from '../../public/static/profile.jpeg';
 
@@ -70,6 +71,11 @@ export const Gnb = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router]);
+
+	useEffect(() => {
+		dispatch(getCategory());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router.pathname]);
 
 	useClickAway(gnbRef, () => isGnbOpen && dispatch(toggleIsGnbOpen(false)));
 

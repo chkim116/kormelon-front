@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BsPencil, BsPlus } from 'react-icons/bs';
 import { FiMinus } from 'react-icons/fi';
 import dayjs from 'dayjs';
@@ -50,10 +50,13 @@ const PostComment = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
 	const { comments } = useAppSelector((state) => state.post.post);
+	const { focusId } = useAppSelector((state) => state.comment);
 	const { query } = useRouter();
 	const { callNotification } = useNotification();
 
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
+
+	const focusCommentRef = useRef<HTMLDivElement | null>(null);
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -309,6 +312,14 @@ const PostComment = () => {
 		[dispatch, deleteCommentValue, isAnonymousPw]
 	);
 
+	useEffect(() => {
+		const { current: focusComment } = focusCommentRef;
+		if (focusComment) {
+			focusComment.scrollIntoView({ block: 'center' });
+			focusComment.classList.add('add');
+		}
+	}, [focusId]);
+
 	return (
 		<PostCommentStyle>
 			<Modal isOpen={isDeleteModalOpen}>
@@ -392,9 +403,8 @@ const PostComment = () => {
 						댓글 작성
 					</Button>
 				</form>
-
 				{comments.map((comment) => (
-					<div className='comment-list' key={comment.id}>
+					<div className='comment-list' key={comment.id} ref={focusCommentRef}>
 						<div className='comment-box'>
 							<div className='box-title'>
 								<div className='user'>
@@ -521,7 +531,11 @@ const PostComment = () => {
 								</form>
 
 								{comment.commentReplies.map((reply) => (
-									<div className='comment-box' key={reply.id}>
+									<div
+										className='comment-box'
+										key={reply.id}
+										ref={focusCommentRef}
+									>
 										<div className='box-title'>
 											<div className='user'>
 												<div>{reply.username}</div>

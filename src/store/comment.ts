@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
 import { addNotification } from './notification';
 import {
@@ -11,6 +11,8 @@ import {
 } from './post';
 
 interface CommentState {
+	focusId: string;
+
 	isCreateCommentLoad: boolean;
 	isCreateCommentDone: boolean;
 	isCreateCommentErr: null | any;
@@ -37,6 +39,8 @@ interface CommentState {
 }
 
 const initialState: CommentState = {
+	focusId: '',
+
 	isCreateCommentLoad: false,
 	isCreateCommentDone: false,
 	isCreateCommentErr: null,
@@ -65,7 +69,11 @@ const initialState: CommentState = {
 const comment = createSlice({
 	name: 'comment',
 	initialState,
-	reducers: {},
+	reducers: {
+		setFocusCommentId: (state, { payload }: PayloadAction<string>) => {
+			state.focusId = payload;
+		},
+	},
 	extraReducers: (build) =>
 		build
 			.addCase(postCreateComment.pending, (state) => {
@@ -173,6 +181,7 @@ export const postCreateComment = createAsyncThunk(
 			dispatch(
 				addNotification({ type: 'success', message: '댓글이 작성되었습니다.' })
 			);
+			dispatch(setFocusCommentId(comment.id));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -202,6 +211,7 @@ export const postCreateReply = createAsyncThunk(
 					message: '댓글이 작성되었습니다.',
 				})
 			);
+			dispatch(setFocusCommentId(commentReply.id));
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}
@@ -295,5 +305,7 @@ export const deleteReply = createAsyncThunk(
 		}
 	}
 );
+
+export const { setFocusCommentId } = comment.actions;
 
 export default comment.reducer;

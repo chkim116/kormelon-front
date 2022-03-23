@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AiOutlineClose, AiOutlineSearch } from 'react-icons/ai';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { MdLightMode, MdModeNight } from 'react-icons/md';
+import { getCategory } from 'src/store/category';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
@@ -61,6 +62,16 @@ export const Header = () => {
 			mobileSearchRef.current!.focus();
 		}
 	}, [isShowMobileSearchBar]);
+
+	useEffect(() => {
+		const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
+			| 'dark'
+			| 'light';
+		dispatch(setThemeMode(existTheme));
+		dispatch(getCategory());
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [router.pathname]);
 
 	return (
 		<HeaderStyle>

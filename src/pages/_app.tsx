@@ -24,8 +24,6 @@ import { getUser } from 'src/store/user';
 import { getView } from 'src/store/view';
 import { useRouter } from 'next/router';
 import { pageView } from 'src/lib/gtagConfig';
-import { getCategory } from 'src/store/category';
-import { setThemeMode } from 'src/store/themeMode';
 
 // korean 시간
 dayJs.locale('ko');
@@ -33,15 +31,6 @@ dayJs.locale('ko');
 // theme, global style 적용
 const AppTheme: FC = ({ children }) => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
-	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
-			| 'dark'
-			| 'light';
-		dispatch(setThemeMode(existTheme));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		document.body.style.transition = 'all 300ms';
@@ -80,11 +69,6 @@ const Auth = () => {
 		dispatch(getUser());
 	}, [dispatch, userData]);
 
-	useEffect(() => {
-		dispatch(getCategory());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return null;
 };
 
@@ -103,7 +87,6 @@ const GlobalLoading = () => {
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const [isGlobalLoading, setIsGlobalLoading] = useState(false);
-	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		const onRouteChangeStart = () => {
@@ -115,13 +98,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 			// gtags
 			pageView(url);
-
-			// theme
-			const existTheme = (localStorage.getItem('kblog_theme') ?? 'dark') as
-				| 'dark'
-				| 'light';
-			dispatch(setThemeMode(existTheme));
-			dispatch(getCategory());
 		};
 
 		const onRouteChangeError = () => {

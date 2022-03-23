@@ -69,7 +69,7 @@ export const Header = () => {
 		dispatch(setThemeMode(existTheme));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.pathname]);
+	}, [router.asPath]);
 
 	return (
 		<HeaderStyle>
@@ -136,6 +136,7 @@ const HeaderStyle = styled.header`
 	position: fixed;
 	width: 100%;
 	height: 50px;
+	z-index: 50;
 	top: 0;
 	left: 0;
 	background-color: ${({ theme }) => theme.colors.primary};

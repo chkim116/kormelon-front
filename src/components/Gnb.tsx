@@ -75,7 +75,7 @@ export const Gnb = () => {
 	useEffect(() => {
 		dispatch(getCategory());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.pathname]);
+	}, [router.asPath]);
 
 	useClickAway(gnbRef, () => isGnbOpen && dispatch(toggleIsGnbOpen(false)));
 

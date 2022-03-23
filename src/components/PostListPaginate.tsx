@@ -11,7 +11,7 @@ interface PostListPaginateProps {
 }
 
 const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
-	const { push, query, pathname } = useRouter();
+	const { query, pathname } = useRouter();
 
 	const [selectedPage, setSelectedPage] = useState(Number(query?.page) || 1);
 
@@ -40,27 +40,26 @@ const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
 
 	const onClickNext = useCallback(() => {
 		setSelectedPage((prev) => (prev + 1 > pages.length ? prev : prev + 1));
-
-		push(
-			`${pathname}/?${getQuery(
-				selectedPage + 1 > pages.length ? selectedPage : selectedPage + 1
-			)}`
-		);
-	}, [getQuery, pages.length, pathname, push, selectedPage]);
+	}, [pages.length]);
 
 	const onClickPrev = useCallback(() => {
 		setSelectedPage((prev) => (prev - 1 > 0 ? prev - 1 : prev));
-
-		push(
-			`${pathname}?${getQuery(
-				selectedPage - 1 > 0 ? selectedPage - 1 : selectedPage
-			)}`
-		);
-	}, [getQuery, pathname, push, selectedPage]);
+	}, []);
 
 	return (
 		<PostListPaginateStyle>
-			<li onClick={onClickPrev}>{'<'}</li>
+			<PaginateBtn
+				onClick={onClickPrev}
+				disabled={(query.page ? +query.page : 1) === 1}
+			>
+				<Link
+					href={`/?page=${
+						selectedPage - 1 > 0 ? selectedPage - 1 : selectedPage
+					}`}
+				>
+					{'<'}
+				</Link>
+			</PaginateBtn>
 			{pages.map((page) => (
 				<PaginateBtn
 					onClick={onClickPagination}
@@ -73,7 +72,18 @@ const PostListPaginate = ({ total, per }: PostListPaginateProps) => {
 					</Link>
 				</PaginateBtn>
 			))}
-			<li onClick={onClickNext}>{'>'}</li>
+			<PaginateBtn
+				onClick={onClickNext}
+				disabled={(query.page ? +query.page : 1) === pages.length}
+			>
+				<Link
+					href={`/?page=${
+						selectedPage + 1 > pages.length ? pages.length : selectedPage + 1
+					}`}
+				>
+					{'>'}
+				</Link>
+			</PaginateBtn>
 		</PostListPaginateStyle>
 	);
 };
@@ -104,12 +114,23 @@ const PostListPaginateStyle = styled.div`
 	}
 `;
 
-const PaginateBtn = styled.li<{ selected?: boolean }>`
+const PaginateBtn = styled.li<{ selected?: boolean; disabled?: boolean }>`
+	${({ disabled }) => {
+		if (disabled) {
+			return css`
+				pointer-events: none;
+				opacity: 0.5;
+			`;
+		}
+	}}
+
 	${({ selected, theme }) => {
 		if (selected) {
 			return css`
 				font-weight: bold;
 				background-color: ${theme.colors.onSecondary} !important;
+				pointer-events: none;
+				opacity: 0.8;
 
 				a {
 					color: ${theme.colors.secondary} !important;

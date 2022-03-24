@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import type { AppProps } from 'next/app';
 import styled from '@emotion/styled';
-import dayJs from 'dayJs';
-import 'dayJs/locale/ko';
+import dayJs from 'dayjs';
+import 'dayjs/locale/ko';
 import { ReactNotifications } from 'react-notifications-component';
 import { ThemeProvider, useTheme } from '@emotion/react';
 import ReactLoading from 'react-loading';

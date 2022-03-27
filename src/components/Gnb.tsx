@@ -30,7 +30,9 @@ export const Gnb = () => {
 
 	const dispatch = useAppDispatch();
 	const { isGnbOpen } = useAppSelector((state) => state.gnb);
-	const { categories } = useAppSelector((state) => state.category);
+	const { categories, isCategoryDone } = useAppSelector(
+		(state) => state.category
+	);
 	const { userData } = useAppSelector((state) => state.user);
 	const { today, total } = useAppSelector((state) => state.view);
 
@@ -79,9 +81,10 @@ export const Gnb = () => {
 	}, [router]);
 
 	useEffect(() => {
+		if (isCategoryDone) return;
+
 		dispatch(getCategory());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.asPath]);
+	}, [dispatch, isCategoryDone, router.asPath]);
 
 	useClickAway(gnbRef, () => isGnbOpen && dispatch(toggleIsGnbOpen(false)));
 

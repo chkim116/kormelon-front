@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { api } from 'src/lib/api';
-import { Post } from './post';
+import { Posts } from './post';
 
 interface SearchState {
 	searchLoad: boolean;
 	searchDone: boolean;
 	searchErr: null | any;
 
-	postByQuery: Post;
+	postByQuery: Posts;
 }
 
 const initialState: SearchState = {

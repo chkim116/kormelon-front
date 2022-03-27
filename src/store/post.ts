@@ -10,7 +10,7 @@ type PostCategory = {
 	parentValue: string;
 };
 
-export type Post = {
+export type Posts = {
 	total: number;
 	results: {
 		id: string;
@@ -39,7 +39,7 @@ export type PostDetail = {
 };
 
 interface PostState {
-	posts: Post[];
+	posts: Posts;
 	post: PostDetail;
 
 	isPostLoad: boolean;
@@ -64,7 +64,10 @@ interface PostState {
 }
 
 const initialState: PostState = {
-	posts: [],
+	posts: {
+		total: 0,
+		results: [],
+	},
 	post: {
 		id: '',
 		userId: '',

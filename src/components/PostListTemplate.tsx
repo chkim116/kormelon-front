@@ -4,13 +4,13 @@ import dayjs from 'dayjs';
 
 import PostListPaginate from './PostListPaginate';
 
-import { Post } from 'src/store/post';
+import { Posts } from 'src/store/post';
 import Tag from 'src/components/Tag';
 import { DEFAULT_PER } from 'src/lib/constants';
 import Empty from './Empty';
 
 interface PostListTemplateProps {
-	posts: Post;
+	posts: Posts;
 	children?: React.ReactChild;
 }
 

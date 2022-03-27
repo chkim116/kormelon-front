@@ -1,0 +1,17 @@
+falsyExempleServerlessNext:
+  component: '@sls-next/serverless-component@3.5.3-alpha.4'
+  inputs:
+    # useServerlessTraceTarget: true
+    memory:
+      defaultLambda: 1024
+    roleArn: arn:aws:iam::195592554540:role/serverless_kormelon
+    bucketName: 'kormelon'
+    runtime:
+      defaultLambda: 'nodejs14.x'
+      apiLambda: 'nodejs14.x'
+      imageLambda: 'nodejs14.x'
+    cloudfront:
+      distributionId: 'E294ZOOBDNKQSP'
+    name:
+      defaultLambda: 'kormelonLambda'
+      apiLambda: 'kormelonApiLambda'

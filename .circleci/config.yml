@@ -1,0 +1,41 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.3.0
+
+jobs:
+  deploy-stage:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-
+      - run:
+          name: install
+          command: |
+            yarn install
+      - run:
+          name: build
+          command: |
+            yarn build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-
+      - run:
+          name: deploy Next.js
+          command: |
+            yarn deploy
+
+workflows:
+  version: 2
+  next-deploy:
+    jobs:
+      - deploy-stage:
+          filters:
+            branches:
+              only:
+                - v2
+          context: kormelon

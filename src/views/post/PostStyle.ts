@@ -1,8 +1,24 @@
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+
+const focus = keyframes`
+	0% {
+		opacity: 0.3;
+		background-color: #ffff00;
+	}
+	100% {
+		opacity: 1;
+	}
+`;
 
 const PostStyle = styled.div`
 	display: flex;
 	width: 100%;
+
+	/* 포커싱 애니메이션 */
+	.focus {
+		animation: ${focus} 1500ms forwards;
+	}
 
 	.anchors {
 		position: sticky;
@@ -197,6 +213,7 @@ const PostCommentStyle = styled.div`
 	.comment-box {
 		margin: 25px 0;
 		width: 100%;
+		padding: 0 8px;
 
 		.comment-edit {
 			display: flex;

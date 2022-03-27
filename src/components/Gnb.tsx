@@ -12,7 +12,7 @@ import {
 	BsPencil,
 } from 'react-icons/bs';
 import { AiOutlineFolderOpen, AiOutlineFolder } from 'react-icons/ai';
-import { MdSettings } from 'react-icons/md';
+import { MdNotifications, MdSettings } from 'react-icons/md';
 import { useClickAway } from 'react-use';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
@@ -109,7 +109,6 @@ export const Gnb = () => {
 									) : (
 										<AiOutlineFolder />
 									)}
-									{/* TODO: close */}
 								</span>
 							</summary>
 							<ul>

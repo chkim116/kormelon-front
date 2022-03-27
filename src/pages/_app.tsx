@@ -24,6 +24,7 @@ import { getUser } from 'src/store/user';
 import { getView } from 'src/store/view';
 import { useRouter } from 'next/router';
 import { pageView } from 'src/lib/gtagConfig';
+import Notifications from 'src/components/Notifications';
 
 // korean 시간
 dayJs.locale('ko');
@@ -129,6 +130,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 					<Component {...pageProps} />
 				</div>
 				<Footer />
+				<Notifications />
 			</AppStyle>
 		</AppTheme>
 	);

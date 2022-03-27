@@ -2,11 +2,23 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { api } from 'src/lib/api';
 
+interface Notification {
+	postId: string;
+	postTitle: string;
+	type: 'comment' | 'reply';
+	targetId: string;
+	value: string;
+	author: string;
+	isRead: boolean;
+	createdAt: string;
+}
+
 type UserData = {
 	id: string;
 	username: string;
 	email: string;
 	isAdmin: boolean;
+	notifications: Notification[];
 };
 
 interface UserState {

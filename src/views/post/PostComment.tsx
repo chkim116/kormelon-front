@@ -55,9 +55,21 @@ const PostComment = () => {
 	const { query } = useRouter();
 	const { callNotification } = useNotification();
 
+	const focusIdByQuery = useMemo(() => query.target, [query]);
 	const isLogged = useMemo(() => !!userData?.id, [userData]);
 
 	const focusCommentRef = useRef<HTMLDivElement | null>(null);
+	const focusingComment = useCallback(() => {
+		const { current: focusComment } = focusCommentRef;
+		if (focusComment) {
+			focusComment.scrollIntoView({ block: 'center' });
+			focusComment.classList.add('focus');
+
+			setTimeout(() => {
+				focusComment.classList.remove('focus');
+			}, 1500);
+		}
+	}, []);
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -313,16 +325,49 @@ const PostComment = () => {
 		[dispatch, deleteCommentValue, isAnonymousPw]
 	);
 
+	// 알림으로 이동 시 댓글 or 대댓글 포커스
 	useEffect(() => {
-		const { current: focusComment } = focusCommentRef;
-		if (focusComment) {
-			focusComment.scrollIntoView({ block: 'center' });
+		if (!query.target) return;
+
+		if (query.type === 'reply') {
+			const openComment = comments.find((comment) =>
+				comment.commentReplies.find((reply) => reply.id === query.target)
+			);
+
+			if (!openComment) return;
+
+			new Promise((resolve) => {
+				resolve(
+					setIsOpenReplyIds((prev) => {
+						if (!prev.length) {
+							return [openComment.id];
+						}
+
+						if (prev.includes(openComment.id)) {
+							return prev;
+						}
+
+						return [...prev, openComment.id];
+					})
+				);
+			}).then(() => {
+				focusingComment();
+			});
 		}
+
+		if (query.type === 'comment') {
+			focusingComment();
+		}
+	}, [comments, focusingComment, query.target, query.type]);
+
+	// 댓글 or 대댓글 작성시 포커스
+	useEffect(() => {
+		focusingComment();
 
 		return () => {
 			dispatch(removeFocusCommentId());
 		};
-	}, [dispatch, focusId]);
+	}, [dispatch, focusingComment, focusId]);
 
 	return (
 		<PostCommentStyle>
@@ -408,12 +453,15 @@ const PostComment = () => {
 					</Button>
 				</form>
 				{comments.map((comment) => (
-					<div
-						className='comment-list'
-						key={comment.id}
-						ref={comment.id === focusId ? focusCommentRef : null}
-					>
-						<div className='comment-box'>
+					<div className='comment-list' key={comment.id}>
+						<div
+							className='comment-box'
+							ref={
+								comment.id === (focusIdByQuery || focusId)
+									? focusCommentRef
+									: null
+							}
+						>
 							<div className='box-title'>
 								<div className='user'>
 									<div>{comment.username}</div>
@@ -543,7 +591,11 @@ const PostComment = () => {
 									<div
 										className='comment-box'
 										key={reply.id}
-										ref={comment.id === focusId ? focusCommentRef : null}
+										ref={
+											reply.id === (focusIdByQuery || focusId)
+												? focusCommentRef
+												: null
+										}
 									>
 										<div className='box-title'>
 											<div className='user'>

@@ -55,7 +55,7 @@ const Notifications = () => {
 													{notification.postTitle}에{' '}
 													{notification.type === 'comment'
 														? '댓글이 달렸습니다.'
-														: '대댓글이 달렸습니다.'}
+														: '작성한 댓글에 대댓글이 달렸습니다.'}
 												</div>
 
 												<div className='notification-value'>

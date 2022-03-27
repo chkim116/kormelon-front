@@ -55,8 +55,11 @@ const PostComment = () => {
 	const { query } = useRouter();
 	const { callNotification } = useNotification();
 
-	const focusIdByQuery = useMemo(() => query.target, [query]);
-	const isLogged = useMemo(() => !!userData?.id, [userData]);
+	const focusIdByQuery = useMemo(
+		() => focusId || query.target,
+		[focusId, query.target]
+	);
+	const isLogged = useMemo(() => !!userData?.id, [userData?.id]);
 
 	const focusCommentRef = useRef<HTMLDivElement | null>(null);
 	const focusingComment = useCallback(() => {
@@ -70,6 +73,8 @@ const PostComment = () => {
 			}, 1500);
 		}
 	}, []);
+	// 이미 쿼리로 포커스 한 상태
+	const [isReaded, setIsReaded] = useState(false);
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -185,7 +190,7 @@ const PostComment = () => {
 					id: commentValue.id,
 					text: commentValue.text,
 				},
-				userData ? {} : anonymousUser
+				userData?.id ? {} : anonymousUser
 			);
 
 			if (commentValue.type === 'comment') {
@@ -206,7 +211,7 @@ const PostComment = () => {
 				);
 			}
 		},
-		[dispatch, commentValues, anonymousUser, userData, callNotification]
+		[dispatch, commentValues, anonymousUser, userData?.id, callNotification]
 	);
 
 	// * 댓글 수정 입력 받기
@@ -267,7 +272,7 @@ const PostComment = () => {
 				}
 			}
 		},
-		[dispatch, userData]
+		[dispatch, userData?.isAdmin]
 	);
 
 	const [isAnonymousPw, setIsAnonymousPw] = useState('');
@@ -325,9 +330,20 @@ const PostComment = () => {
 		[dispatch, deleteCommentValue, isAnonymousPw]
 	);
 
+	// 댓글 or 대댓글 작성시 포커스
+	useEffect(() => {
+		if (focusId) {
+			new Promise(() => {
+				focusingComment();
+			}).then(() => {
+				dispatch(removeFocusCommentId());
+			});
+		}
+	}, [dispatch, focusId, focusingComment]);
+
 	// 알림으로 이동 시 댓글 or 대댓글 포커스
 	useEffect(() => {
-		if (!query.target) return;
+		if (isReaded || !query.target) return;
 
 		if (query.type === 'reply') {
 			const openComment = comments.find((comment) =>
@@ -358,16 +374,9 @@ const PostComment = () => {
 		if (query.type === 'comment') {
 			focusingComment();
 		}
-	}, [comments, focusingComment, query.target, query.type]);
 
-	// 댓글 or 대댓글 작성시 포커스
-	useEffect(() => {
-		focusingComment();
-
-		return () => {
-			dispatch(removeFocusCommentId());
-		};
-	}, [dispatch, focusingComment, focusId]);
+		setIsReaded(true);
+	}, [comments, focusingComment, isReaded, query.target, query.type]);
 
 	return (
 		<PostCommentStyle>
@@ -456,11 +465,7 @@ const PostComment = () => {
 					<div className='comment-list' key={comment.id}>
 						<div
 							className='comment-box'
-							ref={
-								comment.id === (focusIdByQuery || focusId)
-									? focusCommentRef
-									: null
-							}
+							ref={comment.id === focusIdByQuery ? focusCommentRef : null}
 						>
 							<div className='box-title'>
 								<div className='user'>
@@ -591,11 +596,7 @@ const PostComment = () => {
 									<div
 										className='comment-box'
 										key={reply.id}
-										ref={
-											reply.id === (focusIdByQuery || focusId)
-												? focusCommentRef
-												: null
-										}
+										ref={reply.id === focusIdByQuery ? focusCommentRef : null}
 									>
 										<div className='box-title'>
 											<div className='user'>

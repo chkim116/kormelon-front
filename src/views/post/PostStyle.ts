@@ -214,6 +214,7 @@ const PostCommentStyle = styled.div`
 		margin: 25px 0;
 		width: 100%;
 		padding: 0 8px;
+		word-wrap: break-word;
 
 		.comment-edit {
 			display: flex;

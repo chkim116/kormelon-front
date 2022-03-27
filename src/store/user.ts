@@ -27,6 +27,10 @@ interface UserState {
 	isLoginDone: boolean;
 	isLoginErr: null | any;
 
+	isLogoutLoad: boolean;
+	isLogoutDone: boolean;
+	isLogoutErr: null | any;
+
 	isRegisterLoad: boolean;
 	isRegisterDone: boolean;
 	isRegisterErr: null | any;
@@ -37,6 +41,10 @@ const initialState: UserState = {
 	isLoginLoad: false,
 	isLoginErr: null,
 	isLoginDone: false,
+
+	isLogoutLoad: false,
+	isLogoutErr: null,
+	isLogoutDone: false,
 
 	isRegisterLoad: false,
 	isRegisterErr: null,
@@ -65,6 +73,21 @@ const user = createSlice({
 			.addCase(postLogin.rejected, (state, { payload }) => {
 				state.isLoginLoad = false;
 				state.isLoginErr = payload;
+			})
+
+			.addCase(postLogout.pending, (state) => {
+				state.isLogoutLoad = true;
+				state.isLogoutDone = false;
+				state.isLogoutErr = null;
+			})
+			.addCase(postLogout.fulfilled, (state) => {
+				state.isLogoutLoad = false;
+				state.isLogoutDone = true;
+				state.userData = null;
+			})
+			.addCase(postLogout.rejected, (state, { payload }) => {
+				state.isLogoutLoad = false;
+				state.isLogoutErr = payload;
 			})
 
 			.addCase(postRegister.pending, (state) => {
@@ -100,6 +123,17 @@ export const postLogin = createAsyncThunk(
 		try {
 			const res = await api.post('/user/login', data).then((res) => res.data);
 			return res;
+		} catch (err: any) {
+			return rejectWithValue(err.response.data.message);
+		}
+	}
+);
+
+export const postLogout = createAsyncThunk(
+	'user/postLogout',
+	async (_, { rejectWithValue }) => {
+		try {
+			await api.post('/user/logout');
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

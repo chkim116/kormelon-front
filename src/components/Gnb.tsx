@@ -12,12 +12,13 @@ import {
 	BsPencil,
 } from 'react-icons/bs';
 import { AiOutlineFolderOpen, AiOutlineFolder } from 'react-icons/ai';
-import { MdNotifications, MdSettings } from 'react-icons/md';
+import { MdSettings } from 'react-icons/md';
 import { useClickAway } from 'react-use';
 
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import { toggleIsGnbOpen } from 'src/store/gnb';
 import { getCategory } from 'src/store/category';
+import { postLogout } from 'src/store/user';
 
 import profileImg from '../../public/static/profile.jpeg';
 
@@ -65,6 +66,11 @@ export const Gnb = () => {
 		setOpenCategories((prev) => ({ ...prev, [value]: !open }));
 	}, []);
 
+	const onClickLogout = useCallback(() => {
+		dispatch(postLogout());
+		dispatch(toggleIsGnbOpen());
+	}, [dispatch]);
+
 	useEffect(() => {
 		if (isGnbOpen) {
 			dispatch(toggleIsGnbOpen());
@@ -88,9 +94,11 @@ export const Gnb = () => {
 			<div className='user'>
 				<div className='profile'>
 					<Image src={profileImg} alt='유저 이미지' width={32} height={32} />
-					<span>Kim changhoe</span>
+					<span>Kim Changhoe</span>
 				</div>
-				<div className='text'>😀😎</div>
+				<div className='text'>
+					I&apos;m Frontend Developer 😀 <br />I love JavaScript and More.
+				</div>
 			</div>
 
 			<div className='categories'>
@@ -175,7 +183,12 @@ export const Gnb = () => {
 			<br />
 
 			{userData ? (
-				<p className='user-on'>{userData.username} ⭐️</p>
+				<>
+					<p className='user-on'>{userData.username} ⭐️</p>
+					<p className='user-logout' onClick={onClickLogout}>
+						Logout?
+					</p>
+				</>
 			) : (
 				<span className='user-off'>
 					<span>👉</span>
@@ -358,6 +371,16 @@ const GnbStyle = styled(animated.nav)`
 		margin-top: -3px;
 		font-weight: bold;
 		font-size: ${({ theme }) => theme.fontSizes.md};
+	}
+
+	.user-logout {
+		margin-top: 6px;
+		font-size: ${({ theme }) => theme.fontSizes.sm};
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	.user-off {

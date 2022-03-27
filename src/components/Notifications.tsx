@@ -26,6 +26,10 @@ const Notifications = () => {
 		await api.get(`/user/noti/${targetId}`);
 	}, []);
 
+	if (!notificationList.length) {
+		return null;
+	}
+
 	return (
 		<NotificationsStyle onClick={toggleList}>
 			<span className='cnt'>{notificationList.length}</span>

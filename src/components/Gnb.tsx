@@ -184,7 +184,7 @@ export const Gnb = () => {
 
 			{userData ? (
 				<>
-					<p className='user-on'>{userData.username} ⭐️</p>
+					<p className='user-on'>🚀 Your Name : {userData.username}</p>
 					<p className='user-logout' onClick={onClickLogout}>
 						Logout?
 					</p>
@@ -377,6 +377,7 @@ const GnbStyle = styled(animated.nav)`
 		margin-top: 6px;
 		font-size: ${({ theme }) => theme.fontSizes.sm};
 		cursor: pointer;
+		font-weight: bold;
 
 		&:hover {
 			text-decoration: underline;

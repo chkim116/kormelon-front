@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { api } from 'src/lib/api';
+import { addNotification } from './notification';
 
 interface Notification {
 	postId: string;
@@ -83,6 +84,7 @@ const user = createSlice({
 			.addCase(postLogout.fulfilled, (state) => {
 				state.isLogoutLoad = false;
 				state.isLogoutDone = true;
+				state.isLoginDone = false;
 				state.userData = null;
 			})
 			.addCase(postLogout.rejected, (state, { payload }) => {
@@ -131,9 +133,15 @@ export const postLogin = createAsyncThunk(
 
 export const postLogout = createAsyncThunk(
 	'user/postLogout',
-	async (_, { rejectWithValue }) => {
+	async (_, { rejectWithValue, dispatch }) => {
 		try {
 			await api.post('/user/logout');
+			dispatch(
+				addNotification({
+					type: 'success',
+					message: '로그아웃 되었습니다.',
+				})
+			);
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);
 		}

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BsPencil, BsPlus } from 'react-icons/bs';
@@ -27,6 +28,7 @@ export interface CommentReply {
 	text: string;
 	userId: string | null;
 	username: string;
+	userImage: string;
 	isAnonymous: boolean;
 	createdAt: string;
 }
@@ -35,6 +37,7 @@ export interface Comment {
 	text: string;
 	userId: string | null;
 	username: string;
+	userImage: string;
 	createdAt: string;
 	deletedAt: string | null;
 	isAnonymous: boolean;
@@ -469,7 +472,10 @@ const PostComment = () => {
 						>
 							<div className='box-title'>
 								<div className='user'>
-									<div>{comment.username}</div>
+									<div>
+										<img src={comment.userImage} alt='user image' />
+										<span>{comment.username}</span>
+									</div>
 									<div>{dayjs(comment.createdAt).format('YYYY-MM-DD')}</div>
 								</div>
 								{/* case 1. user is anonoymous */}
@@ -600,7 +606,10 @@ const PostComment = () => {
 									>
 										<div className='box-title'>
 											<div className='user'>
-												<div>{reply.username}</div>
+												<div>
+													<img src={reply.userImage} alt='user image' />
+													<span>{reply.username}</span>
+												</div>
 												<div>{dayjs(reply.createdAt).format('YYYY-MM-DD')}</div>
 											</div>
 

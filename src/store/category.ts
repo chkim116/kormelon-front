@@ -200,7 +200,7 @@ export const postCategory = createAsyncThunk(
 	async (value: string, { rejectWithValue, dispatch }) => {
 		try {
 			await api.post('/category', { value });
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',
@@ -223,7 +223,7 @@ export const postSubCategory = createAsyncThunk(
 			await api.post(`/category/${data.parentId}/sub`, {
 				value: data.value,
 			});
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',
@@ -245,7 +245,7 @@ export const patchCategory = createAsyncThunk(
 		const { id, value } = data;
 		try {
 			await api.patch(`/category/${id}`, { value });
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',
@@ -269,7 +269,7 @@ export const patchSubCategory = createAsyncThunk(
 			await api.patch(`/category/${id}/sub`, {
 				value,
 			});
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',
@@ -287,7 +287,7 @@ export const deleteCategory = createAsyncThunk(
 	async (id: string, { rejectWithValue, dispatch }) => {
 		try {
 			await api.delete(`/category/${id}`);
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',
@@ -305,7 +305,7 @@ export const deleteSubCategory = createAsyncThunk(
 	async (id: string, { rejectWithValue, dispatch }) => {
 		try {
 			await api.delete(`/category/${id}/sub`);
-			dispatch(getCategory());
+			await dispatch(getCategory());
 			dispatch(
 				addNotification({
 					type: 'success',

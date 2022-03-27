@@ -19,6 +19,7 @@ type UserData = {
 	username: string;
 	email: string;
 	isAdmin: boolean;
+	userImage: string;
 	notifications: Notification[];
 };
 

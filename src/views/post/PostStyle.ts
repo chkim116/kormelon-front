@@ -250,7 +250,16 @@ const PostCommentStyle = styled.div`
 
 			.user {
 				div:nth-of-type(1) {
+					display: flex;
+					align-items: center;
 					font-weight: 700;
+
+					img {
+						width: 32px;
+						height: 32px;
+						border-radius: 50%;
+						margin-right: 6px;
+					}
 				}
 				div:nth-of-type(2) {
 					margin: 8px 0;

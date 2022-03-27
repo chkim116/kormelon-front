@@ -180,7 +180,7 @@ export const postCreateComment = createAsyncThunk(
 			const comment = await api
 				.post(`/post/comment/${id}`, withoutId)
 				.then((res) => res.data);
-			dispatch(addPostComment(comment));
+			await dispatch(addPostComment(comment));
 			dispatch(
 				addNotification({ type: 'success', message: '댓글이 작성되었습니다.' })
 			);
@@ -207,7 +207,7 @@ export const postCreateReply = createAsyncThunk(
 			const commentReply = await api
 				.post(`/post/comment/reply/${id}`, withoutId)
 				.then((res) => res.data);
-			dispatch(addPostCommentReply({ id, commentReply }));
+			await dispatch(addPostCommentReply({ id, commentReply }));
 			dispatch(
 				addNotification({
 					type: 'success',

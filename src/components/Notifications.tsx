@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { useClickAway, useToggle } from 'react-use';
+
+import { api } from 'src/lib/api';
 import { useAppSelector } from 'src/store/config';
 
 const Notifications = () => {
@@ -12,22 +14,31 @@ const Notifications = () => {
 	const [toggle, toggleList] = useToggle(false);
 	const notiList = useRef(null);
 
+	const notificationList = useMemo(() => {
+		return userData?.notifications.filter((noti) => !noti.isRead) || [];
+	}, [userData?.notifications]);
+
 	useClickAway(notiList, () => toggleList(false));
 
-	const onClickDeleteList = useCallback((e) => {
-		const { targetId } = e.currentTarget.dataset;
-		// TODO: 클릭 시 or x 누를 시 삭제
+	const onClickDeleteList = useCallback(async (e) => {
+		const { id: targetId } = e.currentTarget;
+
+		await api.get(`/user/noti/${targetId}`);
 	}, []);
 
 	return (
 		<NotificationsStyle onClick={toggleList}>
-			<span className='cnt'>{userData?.notifications.length}</span>
+			<span className='cnt'>{notificationList.length}</span>
 			<IoNotificationsOutline />
 
 			{toggle && (
 				<div className='notification-box' ref={notiList}>
-					{userData?.notifications.map((notification, i) => (
-						<div key={notification.postId + i}>
+					{notificationList.map((notification, i) => (
+						<div
+							key={notification.postId + i}
+							onClick={onClickDeleteList}
+							id={notification.targetId}
+						>
 							<ul>
 								<li>
 									<Link
@@ -100,21 +111,20 @@ const NotificationsStyle = styled.div`
 	}
 
 	.notification-box {
+		max-height: 300px;
+		overflow-y: auto;
 		border: 1px solid ${({ theme }) => theme.colors.border};
 		z-index: 100;
 		position: absolute;
 		background-color: ${({ theme }) => theme.colors.primary};
 		bottom: calc(5% + 60px);
 		right: 0;
-		width: 250px;
-
-		li + li {
-			border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-		}
+		width: 280px;
+		word-wrap: break-word;
 
 		li {
+			padding: 1em;
 			list-style: none;
-			padding: 8px 10px;
 			font-size: ${({ theme }) => theme.fontSizes.sm};
 
 			&:hover {

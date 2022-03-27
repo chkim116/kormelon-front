@@ -6,6 +6,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { marked } from 'marked';
 import { BsPencil } from 'react-icons/bs';
 import { MdDelete } from 'react-icons/md';
+import { IoEyeSharp } from 'react-icons/io5';
 
 import PostAnchors from './PostAnchors';
 import PostComment from './PostComment';
@@ -70,6 +71,11 @@ const Post = () => {
 					<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
 					<span className='separator'>·</span>
 					<small>{post.readTime}</small>
+					<span className='separator'>·</span>
+					<small className='view'>
+						<IoEyeSharp />
+						{post.view}
+					</small>
 				</div>
 
 				<div className='tags'>

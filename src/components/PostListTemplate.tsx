@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import dayjs from 'dayjs';
+import { FaComment } from 'react-icons/fa';
+import { IoEyeSharp } from 'react-icons/io5';
 
 import PostListPaginate from './PostListPaginate';
 
@@ -54,9 +56,22 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 								))}
 							</div>
 							<div className='meta'>
-								<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
-								<span className='separator'>·</span>
-								<small>{post.readTime}</small>
+								<div>
+									<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
+									<span className='separator'>·</span>
+									<small>{post.readTime}</small>
+								</div>
+								<div>
+									<small className='comments'>
+										<FaComment />
+										{post.commentLength}
+									</small>
+									<span className='separator'>·</span>
+									<small className='view'>
+										<IoEyeSharp />
+										{post.view}
+									</small>
+								</div>
 							</div>
 						</div>
 					))
@@ -105,10 +120,29 @@ const PostListTemplateStyle = styled.article`
 
 		.meta {
 			display: flex;
+			flex-direction: column;
 			margin-top: 10px;
 
 			.separator {
-				margin: 0 2px;
+				margin: 0 4px;
+			}
+
+			div {
+				display: flex;
+				align-items: center;
+			}
+
+			.comments,
+			.view {
+				display: flex;
+				align-items: center;
+
+				svg {
+					margin-right: 6px;
+					color: ${({ theme }) => theme.colors.onPrimary};
+					font-size: 12px;
+					transform: scale(-1, 1);
+				}
 			}
 		}
 	}

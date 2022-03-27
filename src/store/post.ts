@@ -15,8 +15,9 @@ export type Posts = {
 	results: {
 		id: string;
 		title: string;
-		content: string;
 		category: PostCategory;
+		view: number;
+		commentLength: number;
 		tags: Tags;
 		readTime: number;
 		isPrivate: boolean;

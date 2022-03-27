@@ -76,6 +76,20 @@ const PostStyle = styled.div`
 			margin: 0 4px;
 		}
 
+		.info {
+			display: flex;
+			align-items: center;
+
+			.view {
+				display: flex;
+				align-items: center;
+				svg {
+					color: ${({ theme }) => theme.colors.onPrimary};
+					margin-right: 6px;
+				}
+			}
+		}
+
 		.tags {
 			display: flex;
 			gap: 8px;

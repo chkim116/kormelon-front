@@ -4,6 +4,7 @@ import { api } from 'src/lib/api';
 const initialState = {
 	today: 0,
 	total: 0,
+	isView: false,
 };
 
 const view = createSlice({
@@ -16,6 +17,7 @@ const view = createSlice({
 			(state, { payload }: PayloadAction<{ today: number; total: number }>) => {
 				state.today = payload.today;
 				state.total = payload.total;
+				state.isView = true;
 			}
 		),
 });

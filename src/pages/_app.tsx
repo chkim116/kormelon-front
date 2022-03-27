@@ -51,10 +51,14 @@ const AppTheme: FC = ({ children }) => {
 
 const View = () => {
 	const dispatch = useAppDispatch();
+	const { pathname } = useRouter();
+	const { isView } = useAppSelector((state) => state.view);
 
 	useEffect(() => {
+		if (isView) return;
+
 		dispatch(getView());
-	}, [dispatch]);
+	}, [dispatch, isView, pathname]);
 
 	return null;
 };

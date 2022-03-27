@@ -7,6 +7,7 @@ import PostListPaginate from './PostListPaginate';
 import { Post } from 'src/store/post';
 import Tag from 'src/components/Tag';
 import { DEFAULT_PER } from 'src/lib/constants';
+import Empty from './Empty';
 
 interface PostListTemplateProps {
 	posts: Post;
@@ -60,8 +61,7 @@ export const PostListTemplate = ({ posts }: PostListTemplateProps) => {
 						</div>
 					))
 				) : (
-					// TODO: Empty
-					<div>없습니다..</div>
+					<Empty />
 				)}
 			</PostListTemplateStyle>
 			<PostListPaginate total={total} per={DEFAULT_PER} />

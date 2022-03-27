@@ -4,12 +4,16 @@ import Image from 'next/image';
 import { useAppSelector } from 'src/store/config';
 import EmptyIcon from '../../public/static/empty-folder.svg';
 
-const Empty = () => {
+interface EmptyProps {
+	title?: string;
+}
+
+const Empty = ({ title = '아직 게시된 글이 없네요 :(' }: EmptyProps) => {
 	const { themeMode } = useAppSelector((state) => state.themeMode);
 	return (
 		<EmptyStyle themeMode={themeMode === 'dark'}>
 			<Image src={EmptyIcon} alt='empty icon' width={120} height={120} />
-			<h4>아직 게시된 글이 없네요 :(</h4>
+			<h4>{title}</h4>
 		</EmptyStyle>
 	);
 };

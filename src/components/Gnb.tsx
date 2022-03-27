@@ -228,6 +228,7 @@ const GnbStyle = styled(animated.nav)`
 	border-right: 1px solid ${({ theme }) => theme.colors.border};
 	background-color: ${({ theme }) => theme.colors.primary};
 	padding: 30px 26px;
+	overflow-y: auto;
 
 	.gnb-close-btn {
 		position: absolute;

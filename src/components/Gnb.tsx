@@ -230,6 +230,12 @@ const GnbStyle = styled(animated.nav)`
 	padding: 30px 26px;
 	overflow-y: auto;
 
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+	&::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera*/
+	}
+
 	.gnb-close-btn {
 		position: absolute;
 		top: 10px;

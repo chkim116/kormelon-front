@@ -4,7 +4,10 @@ import Post from 'src/views/post';
 
 export const getServerSideProps = store.getServerSideProps(
 	(store) => async (ctx) => {
-		const { params } = ctx;
+		const {
+			params,
+			req: { cookies },
+		} = ctx;
 
 		if (!params || !params['id']) {
 			return {
@@ -18,7 +21,7 @@ export const getServerSideProps = store.getServerSideProps(
 
 		const id = params['id'] as string;
 		const { dispatch } = store;
-		await dispatch(getPost(id));
+		await dispatch(getPost({ id, token: cookies['auth'] }));
 
 		return {
 			props: {},

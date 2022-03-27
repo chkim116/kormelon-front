@@ -33,7 +33,9 @@ export const getServerSideProps: GetServerSideProps = store.getServerSideProps(
 		// query가 있으면 게시글의 정보를 불러온다. 만약 잘못된 쿼리면 /post/write로 리다이렉트
 		if (query && query['edit']) {
 			const { dispatch, getState } = store;
-			await dispatch(getPost(query['edit'] as string));
+			await dispatch(
+				getPost({ id: query['edit'] as string, token: cookies['auth'] })
+			);
 			const prevPost = getState().post.post;
 
 			if (prevPost) {

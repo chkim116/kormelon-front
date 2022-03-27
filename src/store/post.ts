@@ -312,9 +312,19 @@ export const patchPost = createAsyncThunk(
 
 export const getPost = createAsyncThunk(
 	'post/getPost',
-	async (id: string, { rejectWithValue }) => {
+	async (
+		{ id, token = '' }: { id: string; token?: string },
+		{ rejectWithValue }
+	) => {
 		try {
-			const post = await api.get(`/post/${id}`).then((res) => res.data);
+			const post = await api
+				.get(`/post/${id}`, {
+					headers: {
+						Cookie: `auth=${token}`,
+					},
+					withCredentials: true,
+				})
+				.then((res) => res.data);
 			return post;
 		} catch (err: any) {
 			return rejectWithValue(err.response.data.message);

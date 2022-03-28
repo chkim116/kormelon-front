@@ -128,6 +128,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 			{/* SEO */}
 			<DefaultSeo />
 			<Head>
+				{/* google webconsole */}
+				<meta
+					name='google-site-verification'
+					content='0sCrJ0gEiQY8ypglxoB_nZ2vgIIWS_q9kwXF_8spzOc'
+				/>
+
 				{/* favicon */}
 				<link
 					rel='apple-touch-icon'

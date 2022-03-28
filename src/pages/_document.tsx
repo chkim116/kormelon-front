@@ -13,12 +13,6 @@ export default class MyDocument extends Document {
 						href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/a11y-dark.min.css'
 					></link>
 
-					{/* google webconsole */}
-					<meta
-						name='google-site-verification'
-						content='0sCrJ0gEiQY8ypglxoB_nZ2vgIIWS_q9kwXF_8spzOc'
-					/>
-
 					{/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
 					<script
 						async

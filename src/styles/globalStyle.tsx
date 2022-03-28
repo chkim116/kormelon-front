@@ -28,21 +28,37 @@ export const GlobalStyle = ({ theme }: { theme: Theme }) => {
 				h1 {
 					font-size: 30px;
 					font-weight: 700;
+
+					@media all and (max-width: 500px) {
+						font-size: 26px;
+					}
 				}
 
 				h2 {
 					font-size: 26px;
 					font-weight: 700;
+
+					@media all and (max-width: 500px) {
+						font-size: 23px;
+					}
 				}
 
 				h3 {
 					font-size: 22px;
 					font-weight: 700;
+
+					@media all and (max-width: 500px) {
+						font-size: 19px;
+					}
 				}
 
 				h4 {
 					font-size: 20px;
 					font-weight: 700;
+
+					@media all and (max-width: 500px) {
+						font-size: 17px;
+					}
 				}
 
 				/* 마크다운 부분 세팅 */

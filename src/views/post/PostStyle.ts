@@ -44,13 +44,18 @@ const PostStyle = styled.div`
 			}
 		}
 
-		@media all and (max-width: 900px) {
+		@media all and (max-width: 1000px) {
 			display: none;
 		}
 	}
 
 	.post {
-		width: 800px;
+		max-width: 800px;
+		width: 100%;
+
+		@media all and (max-width: 1000px) {
+			max-width: 1000px;
+		}
 
 		h1,
 		h2,
@@ -107,7 +112,11 @@ const PostStyle = styled.div`
 			overflow-wrap: break-word;
 			word-break: keep-all;
 			line-height: 2em;
-			font-size: 1.1em;
+			font-size: 17.5px;
+
+			@media all and (max-width: 500px) {
+				font-size: 15px;
+			}
 
 			p {
 				margin-bottom: 6px;

@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
 					{/* google webconsole */}
 					<meta
 						name='google-site-verification'
-						content='3yQnN4a3laP_8uJlbw0p-c0XNOQlISHhCfBdGfGTq4w'
+						content='0sCrJ0gEiQY8ypglxoB_nZ2vgIIWS_q9kwXF_8spzOc'
 					/>
 
 					{/* <!-- Global site tag (gtag.js) - Google Analytics --> */}

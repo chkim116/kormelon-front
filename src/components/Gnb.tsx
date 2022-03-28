@@ -20,8 +20,6 @@ import { toggleIsGnbOpen } from 'src/store/gnb';
 import { getCategory } from 'src/store/category';
 import { postLogout } from 'src/store/user';
 
-import profileImg from '../../public/assets/images/profile.jpeg';
-
 /**
  * 왼쪽에 표시될 공통 네비게이션
  */
@@ -96,7 +94,14 @@ export const Gnb = () => {
 
 			<div className='user'>
 				<div className='profile'>
-					<Image src={profileImg} alt='유저 이미지' width={32} height={32} />
+					<Image
+						src={
+							'https://assets-kormelon-v2.s3.ap-northeast-2.amazonaws.com/img/profile.jpeg'
+						}
+						alt='유저 이미지'
+						width={32}
+						height={32}
+					/>
 					<span>Kim Changhoe</span>
 				</div>
 				<div className='text'>

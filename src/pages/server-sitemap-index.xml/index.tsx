@@ -10,7 +10,7 @@ interface PostRss {
 
 const URL =
 	process.env.NODE_ENV === 'production'
-		? 'https://kormelon'
+		? 'https://kormelon.com'
 		: 'http://localhost:3000';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

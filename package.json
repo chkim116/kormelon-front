@@ -24,6 +24,7 @@
 		"next": "12.0.9",
 		"next-compose-plugins": "2.2.1",
 		"next-redux-wrapper": "7.0.5",
+		"next-seo": "5.2.0",
 		"next-sitemap": "2.5.11",
 		"query-string": "7.1.1",
 		"react": "17.0.2",

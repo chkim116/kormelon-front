@@ -19,6 +19,7 @@ import 'src/lib/markedConfig';
 import { deletePost } from 'src/store/post';
 import { useAppDispatch, useAppSelector } from 'src/store/config';
 import Button from 'src/components/Button';
+import PageSeo from 'src/lib/seo/PageSeo';
 
 DOMPurify.setConfig({
 	ALLOWED_TAGS,
@@ -55,67 +56,76 @@ const Post = () => {
 	);
 
 	return (
-		<PostStyle>
-			<div className='post'>
-				<div className='category'>
-					<Link href={`/search/category?q=${post.category.parentValue}`}>
-						{post.category.parentValue}
-					</Link>
-					<span>{'>'}</span>
-					<Link href={`/search/category/sub?q=${post.category.value}`}>
-						{post.category.value}
-					</Link>
-				</div>
-				<h1 className='title'>{post.title}</h1>
-				<div className='info'>
-					<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
-					<span className='separator'>·</span>
-					<small>{post.readTime}</small>
-					<span className='separator'>·</span>
-					<small className='view'>
-						<IoEyeSharp />
-						{post.view}
-					</small>
-				</div>
+		<>
+			<PageSeo
+				title={post.title}
+				desc={parsedContent.replace(/<[^>]*>?/g, '').slice(0, 200)}
+				url={`/post/${post.id}/${post.title}`}
+				image={parsedContent?.split('<img src="')[1]?.split('"')[0] || ''}
+			/>
 
-				<div className='tags'>
-					{post.tags.length
-						? post.tags.map((tag) => (
-								<Tag key={tag.id} href={`/search/tag?q=${tag.value}`}>
-									{tag.value}
-								</Tag>
-						  ))
-						: null}
-				</div>
-
-				{post.userId === userData?.id && userData?.isAdmin && (
-					<div className='btns'>
-						<Button>
-							<Link href={`/post/write/?edit=${post.id}`} passHref>
-								<a>
-									<BsPencil />
-								</a>
-							</Link>
-						</Button>
-						<Button id={post.id} onClick={onClickPostDelete}>
-							<MdDelete />
-						</Button>
+			<PostStyle>
+				<div className='post'>
+					<div className='category'>
+						<Link href={`/search/category?q=${post.category.parentValue}`}>
+							{post.category.parentValue}
+						</Link>
+						<span>{'>'}</span>
+						<Link href={`/search/category/sub?q=${post.category.value}`}>
+							{post.category.value}
+						</Link>
 					</div>
-				)}
+					<h1 className='title'>{post.title}</h1>
+					<div className='info'>
+						<small>{dayjs(post.createdAt).format('YYYY-MM-DD')}</small>
+						<span className='separator'>·</span>
+						<small>{post.readTime}</small>
+						<span className='separator'>·</span>
+						<small className='view'>
+							<IoEyeSharp />
+							{post.view}
+						</small>
+					</div>
 
-				<div
-					className='content'
-					dangerouslySetInnerHTML={{
-						__html: parsedContent,
-					}}
-				/>
-				<PostComment />
-			</div>
+					<div className='tags'>
+						{post.tags.length
+							? post.tags.map((tag) => (
+									<Tag key={tag.id} href={`/search/tag?q=${tag.value}`}>
+										{tag.value}
+									</Tag>
+							  ))
+							: null}
+					</div>
 
-			<div className='anchors'>
-				<PostAnchors anchors={anchors || []} />
-			</div>
-		</PostStyle>
+					{post.userId === userData?.id && userData?.isAdmin && (
+						<div className='btns'>
+							<Button>
+								<Link href={`/post/write/?edit=${post.id}`} passHref>
+									<a>
+										<BsPencil />
+									</a>
+								</Link>
+							</Button>
+							<Button id={post.id} onClick={onClickPostDelete}>
+								<MdDelete />
+							</Button>
+						</div>
+					)}
+
+					<div
+						className='content'
+						dangerouslySetInnerHTML={{
+							__html: parsedContent,
+						}}
+					/>
+					<PostComment />
+				</div>
+
+				<div className='anchors'>
+					<PostAnchors anchors={anchors || []} />
+				</div>
+			</PostStyle>
+		</>
 	);
 };
 

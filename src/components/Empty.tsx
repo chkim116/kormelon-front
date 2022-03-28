@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import { useAppSelector } from 'src/store/config';
-import EmptyIcon from '../../public/static/empty-folder.svg';
+import EmptyIcon from 'src/assets/static/empty-folder.svg';
 
 interface EmptyProps {
 	title?: string;

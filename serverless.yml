@@ -1,9 +1,10 @@
 falsyExempleServerlessNext:
-  component: '@sls-next/serverless-component@latest'
+  component: '@sls-next/serverless-component@3.5.3-alpha.4'
   inputs:
+    useServerlessTraceTarget: true
     memory:
       defaultLambda: 1024
-    roleArn: arn:aws:iam::195592554540:role/serverless_kormelon
+    roleArn: arn:aws:iam::463919562304:role/serverless_kormelon
     bucketName: 'kormelon-v2'
     runtime:
       defaultLambda: 'nodejs14.x'

@@ -20,7 +20,7 @@ import { toggleIsGnbOpen } from 'src/store/gnb';
 import { getCategory } from 'src/store/category';
 import { postLogout } from 'src/store/user';
 
-import profileImg from '../../public/static/profile.jpeg';
+import profileImg from 'src/assets/static/profile.jpeg';
 
 /**
  * 왼쪽에 표시될 공통 네비게이션

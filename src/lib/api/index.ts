@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { makeStore } from 'src/store/config';
 import { addNotification } from 'src/store/notification';
-
-const API_URL = 'http://localhost:4000';
+import { API_URL } from '../constants';
 
 export const api = axios.create({
 	baseURL: API_URL,

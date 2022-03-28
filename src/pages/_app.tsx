@@ -130,9 +130,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<ReactNotifications />
 				<Gnb />
 				<Header />
-				<div className='main'>
+				<main>
 					<Component {...pageProps} />
-				</div>
+				</main>
 				<Footer />
 				<Notifications />
 			</AppStyle>
@@ -163,9 +163,10 @@ const AppStyle = styled.div`
 		}
 	}
 
-	.main {
+	main {
 		width: 100%;
 		max-width: 1000px;
+		min-height: calc(100vh - 50px);
 		margin: 0 auto;
 		padding: 38px 10px;
 	}

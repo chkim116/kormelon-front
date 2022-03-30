@@ -7,7 +7,8 @@ interface PostAnchorsProps {
 function toReplace(anchor: string) {
 	return anchor
 		.replace(/[\!\@\#\$\%\^\&\*\(\)\_\+\?\.\,\_\=\~\`\/\*\-\+]+/g, '')
-		.replace(/ /g, '-');
+		.replace(/ /g, '-')
+		.toLowerCase();
 }
 
 const PostAnchors = ({ anchors }: PostAnchorsProps) => {
@@ -27,7 +28,7 @@ const PostAnchors = ({ anchors }: PostAnchorsProps) => {
 
 		for (const anchor of anchors) {
 			const reAnchor = toReplace(anchor);
-			// 2로 나눈 이유는, 시작 지점이 아니라 그 이전에 앵커를 active하기 위함.
+			// -200 한 이유는, 시작 지점이 아니라 그 이전에 앵커를 active하기 위함.
 			const aDom = document.getElementById(reAnchor);
 			if (aDom) {
 				res[reAnchor] = aDom.offsetTop - 200;
@@ -69,22 +70,24 @@ const PostAnchors = ({ anchors }: PostAnchorsProps) => {
 				return;
 			}
 
+			history.pushState(null, '', hash);
+			setActiveAnchor(id);
+
 			scrollTo({
 				behavior: 'smooth',
 				top: anchor[id],
 			});
 
-			history.pushState(null, '', hash);
-			setActiveAnchor(id);
-
 			// scrollTo 되면서 자동으로 발생하는 anchor active 방지
 			setIsMove(true);
 
-			// 300ms 후, isMove 해제.
-			const tick = setTimeout(() => {
-				setIsMove(false);
-				clearInterval(tick);
-			}, 300);
+			// isMove 해제.
+			const tick = setInterval(() => {
+				if (anchor[id] === window.scrollY) {
+					setIsMove(false);
+					clearInterval(tick);
+				}
+			}, 25);
 		},
 		[getAnchorPosition]
 	);

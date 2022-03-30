@@ -131,7 +131,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				{/* google webconsole */}
 				<meta
 					name='google-site-verification'
-					content='0sCrJ0gEiQY8ypglxoB_nZ2vgIIWS_q9kwXF_8spzOc'
+					content='3yQnN4a3laP_8uJlbw0p-c0XNOQlISHhCfBdGfGTq4w'
 				/>
 
 				{/* favicon */}

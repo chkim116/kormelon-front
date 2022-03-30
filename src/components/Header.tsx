@@ -107,7 +107,7 @@ export const Header = () => {
 							/>
 						)}
 						<button
-							type='button'
+							type='submit'
 							className={`search-mobile-btn ${
 								isShowMobileSearchBar ? 'close' : ''
 							}`}

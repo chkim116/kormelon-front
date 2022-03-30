@@ -112,7 +112,7 @@ const PostStyle = styled.div`
 			overflow-wrap: break-word;
 			word-break: keep-all;
 			line-height: 2em;
-			font-size: 17.5px;
+			font-size: 16px;
 
 			@media all and (max-width: 500px) {
 				font-size: 15px;
@@ -124,6 +124,9 @@ const PostStyle = styled.div`
 
 			img {
 				margin: 4px 0;
+				max-height: 400px;
+				height: 100%;
+				object-fit: contain;
 			}
 
 			a {

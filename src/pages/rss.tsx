@@ -17,6 +17,10 @@ const URL =
 const TITLE = 'Kormelon';
 const SITE_DESCRIPTION = 'The most recent home feed on Kormelon Blog';
 
+const utf8ForXml = (content : string) => {
+    return content.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g, '');
+}
+
 const postRssXml = (posts: PostRss[]) => {
 	let latestPostDate: string = '';
 	let rssItemsXml = '';
@@ -31,9 +35,9 @@ const postRssXml = (posts: PostRss[]) => {
       <item>
         <title>${post.title}</title>
         <link>${URL}/${post.id}/${post.title}</link>
-        <pubDate>${post.createdAt}</pubDate>
+        <pubDate>${new Date(post.createdAt)}</pubDate>
         <description>
-        <![CDATA[${marked.parse(post.content)}]]>
+	<![CDATA[${marked.parse(utf8ForXml(post.content))}]]>
         </description>
     </item>`;
 	});
@@ -46,15 +50,15 @@ const postRssXml = (posts: PostRss[]) => {
 const getRssXml = (posts: PostRss[]) => {
 	const { rssItemsXml, latestPostDate } = postRssXml(posts);
 
-	return `<?xml version="1.0" ?>
-  <rss version="2.0"  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	return `<?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>${TITLE}</title>
         <description>${SITE_DESCRIPTION}</description>
         <link>${URL}</link>
         <language>ko</language>
-				<atom:link rel="self" type="application/rss+xml" href="${`${URL}/rss`}"></atom:link>
-        <lastBuildDate>${latestPostDate}</lastBuildDate>
+	<atom:link rel="self" type="application/rss+xml" href="${`${URL}/rss`}"></atom:link>
+        <lastBuildDate>${new Date(latestPostDate)}</lastBuildDate>
         ${rssItemsXml}
     </channel>
   </rss>`;

@@ -26,19 +26,23 @@ DOMPurify.setConfig({
 	ALLOWED_URI_REGEXP,
 });
 
+const anchorRegExp =
+	/<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\{\:\\\/\}\>]+<\/\h1>/g;
+const imageRegExp = /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/;
+
 const Post = () => {
 	const dispatch = useAppDispatch();
 	const { userData } = useAppSelector((state) => state.user);
 	const { post } = useAppSelector((state) => state.post);
 	const router = useRouter();
 
-	// h1 뽑는 정규
-	const anchorRegExp =
-		/<([h][1])[^>]*>[ㄱ-ㅎ\ㅏ-ㅣ\가-힣\w\s\.\!\@\#\$\%\^\&\*\(\)\-\=\+\_\?\,\;\"\'\|\/\~\{\:\\\/\}\>]+<\/\h1>/g;
-
 	const parsedContent = useMemo(() => {
 		return DOMPurify.sanitize(marked.parse(post.content));
 	}, [post.content]);
+
+	const thumbNail =
+		parsedContent.match(imageRegExp)?.[0].split('src="')[1]?.split('"')[0] ||
+		'';
 
 	// h1 뽑고.. anchor로 보낼 얘들
 	const anchors = parsedContent
@@ -61,7 +65,7 @@ const Post = () => {
 				title={post.title}
 				desc={parsedContent.replace(/<[^>]*>?/g, '').slice(0, 200)}
 				url={`/post/${post.id}/${post.title}`}
-				image={parsedContent?.split('<img src="')[1]?.split('"')[0] || ''}
+				image={thumbNail}
 			/>
 
 			<PostStyle>

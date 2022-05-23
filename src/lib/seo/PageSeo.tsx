@@ -16,7 +16,7 @@ const PageSeo = ({
 	title = 'Kormelon Devlog 👨‍💻',
 	desc = '가끔 생각날 때 정리하는 블로그',
 	url = 'https://www.kormelon.com',
-	image = imageSample,
+	image,
 }: PageSeoProps) => {
 	return (
 		<NextSeo
@@ -35,7 +35,7 @@ const PageSeo = ({
 				site_name: 'Kormelon Devlog 👨‍💻',
 				images: [
 					{
-						url: image,
+						url: image || imageSample,
 						alt: title,
 					},
 				],

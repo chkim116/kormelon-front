@@ -288,6 +288,10 @@ const GnbStyle = styled(animated.nav)`
 				height: 100%;
 			}
 
+			summary::-webkit-details-marker {
+				display: none;
+			}
+
 			svg {
 				width: 12px;
 				height: 12px;

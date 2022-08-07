@@ -1,19 +1,21 @@
 import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
+import Link from 'next/link';
 
 import { NavLinkMenu } from './NavLinkMenu';
 import { UserMenu } from './UserMenu';
 
 export const Navigation = () => {
 	return (
-		<Box bg={useColorModeValue('white', 'gray.900')} px={4}>
+		<Box px={4}>
 			<Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
 				<Box
+					color={useColorModeValue('gray.900', 'gray.100')}
 					display={{ base: 'none', md: 'flex' }}
 					flex={1}
 					fontWeight={700}
 					fontSize={24}
 				>
-					Kormelon
+					<Link href='/'>Kormelon</Link>
 				</Box>
 				<NavLinkMenu />
 				<UserMenu />

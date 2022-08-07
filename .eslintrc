@@ -2,6 +2,44 @@
   "extends": [
 		"next/core-web-vitals",
     "plugin:react/jsx-runtime",
-    "plugin:@next/next/recommended"
-  ]
+    "plugin:@next/next/recommended",
+		"eslint:recommended"
+  ],
+	"rules": {
+		"no-unused-vars": [
+			"error",
+			{ "argsIgnorePattern" : "^_" }
+		],
+		"import/order": ["error", {
+			"groups": [
+				"builtin",
+				"external",
+				"internal",
+				["sibling", "parent"],
+				"index",
+				"object"
+			],
+			"pathGroups": [
+				{
+					"pattern": "react",
+					"group": "builtin",
+					"position": "before"
+				},
+				{
+					"pattern": "@core/**",
+					"group": "internal"
+				},
+				{
+					"pattern": "@common/**",
+					"group": "internal"
+				},
+				{
+					"pattern": "@features/**",
+					"group": "internal",
+					"position": "after"
+				}
+			],
+			"pathGroupsExcludedImportTypes": ["builtin"]
+		}]
+	}
 }

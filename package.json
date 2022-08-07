@@ -7,8 +7,7 @@
 		"build": "next build",
 		"postbuild": "next-sitemap --config next-sitemap.config.js",
 		"start": "next start",
-		"lint": "next lint",
-		"lint:fix": "eslint src --fix && yarn format",
+		"lint": "next lint --fix && yarn format",
 		"format": "prettier --write src"
 	},
 	"dependencies": {

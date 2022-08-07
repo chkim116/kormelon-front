@@ -27,6 +27,7 @@ export const NavLinkMenu = () => {
 				gap='36px'
 				fontSize={18}
 				fontWeight={500}
+				as='nav'
 			>
 				<NavLink to='/posts'>Posts</NavLink>
 				<NavLink to='/works'>Works</NavLink>
@@ -48,7 +49,7 @@ export const NavLinkMenu = () => {
 			</Flex>
 
 			<Slide direction='left' in={isOpen} style={{ zIndex: 1 }}>
-				<Box pb={4} h='full' display={{ md: 'none' }}>
+				<Box pb={4} h='full' display={{ md: 'none' }} as='aside'>
 					<Flex
 						bg={MobileNavColor}
 						w='full'

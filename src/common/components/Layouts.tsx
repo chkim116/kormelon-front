@@ -11,7 +11,9 @@ export const Layouts = ({ children }: LayoutsProps) => {
 	return (
 		<Box>
 			<Navigation />
-			<Box>{children}</Box>
+			<Box maxW='1440px' mx='auto' as='main'>
+				{children}
+			</Box>
 		</Box>
 	);
 };

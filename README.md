@@ -12,3 +12,7 @@ yarn install
 yarn dev
 ```
 
+
+08.08 ~
+TODO: storybook 세팅
+TODO: Home hero 세팅

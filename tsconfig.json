@@ -29,10 +29,14 @@
 			"@features/*": [
 				"src/features/*"
 			],
+			"@assets/*": [
+				"src/assets/*"
+			],
 		}
 	},
   "include": [
     "next-env.d.ts",
+		"additional.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "src"

@@ -1,6 +1,6 @@
 {
 	"name": "kormelon-front",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Kormelon Blog 클라이언트",
 	"scripts": {
 		"dev": "next dev",

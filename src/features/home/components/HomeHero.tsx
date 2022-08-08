@@ -40,8 +40,8 @@ const textAnimation = `${translateYUp} 0.5s ease-out`;
 export const HomeHero = () => {
 	const imageSrc = useColorModeValue(mainImageLight, mainImageDark);
 	return (
-		<Container maxW={'8xl'} py={12}>
-			<SimpleGrid px={5} columns={{ base: 1, md: 2 }} spacing={10}>
+		<Container maxW={'8xl'} py={{ base: 10, md: 24, lg: 36 }}>
+			<SimpleGrid px={5} columns={{ base: 1, lg: 2 }} spacing={10}>
 				<Stack spacing={4} animation={textAnimation} py={{ base: 0, md: 8 }}>
 					<Heading>Kormelon</Heading>
 					<Text color={'gray.500'}>KimChanghoe, Web Developer</Text>

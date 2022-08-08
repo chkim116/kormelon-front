@@ -1,13 +1,15 @@
-import Head from 'next/head';
+import { ChakraProvider } from '@chakra-ui/react';
 import { DefaultSeo } from 'next-seo';
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import Head from 'next/head';
 
+import { Layouts } from '@common/components/Layouts';
+import { customTheme } from '@core/theme';
 import defaultSEOConfig from '../../next-seo.config';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 	return (
-		<ChakraProvider>
+		<>
 			<Head>
 				<meta
 					name='viewport'
@@ -15,8 +17,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 				/>
 			</Head>
 			<DefaultSeo {...defaultSEOConfig} />
-			<Component {...pageProps} />
-		</ChakraProvider>
+			<ChakraProvider theme={customTheme}>
+				<Layouts>
+					<Component {...pageProps} />
+				</Layouts>
+			</ChakraProvider>
+		</>
 	);
 };
 

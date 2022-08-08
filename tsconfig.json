@@ -29,6 +29,9 @@
 			"@features/*": [
 				"src/features/*"
 			],
+			"@assets/*": [
+				"src/assets/*"
+			],
 		}
 	},
   "include": [

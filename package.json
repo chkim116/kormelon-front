@@ -11,19 +11,23 @@
 		"format": "prettier --write src"
 	},
 	"dependencies": {
+		"@chakra-ui/icons": "^2.0.6",
 		"@chakra-ui/react": "^2.2.4",
 		"@emotion/react": "^11.9.3",
 		"@emotion/styled": "^11.9.3",
+		"@react-three/fiber": "^8.3.0",
 		"framer-motion": "^6.5.1",
 		"next": "12.2.0",
 		"next-seo": "^5.5.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"react-icons": "^4.4.0"
+		"react-icons": "^4.4.0",
+		"three": "^0.143.0"
 	},
 	"devDependencies": {
 		"@types/node": "^18.6.3",
 		"@types/react": "^18.0.15",
+		"@types/three": "^0.143.0",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.20.0",
 		"eslint-config-next": "^12.2.3",

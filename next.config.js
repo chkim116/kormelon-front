@@ -1,5 +1,7 @@
+const withImages = require('next-images');
+
 /** @type {import('next').NextConfig} */
-module.exports = {
+const config = {
 	swcMinify: true,
 	reactStrictMode: true,
 	images: {
@@ -7,3 +9,10 @@ module.exports = {
 		domains: ['kormelon-v2.s3.us-east-1.amazonaws.com'],
 	},
 };
+
+module.exports = withImages({
+	...config,
+	webpack(config) {
+		return config;
+	},
+});

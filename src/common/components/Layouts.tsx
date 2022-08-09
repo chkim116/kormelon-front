@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Box } from '@chakra-ui/react';
 
-import { Navigation } from './Navigation';
+import { Header } from './Header';
 import { Footer } from './Footer';
 
 interface LayoutsProps {
@@ -11,7 +11,7 @@ interface LayoutsProps {
 export const Layouts = ({ children }: LayoutsProps) => {
 	return (
 		<Box>
-			<Navigation />
+			<Header />
 			<Box maxW='1440px' mx='auto' as='main'>
 				{children}
 			</Box>

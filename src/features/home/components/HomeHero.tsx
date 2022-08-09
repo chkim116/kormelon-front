@@ -2,7 +2,6 @@ import {
 	Container,
 	Flex,
 	Heading,
-	Image,
 	keyframes,
 	SimpleGrid,
 	Stack,
@@ -10,6 +9,7 @@ import {
 	useColorModeValue,
 } from '@chakra-ui/react';
 
+import { Image } from '@common/components/Image';
 import { mainImageDark, mainImageLight } from '@assets/index';
 
 const translateYUp = keyframes`
@@ -46,8 +46,14 @@ export const HomeHero = () => {
 					<Heading>Kormelon</Heading>
 					<Text color={'gray.500'}>KimChanghoe, Web Developer</Text>
 				</Stack>
-				<Flex animation={imageAnimation}>
-					<Image src={imageSrc} alt='blog home main image - stars' />
+				<Flex w='full' h='full' display='block' animation={imageAnimation}>
+					<Image
+						width='514px'
+						height='419px'
+						layout='responsive'
+						src={imageSrc}
+						alt='blog home main image - stars'
+					/>
 				</Flex>
 			</SimpleGrid>
 		</Container>

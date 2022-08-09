@@ -5,13 +5,13 @@ import {
 	Container,
 	Flex,
 	Heading,
-	Image,
 	SimpleGrid,
 	Text,
 	Tooltip,
 	useColorModeValue,
 } from '@chakra-ui/react';
 import { NavLink } from '@common/components/NavLink';
+import { Image } from '@common/components/Image';
 
 const TextStyled = styled(Text)`
 	overflow: hidden;
@@ -76,10 +76,10 @@ export const MostArticles = () => {
 							<Flex direction={'column'} alignItems={'center'} role='group'>
 								<AspectRatio
 									ratio={3 / 4}
-									w='full'
-									h='full'
 									maxW='414px'
 									maxH='547px'
+									w='full'
+									h='full'
 									border='2px'
 									borderRadius={10}
 									color='transparent'
@@ -89,9 +89,8 @@ export const MostArticles = () => {
 									}}
 								>
 									<Image
-										w='full'
-										h='full'
-										borderRadius={10}
+										borderRadius={9}
+										layout='fill'
 										objectFit={'cover'}
 										src={post.thumbnail}
 										alt={`most article - ${post.title}`}

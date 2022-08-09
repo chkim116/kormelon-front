@@ -1,0 +1,33 @@
+{
+	"React Storybook Visual Test - Simple": {
+			"prefix": "!rcs",
+			"description": "스토리북을 통한 리액트 비주얼 테스트 코드를 만든다.",
+			"body": [
+				"import { ComponentProps } from 'react';",
+				"import { ComponentStory, ComponentMeta, ArgTypes } from '@storybook/react';",
+				"import { ${1:${TM_FILENAME_BASE/\\.stories//gi}} } from '${2:..}/${1}';",
+				"",
+				"",
+				"type MyArgTypes = Partial<Record<keyof ComponentProps<typeof ${1}>, ArgTypes[string]>>;",
+				"const argTypes: MyArgTypes = {",
+				"};",
+				"",
+				"export default {",
+				"  title: '${3:ChangePlease}/${1}',",
+				"  component: ${1},",
+				"  argTypes,",
+				"} as ComponentMeta<typeof ${1}>;",
+				"",
+				"const Template: ComponentStory<typeof ${1}> = ({ ...props }) => {",
+				"  return (",
+				"    <${1} {...props}></${1}>",
+				"  );",
+				"};",
+				"",
+				"export const Default = Template.bind({});",
+				"Default.args = {",
+				"};",
+				""
+			]
+		}
+}

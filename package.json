@@ -1,6 +1,6 @@
 {
 	"name": "kormelon-front",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "Kormelon Blog 클라이언트",
 	"scripts": {
 		"dev": "next dev",
@@ -8,32 +8,42 @@
 		"postbuild": "next-sitemap --config next-sitemap.config.js",
 		"start": "next start",
 		"lint": "next lint --fix && yarn format",
-		"format": "prettier --write src"
+		"format": "prettier --write src",
+		"storybook": "start-storybook -s ./public -p 6006",
+		"build-storybook": "build-storybook"
 	},
 	"dependencies": {
 		"@chakra-ui/icons": "^2.0.6",
 		"@chakra-ui/react": "^2.2.4",
 		"@emotion/react": "^11.9.3",
 		"@emotion/styled": "^11.9.3",
-		"@react-three/fiber": "^8.3.0",
 		"framer-motion": "^6.5.1",
 		"next": "12.2.0",
 		"next-images": "^1.8.4",
 		"next-seo": "^5.5.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"react-icons": "^4.4.0",
-		"three": "^0.143.0"
+		"react-icons": "^4.4.0"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.18.10",
+		"@storybook/addon-actions": "^6.5.10",
+		"@storybook/addon-essentials": "^6.5.10",
+		"@storybook/addon-links": "^6.5.10",
+		"@storybook/builder-webpack5": "^6.5.10",
+		"@storybook/manager-webpack5": "^6.5.10",
+		"@storybook/react": "^6.5.10",
+		"@storybook/testing-library": "^0.0.13",
 		"@types/node": "^18.6.3",
 		"@types/react": "^18.0.15",
-		"@types/three": "^0.143.0",
+		"babel-loader": "^8.2.5",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.20.0",
 		"eslint-config-next": "^12.2.3",
 		"next-sitemap": "^3.1.7",
 		"prettier": "^2.7.1",
+		"storybook-addon-next": "^1.6.7",
+		"tsconfig-paths-webpack-plugin": "^4.0.0",
 		"typescript": "^4.7.4"
 	},
 	"keywords": [

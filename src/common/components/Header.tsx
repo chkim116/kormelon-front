@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { NavLinkMenu } from './NavLinkMenu';
 import { UserMenu } from './UserMenu';
 
-export const Navigation = () => {
+export const Header = () => {
 	return (
 		<Box px={4} as='header'>
 			<Flex

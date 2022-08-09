@@ -1,8 +1,6 @@
-import styled from '@emotion/styled';
 import {
 	AspectRatio,
 	Box,
-	Container,
 	Flex,
 	Heading,
 	SimpleGrid,
@@ -10,8 +8,11 @@ import {
 	Tooltip,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import { NavLink } from '@common/components/NavLink';
+import styled from '@emotion/styled';
+
+import { Section } from '@common/components/Section';
 import { Image } from '@common/components/Image';
+import { NavLink } from '@common/components/NavLink';
 
 const TextStyled = styled(Text)`
 	overflow: hidden;
@@ -54,12 +55,7 @@ export const MostArticles = () => {
 	const dateColor = useColorModeValue('gray.700', 'gray.300');
 
 	return (
-		<Container
-			maxW='1280px'
-			mx='auto'
-			as='section'
-			py={{ base: 10, md: 24, lg: 36 }}
-		>
+		<Section>
 			<Heading textAlign={'center'} color={textColor}>
 				Most Articles
 			</Heading>
@@ -139,6 +135,6 @@ export const MostArticles = () => {
 					</Box>
 				</NavLink>
 			</Flex>
-		</Container>
+		</Section>
 	);
 };

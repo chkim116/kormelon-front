@@ -3,7 +3,6 @@
 			"prefix": "!rcs",
 			"description": "스토리북을 통한 리액트 비주얼 테스트 코드를 만든다.",
 			"body": [
-				"/* eslint-disable no-alert */",
 				"import { ComponentProps } from 'react';",
 				"import { ComponentStory, ComponentMeta, ArgTypes } from '@storybook/react';",
 				"import { ${1:${TM_FILENAME_BASE/\\.stories//gi}} } from '${2:..}/${1}';",

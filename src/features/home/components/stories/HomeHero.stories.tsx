@@ -9,7 +9,7 @@ type MyArgTypes = Partial<
 const argTypes: MyArgTypes = {};
 
 export default {
-	title: 'Home/HomeHero',
+	title: 'Home/components/HomeHero',
 	component: HomeHero,
 	argTypes,
 } as ComponentMeta<typeof HomeHero>;

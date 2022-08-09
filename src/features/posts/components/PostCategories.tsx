@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Flex, Tag, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Tag, Text, useColorModeValue } from '@chakra-ui/react';
 
 const CATEGORIES = ['개발뉴스', '프론트엔드', '잡담', '뻘글', '자기계발'];
 
@@ -23,7 +23,7 @@ export const PostCategories = () => {
 
 	return (
 		<Box my='10'>
-			<Flex gap='4'>
+			<Flex flexWrap={'wrap'} gap='4'>
 				{CATEGORIES.map((category) => (
 					<Tag
 						as='button'
@@ -61,7 +61,7 @@ export const PostCategories = () => {
 								transition: 'scale .5s',
 							}}
 						/>
-						{category}
+						<Text>{category}</Text>
 					</Tag>
 				))}
 			</Flex>

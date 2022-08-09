@@ -6,7 +6,7 @@ const config = {
 	reactStrictMode: true,
 	images: {
 		disableStaticImages: true,
-		domains: ['kormelon-v2.s3.us-east-1.amazonaws.com'],
+		domains: ['kormelon-v2.s3.us-east-1.amazonaws.com', 'images.unsplash.com'],
 	},
 };
 

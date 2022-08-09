@@ -1,26 +1,15 @@
 import {
-	AspectRatio,
 	Box,
 	Flex,
 	Heading,
 	SimpleGrid,
 	Text,
-	Tooltip,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import styled from '@emotion/styled';
 
-import { Section } from '@common/components/Section';
-import { Image } from '@common/components/Image';
 import { NavLink } from '@common/components/NavLink';
-
-const TextStyled = styled(Text)`
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-`;
+import { PostCard } from '@common/components/PostCard';
+import { Section } from '@common/components/Section';
 
 // FIXME: 샘플. 이후 제거
 const POSTS = [
@@ -52,7 +41,6 @@ const POSTS = [
 
 export const MostArticles = () => {
 	const textColor = useColorModeValue('gray.900', 'gray.100');
-	const dateColor = useColorModeValue('gray.700', 'gray.300');
 
 	return (
 		<Section>
@@ -67,54 +55,7 @@ export const MostArticles = () => {
 				spacing='6'
 			>
 				{POSTS.map((post) => (
-					<Box key={post.id} maxW='100%'>
-						<NavLink to={`/post/${post.title}`}>
-							<Flex direction={'column'} alignItems={'center'} role='group'>
-								<AspectRatio
-									ratio={3 / 4}
-									maxW='414px'
-									maxH='547px'
-									w='full'
-									h='full'
-									border='2px'
-									borderRadius={10}
-									color='transparent'
-									_groupHover={{
-										borderColor: textColor,
-										transition: 'border .75s',
-									}}
-								>
-									<Image
-										borderRadius={9}
-										layout='fill'
-										objectFit={'cover'}
-										src={post.thumbnail}
-										alt={`most article - ${post.title}`}
-									/>
-								</AspectRatio>
-
-								<Box maxW='414px' w='full'>
-									<Box
-										fontSize={{ base: 'md', lg: 'xl' }}
-										mt='4'
-										color={dateColor}
-									>
-										{post.date} - {post.readTime}
-									</Box>
-									<Box
-										mt='2'
-										fontSize={{ base: '2xl', lg: '3xl' }}
-										color={textColor}
-										fontWeight='700'
-									>
-										<Tooltip label={post.title} placement='bottom'>
-											<TextStyled>{post.title}</TextStyled>
-										</Tooltip>
-									</Box>
-								</Box>
-							</Flex>
-						</NavLink>
-					</Box>
+					<PostCard key={post.id} post={post} />
 				))}
 			</SimpleGrid>
 

@@ -1,6 +1,7 @@
-import { Flex, Box, Tooltip, useColorModeValue, Text } from '@chakra-ui/react';
+import { Box, Flex, Text, Tooltip, useColorModeValue } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
+import { PostListEntity } from '@core/entities/posts/posts.entity';
 import { Image } from './Image';
 import { NavLink } from './NavLink';
 
@@ -12,22 +13,19 @@ const TextStyled = styled(Text)`
 	-webkit-box-orient: vertical;
 `;
 
-// TODO: API 연결 후 변경
-interface Post {
-	id: number;
-	title: string;
-	thumbnail: string;
-	date: string;
-	readTime: string;
-}
+const SAMPLE_THUMBNAIL =
+	'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80';
 
 interface PostCardProps {
-	post: Post;
+	post: PostListEntity;
+	loading: boolean;
 }
 
-export const PostCard = ({ post }: PostCardProps) => {
+export const PostCard = ({ post, loading }: PostCardProps) => {
 	const textColor = useColorModeValue('gray.900', 'gray.100');
 	const dateColor = useColorModeValue('gray.700', 'gray.300');
+
+	console.log(loading, 'TODO: loading일시, 스켈레톤');
 
 	return (
 		<Box key={post.id} maxW='100%'>
@@ -47,14 +45,14 @@ export const PostCard = ({ post }: PostCardProps) => {
 								height='547px'
 								borderRadius={9}
 								objectFit={'cover'}
-								src={post.thumbnail}
+								src={SAMPLE_THUMBNAIL}
 								alt={`most article - ${post.title}`}
 							/>
 						</Flex>
 
 						<Box maxW='414px' w='full'>
 							<Box fontSize={{ base: 'md', lg: 'xl' }} mt='4' color={dateColor}>
-								{post.date} - {post.readTime}
+								{post.createdAt} - {post.readTime}
 							</Box>
 							<Box
 								mt='2'

@@ -130,7 +130,7 @@ export interface PostDetailEntity
 	/**
 	 * 댓글
 	 */
-	comments: Comment[];
+	comments: PostCommentEntity[];
 }
 
 export interface PostListSearchParams {

@@ -1,11 +1,11 @@
-import { PagingRes } from '@common/entitiy';
+import { PagingRes } from '@core/entities/common.entitiy';
 import {
 	PostCreateParams,
 	PostDetailEntity,
 	PostListEntity,
 	PostListSearchParams,
 	PostUpdateParams,
-} from '@core/entities/posts.entity';
+} from '@core/entities/posts/posts.entity';
 import { api } from '@core/network';
 
 export const postsRepository = {

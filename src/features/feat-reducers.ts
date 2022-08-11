@@ -1,3 +1,7 @@
 import { combineReducers } from 'redux';
 
-export const featureReducers = combineReducers({});
+import { postsSlice } from './posts/stores/list/posts.slice';
+
+export const featureReducers = combineReducers({
+	posts: postsSlice.reducer,
+});

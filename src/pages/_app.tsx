@@ -4,6 +4,7 @@ import Head from 'next/head';
 
 import { Layouts } from '@common/components/Layouts';
 import { Chakra } from '@core/Chakra';
+import { store } from '@common/store';
 import defaultSEOConfig from '../../next-seo.config';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -25,4 +26,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 	);
 };
 
-export default MyApp;
+export default store.withRedux(MyApp);

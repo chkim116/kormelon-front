@@ -3,7 +3,7 @@ import { NextSeo } from 'next-seo';
 import { useDispatch } from 'react-redux';
 
 import { AppDispatch } from '@common/store';
-import { PostListContainer } from '../containers/PostListContainer';
+import { PostListContainer } from '../containers/search/PostListContainer';
 import { usePostSearchParams } from '../hooks/usePostSearchParams';
 import { effPostListLoad } from '../stores/list/posts.effect';
 

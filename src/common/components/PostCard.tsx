@@ -25,10 +25,9 @@ export const PostCard = ({ post, loading }: PostCardProps) => {
 	const textColor = useColorModeValue('gray.900', 'gray.100');
 	const dateColor = useColorModeValue('gray.700', 'gray.300');
 
-	console.log(loading, 'TODO: loading일시, 스켈레톤');
-
 	return (
 		<Box key={post.id} maxW='100%'>
+			{loading && 'TODO: loading 중이라면 스켈레톤'}
 			<Flex direction={'column'} alignItems={'center'}>
 				<NavLink to={`/post/${post.title}`}>
 					<Box role='group'>
@@ -52,7 +51,7 @@ export const PostCard = ({ post, loading }: PostCardProps) => {
 
 						<Box maxW='414px' w='full'>
 							<Box fontSize={{ base: 'md', lg: 'xl' }} mt='4' color={dateColor}>
-								{post.createdAt} - {post.readTime}
+								{post.createdAt} - {post.readTime}min
 							</Box>
 							<Box
 								mt='2'

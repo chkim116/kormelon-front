@@ -1,6 +1,5 @@
 import {
 	PostCategoryEntity,
-	PostTagEntity,
 	PostDetailEntity,
 } from '@core/entities/posts/posts.entity';
 
@@ -13,14 +12,6 @@ export function createPostCategory(): PostCategoryEntity {
 	};
 }
 
-export function createPostTags(): PostTagEntity {
-	return {
-		id: '',
-		value: '',
-		count: 0,
-	};
-}
-
 export function createPostDetail(): PostDetailEntity {
 	return {
 		userId: '',
@@ -30,7 +21,7 @@ export function createPostDetail(): PostDetailEntity {
 		title: '',
 		category: createPostCategory(),
 		view: 0,
-		tags: createPostTags(),
+		tags: [],
 		readTime: 0,
 		isPrivate: false,
 		createdAt: '',

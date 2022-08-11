@@ -6,11 +6,12 @@ export const usePostSearchParams = () => {
 	const router = useRouter();
 
 	function refinedQuery(query: Record<string, string>): PostListSearchParams {
-		const { page = 1, per = 5 } = query;
+		const { page = 1, per = 5, q } = query;
 
 		return {
 			page: Number(page),
 			per: Number(per),
+			q,
 		};
 	}
 

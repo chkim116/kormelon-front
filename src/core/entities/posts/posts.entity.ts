@@ -134,8 +134,18 @@ export interface PostDetailEntity
 }
 
 export interface PostListSearchParams {
+	/**
+	 * 페이지
+	 */
 	page: number;
+	/**
+	 * 가져올 게시글 수
+	 */
 	per: number;
+	/**
+	 * 검색 키워드
+	 */
+	q?: string;
 }
 
 export interface PostCreateParams {

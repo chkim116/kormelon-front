@@ -13,8 +13,8 @@ export default {
 	argTypes,
 } as ComponentMeta<typeof PostCategories>;
 
-const Template: ComponentStory<typeof PostCategories> = ({ ...props }) => {
-	return <PostCategories {...props}></PostCategories>;
+const Template: ComponentStory<typeof PostCategories> = () => {
+	return <PostCategories></PostCategories>;
 };
 
 export const Default = Template.bind({});

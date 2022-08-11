@@ -57,7 +57,7 @@ export interface PostListEntity {
 	/**
 	 * 연결된 태그
 	 */
-	tags: PostTagEntity;
+	tags: PostTagEntity[];
 	/**
 	 * 리딩 타임
 	 */

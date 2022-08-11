@@ -1,5 +1,4 @@
 import {
-	Container,
 	Flex,
 	Heading,
 	keyframes,
@@ -9,6 +8,7 @@ import {
 	useColorModeValue,
 } from '@chakra-ui/react';
 
+import { Section } from '@common/components/Section';
 import { Image } from '@common/components/Image';
 import { mainImageDark, mainImageLight } from '@assets/index';
 
@@ -40,7 +40,7 @@ const textAnimation = `${translateYUp} 0.5s ease-out`;
 export const HomeHero = () => {
 	const imageSrc = useColorModeValue(mainImageLight, mainImageDark);
 	return (
-		<Container maxW={'8xl'} py={{ base: 10, md: 24, lg: 36 }}>
+		<Section>
 			<SimpleGrid px={5} columns={{ base: 1, lg: 2 }} spacing={10}>
 				<Stack spacing={4} animation={textAnimation} py={{ base: 0, md: 8 }}>
 					<Heading>Kormelon</Heading>
@@ -56,6 +56,6 @@ export const HomeHero = () => {
 					/>
 				</Flex>
 			</SimpleGrid>
-		</Container>
+		</Section>
 	);
 };

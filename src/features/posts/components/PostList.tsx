@@ -1,17 +1,6 @@
-import {
-	Box,
-	Flex,
-	Heading,
-	SimpleGrid,
-	Text,
-	useColorModeValue,
-} from '@chakra-ui/react';
-
-import { NavLink } from '@common/components/NavLink';
+import { SimpleGrid } from '@chakra-ui/react';
 import { PostCard } from '@common/components/PostCard';
-import { Section } from '@common/components/Section';
 
-// FIXME: 샘플. 이후 제거
 const POSTS = [
 	{
 		id: 1,
@@ -39,14 +28,9 @@ const POSTS = [
 	},
 ];
 
-export const MostArticles = () => {
-	const textColor = useColorModeValue('gray.900', 'gray.100');
-
+export const PostList = () => {
 	return (
-		<Section>
-			<Heading textAlign={'center'} color={textColor}>
-				Most Articles
-			</Heading>
+		<>
 			<SimpleGrid
 				py={{ base: '10', md: '20' }}
 				columns={{ base: 1, lg: 3 }}
@@ -55,27 +39,9 @@ export const MostArticles = () => {
 				spacing='6'
 			>
 				{POSTS.map((post) => (
-					<PostCard key={post.id} post={post} />
+					<PostCard post={post} key={post.id} />
 				))}
 			</SimpleGrid>
-
-			<Flex justifyContent={{ base: 'center', lg: 'flex-end' }}>
-				<NavLink to='/posts'>
-					<Box fontSize='2xl' role='group'>
-						<Flex>
-							More
-							<Text
-								ml='3'
-								transition={'opacity 300ms'}
-								opacity={0}
-								_groupHover={{ opacity: 1 }}
-							>
-								?
-							</Text>
-						</Flex>
-					</Box>
-				</NavLink>
-			</Flex>
-		</Section>
+		</>
 	);
 };
